@@ -1,0 +1,54 @@
+
+// elevon mixer
+
+
+input pitch{
+   minimum = -0.5;
+   maximum = 0.5;
+}
+
+input roll{
+   minimum = -0.5;
+   maximum = 0.5;
+}
+
+input throttle{
+   minimum = 0;
+   maximum = 1;
+}
+
+output elevon_left{
+   minimum = -1;
+   maximum =  1;
+}
+
+output elevon_right{
+   minimum = -1;
+   maximum =  1;
+}
+
+output throttle_out{
+   minimum = 0;
+   maximum = 100;
+}
+
+void setup()
+{
+   pitch_gain = 1000;
+   roll_gain  = 1000;
+   throttle_gain = 1000;
+}
+
+loop()
+{
+    pitch_part = pitch * pitch_gain;
+    roll_part  = roll * roll_gain;
+    
+    elevon_left  <- pitch_part + roll_part;
+    elevon_right <- pitch_part - roll_part;
+    throttle_out <- throttle_in * throttle_gain;
+}
+
+output elevon_left{
+    value = pitch * pitch_gain + rol * roll_gain;
+}
