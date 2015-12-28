@@ -1,0 +1,3 @@
+The mixer is the output
+The symboltable is used for lookup
+Once the mixer is built the symboltable is discarded
