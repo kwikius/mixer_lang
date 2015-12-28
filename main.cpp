@@ -6,11 +6,9 @@ apm_mix::mixer_t* fn_mix();
 
 int main()
 {
-   printf("Hello World\n");
+   printf("mixer demo\nInput the mixer...\n\n");
    
-   bool result = fn_mix();
-   printf("Done %i\n", result);
-   if (result){
+   if (fn_mix()){
      apm_mix::eval_mixer_outputs();
    }
 }

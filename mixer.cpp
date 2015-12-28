@@ -296,7 +296,7 @@ namespace{
             if ( apm_lexer::yylex() == ';'){
                symtab->add_item(name1,expr);
                mixer->add(expr);
-               printf("got assign\n");
+              // printf("got assign\n");
                return true;
             }else{
                return apm_mix::yyerror("? ';'");
