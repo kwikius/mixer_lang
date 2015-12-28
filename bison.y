@@ -37,12 +37,11 @@ Primary :
 |  '+' Primary
 |  '-' Primary
 |  '!' Primary
-
 |  '(' Expr ')'
 ;
 
 IOExpr:
-   INPUT '[' Expr ']'
+   INPUT '(' NAME ')'
 |  OUTPUT '[' Expr ']'
 ;
 

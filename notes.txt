@@ -1,3 +1,7 @@
 The mixer is the output
 The symboltable is used for lookup
 Once the mixer is built the symboltable is discarded
+Inputs are indexed by name
+
+Outputs are indexed by integer constant
+Outputs can be read on the Rhs 

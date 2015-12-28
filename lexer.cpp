@@ -127,6 +127,7 @@ int apm_lexer::yylex()
             return punct2[idx];
          }else{
             if ( (ch == '<') && (ch1 == '~')){
+               //printf("got varassign\n");
                return VARASSIGN;
             }else{
                fn_unget_char(ch1);

@@ -10,6 +10,9 @@ int main()
    
    bool result = fn_mix();
    printf("Done %i\n", result);
+   if (result){
+     apm_mix::eval_mixer_outputs();
+   }
 }
 
 

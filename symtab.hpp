@@ -36,7 +36,7 @@ namespace apm_mix{
 
    struct mixer_t;
 
-   bool yyerror(const char* str = nullptr);
+   
 } // apm_mix
 
 #endif // MIXERLANG_SYMTAB_HPP_INCLUDED

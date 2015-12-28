@@ -4,6 +4,8 @@
 #include <cstdint>
 namespace apm_mix{
 
+   bool yyerror(const char* str = nullptr);
+
    struct output_expr;
    struct mixer_t;
 
