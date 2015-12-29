@@ -31,3 +31,13 @@ Size
    The code has only been tested on a 32 bit Linux PC so far and the complete app image is coming in at under 30K.
    I hope it will be smaller when built as a library for STM32 arm. The aim is under 10K of rom space but we shall see!
 
+Dependenciees
+
+   Requires my quan-trunk library
+
+      https://github.com/kwikius/quan-trunk.git
+
+Compilation
+    Use the makfile. Note that though tghere are bison source and output, these are only used to check the grammar and not used in the builf itself
+
+
