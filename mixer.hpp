@@ -1,7 +1,6 @@
 #ifndef MIXER_LANG_MIXER_HPP_INCLUDED
 #define MIXER_LANG_MIXER_HPP_INCLUDED
 
-
 #include "exprtree.hpp"
 
 namespace apm_mix{
@@ -9,7 +8,9 @@ namespace apm_mix{
    struct abc_expr;
    struct symtab_t;
 
+   // make type of outputs a template param ?
    struct mixer_t{
+
       static constexpr uint32_t num_outputs = 18;
       mixer_t():m_expressions{nullptr}
       {
@@ -28,6 +29,7 @@ namespace apm_mix{
       }
       bool add_output(uint32_t n, abc_expr* output_expr)
       {
+          
           if ( n > num_outputs)  {
              yyerror("invalid output index");
              return false;
@@ -72,6 +74,7 @@ namespace apm_mix{
       abc_expr* m_outputs[num_outputs] ;
    };
 
+   void mixer_init();
    void eval_mixer_outputs();
 }
 

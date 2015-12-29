@@ -9,6 +9,9 @@ namespace apm_lexer{
    double get_lexer_float();
    int get_line_number();
    bool putback(int tok);
+
+   bool open_file( const char * name);
+   void close_file();
 }
 
 #endif // MIXER_LANG_LEXER_HPP_INCLUDED

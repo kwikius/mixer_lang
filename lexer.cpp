@@ -36,8 +36,30 @@ namespace {
 // unless you put a string or num in there
    bool buffer_full = false;
    int  buffered_tok = 0;
-
+  
+    FILE * file_pointer = stdin;
 }
+
+bool apm_lexer::open_file( const char * name)
+{
+   FILE* fp = fopen(name, "r");
+   if ( fp != NULL){
+      file_pointer = fp;
+      return true;
+   }else{
+      return false;
+   }
+}
+
+void apm_lexer::close_file()
+{
+  if ( file_pointer != stdin){
+      fclose(file_pointer);
+      file_pointer = stdin;
+  }
+}
+
+
 int apm_lexer::get_line_number()
 {
    return line_num;
@@ -60,12 +82,12 @@ double apm_lexer::get_lexer_float()
 
 int fn_read_char()
 {
-   return fgetc(stdin);
+   return fgetc(file_pointer);
 }
 
 int fn_unget_char(int c)
 {
-   return ungetc(c,stdin);
+   return ungetc(c,file_pointer);
 }
 
 int fn_peek_char()
@@ -97,13 +119,13 @@ int apm_lexer::yylex()
    int ch ;
    do{
        ch = fn_read_char();
-       if ( ch == -1){
+       if ( ch == EOF){
          return 0;
        }
        if ( ch == '#'){
          while (ch != '\n'){
              ch = fn_read_char();
-             if ( ch == -1){
+             if ( ch == EOF){
                return 0;
              }
          }
@@ -113,9 +135,9 @@ int apm_lexer::yylex()
       }
    } while (std::isspace(ch) );
  
-
    for ( auto p : simplepunct){
       if (ch == p){
+        
          return ch;
       }
    }
@@ -126,13 +148,9 @@ int apm_lexer::yylex()
          if ( ch1 == '='){
             return punct2[idx];
          }else{
-            if ( (ch == '<') && (ch1 == '~')){
-               //printf("got varassign\n");
-               return VARASSIGN;
-            }else{
                fn_unget_char(ch1);
                return ch;
-            }
+           // }
          }
       }else{
          ++idx;

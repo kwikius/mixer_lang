@@ -8,6 +8,7 @@
 #include "mixer.hpp"
 #include <cassert>
 #include <quan/meta/max.hpp>
+#include <quan/meta/min.hpp>
 
 namespace {
    apm_mix::mixer_t* mixer;
@@ -135,11 +136,12 @@ namespace {
        if (rhs != T{0}){
           return lhs / rhs; 
        }else{
-          return quan::meta::max_<T>::value;
+           return (lhs < T{0})
+              ? quan::meta::min_<T>::value
+              : quan::meta::max_<T>::value;
        }
    }
 
-  
    template <typename T>
    apm_mix::abc_expr * make_rel_op_tpl(int op, apm_mix::expr<T>* lhs, apm_mix::expr<T>* rhs)
    {
@@ -243,6 +245,12 @@ namespace {
    }
 }
 
+void apm_mix::mixer_init()
+{
+    mixer = new apm_mix::mixer_t;
+    symtab = new apm_mix::symtab_t;
+}
+
 void apm_mix::eval_mixer_outputs()
 {
    mixer->eval_outputs();
@@ -250,8 +258,6 @@ void apm_mix::eval_mixer_outputs()
 
 bool fn_mix()
 {
-   mixer = new apm_mix::mixer_t;
-   symtab = new apm_mix::symtab_t;
    for (;;){
       switch(apm_lexer::yylex()){
          case NAME :
@@ -350,7 +356,20 @@ namespace{
          // case '-': Primary
          // case '!': Primary
          // case IF : ( expr, Expr, Expr)
-         // case '(': expr ')'
+         case '(': { //  expr ')' 
+            auto * result = do_expr();
+            if (result){
+               if (apm_lexer::yylex() == ')'){
+                     return result;
+               }else{
+                  apm_mix::yyerror("? )");
+                  delete result;
+                  return nullptr;
+               }
+            }else{
+               return nullptr;
+            }
+         }
          default:
              apm_mix::yyerror("? prim");
             return nullptr;
@@ -584,7 +603,6 @@ namespace{
    //expect  ( expr ) = expr1
    bool do_output_expr()
    {
-      printf("in output expr\n");
       if ( apm_lexer::yylex() == '['){
             apm_mix::abc_expr* expr = do_expr();
             if ( expr){
@@ -594,7 +612,7 @@ namespace{
                      uint32_t const idx  = expr1->eval();
                      delete expr; expr = nullptr;
                      
-                     if ( apm_lexer::yylex() == VARASSIGN){
+                     if ( apm_lexer::yylex() == '='){
                          apm_mix::abc_expr* expr2 = do_expr();
                          if( expr2){
                            if (apm_lexer::yylex() == ';'){
@@ -612,7 +630,7 @@ namespace{
                            return false;
                          }
                      }else{
-                       return apm_mix::yyerror("? <~");
+                       return apm_mix::yyerror("? =");
                      }
                   }else{
                      delete expr;

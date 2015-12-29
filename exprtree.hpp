@@ -6,7 +6,6 @@ namespace apm_mix{
 
    bool yyerror(const char* str = nullptr);
 
-   struct output_expr;
    struct mixer_t;
 
    struct abc_expr{
@@ -18,7 +17,7 @@ namespace apm_mix{
       virtual abc_expr* clone() const =0; 
       virtual ~abc_expr(){}
      private:
-      uint32_t m_id;
+      uint32_t const m_id;
       abc_expr* m_next;
       friend class apm_mix:: mixer_t;
    };
@@ -62,30 +61,89 @@ namespace apm_mix{
    private:
       T m_value;
    };
-
+#if 0
+   // is set up with a default expression
    template <typename T>
-   struct variable : expr<T>{
-      variable(expr<T>* expr_in): m_expr(expr_in->fold()){}
-      ~variable()
-      { if (m_expr != nullptr) delete m_expr;}
-      T eval() const { return m_expr->eval();}
-      bool is_constant() const { return m_expr->is_constant();}
+   struct mixer_output : expr<T>{
+      typedef void ( *pfn) ( T );
+      mixer_output(pfn fun, expr<T>* expr_in): m_output_fun{fun}, m_expr{expr_in->fold()}
+      {}
+      ~mixer_output(){ if (m_expr != nullptr){delete m_expr;}}
+      T eval() const 
+      { 
+         return m_expr->eval();
+      }
+
+      bool is_constant() const 
+      { 
+         return m_expr->is_constant();
+      }
+
       expr<T>* fold() 
       { 
-         if (this->is_constant()){
-       //     std:: cout << "folding var\n";
-            expr<T>* t = m_expr;
-            m_expr = nullptr;
-            delete this;
-            return t;
-         }else{
-            return this;
-         }
+         return this;
       }
-      expr<T>* clone() const { return new variable{this->m_expr->clone()};}
-   private:
-      expr<T>* m_expr;
+      
+      void set_expression( expr<T>* expr)
+      {
+         delete m_expr;
+         m_expr = expr;
+      }
+
+      void do_output_fun()
+      {
+         m_output_fun(this->eval());
+      }
+
+      expr<T>* clone() const 
+      { 
+         return new mixer_output{this->m_output_fun,this->m_expr->clone()};
+      }
+      private:
+      pfn m_output_fun;
+      expr<T> * m_expr;
+//      ~variable()
+//      { if (m_expr != nullptr) delete m_expr;}
+//      
+//      expr<T>* fold() 
+//      { 
+//         if (this->is_constant()){
+//       //     std:: cout << "folding var\n";
+//            expr<T>* t = m_expr;
+//            m_expr = nullptr;
+//            delete this;
+//            return t;
+//         }else{
+//            return this;
+//         }
+//      }
+//      expr<T>* clone() const { return new variable{this->m_expr->clone()};}
    };
+#endif
+  
+//   template <typename T>
+//   struct variable : expr<T>{
+//      variable(expr<T>* expr_in): m_expr(expr_in->fold()){}
+//      ~variable()
+//      { if (m_expr != nullptr) delete m_expr;}
+//      T eval() const { return m_expr->eval();}
+//      bool is_constant() const { return m_expr->is_constant();}
+//      expr<T>* fold() 
+//      { 
+//         if (this->is_constant()){
+//       //     std:: cout << "folding var\n";
+//            expr<T>* t = m_expr;
+//            m_expr = nullptr;
+//            delete this;
+//            return t;
+//         }else{
+//            return this;
+//         }
+//      }
+//      expr<T>* clone() const { return new variable{this->m_expr->clone()};}
+//   private:
+//      expr<T>* m_expr;
+//   };
 
    template <typename Result , typename Arg>
    struct unary_op : expr<Result>{

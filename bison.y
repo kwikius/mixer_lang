@@ -4,7 +4,7 @@
 %}
 
 %token  
-   VARASSIGN INPUT OUTPUT NAME  
+   INPUT OUTPUT NAME  
    IF TRUE FALSE LESS_EQUAL GREATER_EQUAL 
    EQUAL_EQUAL NOT_EQUAL  FLOAT INTEGER
    MIXER
@@ -22,7 +22,7 @@ Stmts:
 
 Stmt:
    NAME '=' Expr ';'
- | OUTPUT '[' Expr ']' VARASSIGN  Expr ';'
+ | OUTPUT '[' Expr ']' '='  Expr ';'
 ;
 
 Expr:

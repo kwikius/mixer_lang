@@ -5,3 +5,9 @@ Inputs are indexed by name
 
 Outputs are indexed by integer constant
 Outputs can be read on the Rhs 
+
+input["name"]
+
+input["name"] has a type
+
+input function  T get()

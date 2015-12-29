@@ -37,20 +37,19 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     VARASSIGN = 258,
-     INPUT = 259,
-     OUTPUT = 260,
-     NAME = 261,
-     IF = 262,
-     TRUE = 263,
-     FALSE = 264,
-     LESS_EQUAL = 265,
-     GREATER_EQUAL = 266,
-     EQUAL_EQUAL = 267,
-     NOT_EQUAL = 268,
-     FLOAT = 269,
-     INTEGER = 270,
-     MIXER = 271
+     INPUT = 258,
+     OUTPUT = 259,
+     NAME = 260,
+     IF = 261,
+     TRUE = 262,
+     FALSE = 263,
+     LESS_EQUAL = 264,
+     GREATER_EQUAL = 265,
+     EQUAL_EQUAL = 266,
+     NOT_EQUAL = 267,
+     FLOAT = 268,
+     INTEGER = 269,
+     MIXER = 270
    };
 #endif
 
