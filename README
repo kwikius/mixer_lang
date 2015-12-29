@@ -17,10 +17,15 @@ Outputs
    The output expressions are then evaluated and updated when any of their inputs change.
 
 Implementation
-   In this implementation, the expression is built using an expression-tree built on the heap. During building
-   some extra heap is used to hold symbolic names, but once the tree is built the name memory is freed.
-   During building of the tree constants are folded so producing a small footprint for the resulting expression.
-   
-   The code has only been tested on a 32 bit Linux PC so far and the complete app is coming in at under 30K
-   I hope it will be smaller when built as a library for STM32 arm. The aim is under 10K but we shall see!
+   In this implementation, the expression is built *once* using an expression-tree built on the heap. 
+   Types are verified during building so there is no runtime casting or unboxing and no runtime
+   bytecode interpreter or lookup, so the reseulting tree is fast to execute.
+
+   During building of the tree, constants are folded so producing a fast,small footprint for the resulting expression.
+  
+Size 
+   During building some extra heap is used to hold symbolic names, but once the tree is built the symbol table memory is freed.
+   With constant folding the resulting tree is expected to be compact.
+   The code has only been tested on a 32 bit Linux PC so far and the complete app image is coming in at under 30K.
+   I hope it will be smaller when built as a library for STM32 arm. The aim is under 10K of rom space but we shall see!
 
