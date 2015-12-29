@@ -30,7 +30,7 @@ namespace {
    constexpr int  punct2 [] = {LESS_EQUAL,EQUAL_EQUAL,GREATER_EQUAL,NOT_EQUAL};
 
    // add line info
-   uint32_t line_num = 0;
+   uint32_t line_num = 1;
 // crude buffer
 // works ok
 // unless you put a string or num in there
