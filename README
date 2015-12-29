@@ -1,0 +1,26 @@
+A library to build a control mixer from a script.
+
+Intended specifically for ArduPlane.
+
+The mixer builds an expression for each output using the input script
+
+Each output expression can consist of inputs, intermediate constants and variables and other outputs.
+
+Inputs
+   For ArduPlane the basic inputs are Pitch, Yaw, Roll, and Throttle, though
+   they can be defined as you wish.
+   As well as the basic-inputs, every ArduPlane parameter (plane.ardupilot.com/wiki/arduplane-parameters/)
+   is available as a constant input
+
+Outputs
+   Outputs are represented as an array. Expressions are assigned to the elements of the array.
+   The output expressions are then evaluated and updated when any of their inputs change.
+
+Implementation
+   In this implementation, the expression is built using an expression-tree built on the heap. During building
+   some extra heap is used to hold symbolic names, but once the tree is built the name memory is freed.
+   During building of the tree constants are folded so producing a small footprint for the resulting expression.
+   
+   The code has only been tested on a 32 bit Linux PC so far and the complete app is coming in at under 30K
+   I hope it will be smaller when built as a library for STM32 arm. The aim is under 10K but we shall see!
+

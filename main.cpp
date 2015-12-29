@@ -8,7 +8,7 @@ apm_mix::mixer_t* fn_mix();
 int main()
 {
    apm_mix::mixer_init();
-   if ( apm_lexer::open_file("input.txt")){
+   if ( apm_lexer::open_file("example1.mix")){
       if (fn_mix()){
         apm_mix::eval_mixer_outputs();
       }

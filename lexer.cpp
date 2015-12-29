@@ -137,7 +137,6 @@ int apm_lexer::yylex()
  
    for ( auto p : simplepunct){
       if (ch == p){
-        
          return ch;
       }
    }

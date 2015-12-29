@@ -1,13 +1,25 @@
-The mixer is the output
-The symboltable is used for lookup
-Once the mixer is built the symboltable is discarded
-Inputs are indexed by name
+TODO
+Add Inputs
+   input[NAME]
+   a map (or simple list of) inputs
+   inputs can be variable or constant and can have a type of float/int/bool
+   Inputs will map in ArduPlane to [ pitch, roll, yaw, throttle] etc
+   These will be considered to be variables.
 
-Outputs are indexed by integer constant
-Outputs can be read on the Rhs 
+   Also use ArduPlane params. 
+   They can be looked up by name using AP_Param::find(name,type)
+   These inputs will be considered to be constants.
 
-input["name"]
-
-input["name"] has a type
-
-input function  T get()
+Add functions
+    functions to start will be predefined only. 
+    e.g.
+      min(a,b) 
+      max(a,b)
+      constrain(val, minval,maxval)
+      float(v) # cast ( casts must be explicit)
+      int(v)   # cast
+      bool(v)  # cast
+      sin(alpha)
+      cos(alpha)
+      tan(alpha)
+      if(cond,true_expr,false_expr)

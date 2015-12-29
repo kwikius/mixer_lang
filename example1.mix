@@ -1,18 +1,26 @@
 
 # mixer 
+# anything global must be a constant ...
+# type is deduced from the initialiser expression
 
-pitch_gain = 500.0;
+pitch_gain = 500.0; # pitch gain surprisingly ( Just here to test comments)
 roll_gain = 1000.0 - pitch_gain;
 throttle_gain = 10.0;
 pulse_offset = 1500.0;
 thrt_pls_offset = 1000.0;
 
+# Provide names for the output array indices
 elevon_left = 1;
 elevon_right = 2;
 throttle_out = 3;
 
+# An output in the mixer function is evaluated periodically
+# (Possibly when the inputs connected to it change)
 mixer()
 {
+   # in the mixer function expression can be variables
+   # (N.B. TODO next all here are constants...)
+
    airspeed = 13.0;
    min_airspeed = 13.0;
    F_deflection = (airspeed* airspeed)/( min_airspeed * min_airspeed) ;
@@ -20,6 +28,7 @@ mixer()
    roll  = -0.5 * roll_gain;
    throttle = 10.0 * throttle_gain;
 
+   # The output expressions
    output[elevon_left] = ( pitch + roll) / F_deflection + pulse_offset;
    output[elevon_right] = (pitch - roll) / F_deflection + pulse_offset;
    output[throttle_out] = throttle + thrt_pls_offset;
