@@ -143,6 +143,12 @@ namespace {
    }
 
    template <typename T>
+   T fun_negate(T v)
+   {
+      return -v;
+   }
+
+   template <typename T>
    apm_mix::abc_expr * make_rel_op_tpl(int op, apm_mix::expr<T>* lhs, apm_mix::expr<T>* rhs)
    {
       bool (*fun)( T, T) = nullptr;
@@ -351,9 +357,27 @@ namespace{
                return nullptr;
             }
          } 
-
-         // case '+': Primary
-         // case '-': Primary
+         case '+': // Primary
+         case '-':    {    //Primary
+             apm_mix::abc_expr* expr = do_prim_expr();
+             if (expr){
+                if ( is_numeric(expr) ){
+                  if (tok == '-'){
+                     if ( is_float_expr(expr) ){
+                        return new apm_mix::unary_op<double,double>{fun_negate,(apm_mix::expr<double>*)expr};
+                     }else{
+                        return new apm_mix::unary_op<int64_t, int64_t>{fun_negate,(apm_mix::expr<int64_t>*)expr};
+                     }
+                  }else{
+                     return expr;
+                  }
+                }else{
+                   apm_mix::yyerror("? + not numeric");
+                }
+             }else{
+               return nullptr;
+             }
+         }
          // case '!': Primary
          // case IF : ( expr, Expr, Expr)
          case '(': { //  expr ')' 

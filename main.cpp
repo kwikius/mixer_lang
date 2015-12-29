@@ -7,7 +7,6 @@ apm_mix::mixer_t* fn_mix();
 
 int main()
 {
-   printf("mixer demo\nInput the mixer...\n\n");
    apm_mix::mixer_init();
    if ( apm_lexer::open_file("input.txt")){
       if (fn_mix()){

@@ -149,7 +149,7 @@ namespace apm_mix{
    struct unary_op : expr<Result>{
       typedef Result (*unary_fun)( Arg);
       unary_op(unary_fun fun_in,expr<Arg> * arg_in)
-      :m_fun{fun_in}, m_arg{arg_in->fold()}{}
+      :m_fun{fun_in}, m_arg{(expr<Arg>*)arg_in->fold()}{}
       ~unary_op()
       { 
          if (m_arg != nullptr){delete m_arg;}
@@ -172,7 +172,7 @@ namespace apm_mix{
       }
       expr<Result>* clone() const  
       {
-         return new unary_op{this->m_fun,this->m_arg->clone()}; 
+         return new unary_op{this->m_fun,(expr<Arg>*)this->m_arg->clone()}; 
       }
    private:
       unary_fun  m_fun;
