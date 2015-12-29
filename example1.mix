@@ -1,64 +1,26 @@
 
-# elevon mixer file
+# mixer 
 
-input pitch_in{
-   minimum = -0.5;
-   maximum = 0.5;
-}
+pitch_gain = 500.0;
+roll_gain = 1000.0 - pitch_gain;
+throttle_gain = 10.0;
+pulse_offset = 1500.0;
+thrt_pls_offset = 1000.0;
 
-input roll_in{
-   minimum = -0.5;
-   maximum = 0.5;
-}
+elevon_left = 1;
+elevon_right = 2;
+throttle_out = 3;
 
-input throttle_in {
-   minimum = 0;
-   maximum = 1;
-}
-
-output elevon_left_out{
-   minimum = -1;
-   maximum =  1;
-}
-
-output elevon_right_out{
-   minimum = -1;
-   maximum =  1;
-}
-
-output throttle_out{
-   minimum = 0;
-   maximum = 100;
-}
-
-
-constants{
-   pitch_gain = 1000;
-   roll_gain  = 1000;
-   throttle_gain = 1000;
-   elevon_right_sign = 1;
-   elevon_left_sign = 1;
-}
-
-loop()
+mixer()
 {
-    pitch_part = pitch * pitch_gain;
-    roll_part  = roll * roll_gain;
-    
-    elevon_left  <- (pitch_part + roll_part) * elevon_left_sign;
-    elevon_right <- (pitch_part - roll_part) * elevon_right_sign;
-    throttle_out <- throttle_in * throttle_gain;
-}
+   airspeed = 13.0;
+   min_airspeed = 13.0;
+   F_deflection = (airspeed* airspeed)/( min_airspeed * min_airspeed) ;
+   pitch = 0.2 * pitch_gain;
+   roll  = -0.5 * roll_gain;
+   throttle = 10.0 * throttle_gain;
 
-input_channel_map {
-   pitch = 1;
-   roll = 2;
-   throttle 3;
+   output[elevon_left] = ( pitch + roll) / F_deflection + pulse_offset;
+   output[elevon_right] = (pitch - roll) / F_deflection + pulse_offset;
+   output[throttle_out] = throttle + thrt_pls_offset;
 }
-
-output_channel_map {
-   elevon_left = 1;
-   elevon_right = 2;
-   throttle_out
-}
-
