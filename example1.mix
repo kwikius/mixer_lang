@@ -17,20 +17,16 @@ elevon_right = 2;
 # (Possibly when the inputs connected to it change)
 mixer()
 {
-   # in the mixer function expression can be variables
-   # (N.B. TODO next all here are constants...)
+   # in the mixer function expression can be variables as wel as constants
 
-   airspeed = 10.0;
-   min_airspeed = 10.0;
-   F_deflection = (airspeed* airspeed)/( min_airspeed * min_airspeed) ;
+   F_deflection = (input(Airspeed) * input(Airspeed))/( input(ARSPD_FBWA_MIN) * input(ARSPD_FBWA_MIN)) ;
    pitch = input(Pitch) * pitch_gain;
    roll  = input(Roll) * roll_gain;
-   throttle = input(Throttle) * throttle_gain;
 
    # The output expressions
    output[elevon_left] = ( pitch + roll) / F_deflection + pulse_offset;
    output[elevon_right] = (pitch - roll) / F_deflection + pulse_offset;
 
    # just to show literals work also for outputs
-   output[3] = throttle + thrt_pls_offset;
+   output[3] = input(Throttle) * throttle_gain + thrt_pls_offset;
 }
