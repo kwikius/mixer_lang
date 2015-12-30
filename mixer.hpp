@@ -2,17 +2,27 @@
 #define MIXER_LANG_MIXER_HPP_INCLUDED
 
 #include "exprtree.hpp"
+#include <cstring>
 
 namespace apm_mix{
    
    struct abc_expr;
    struct symtab_t;
 
+   struct input_pair{
+      template <typename T>
+      input_pair(const char* name, T (*pfn)() ): m_input{new input<T>{pfn}}, m_name{name}{}
+      abc_expr* m_input;
+      const char * m_name;
+   };
+
    // make type of outputs a template param ?
    struct mixer_t{
 
       static constexpr uint32_t num_outputs = 18;
-      mixer_t():m_expressions{nullptr}
+      
+      mixer_t(input_pair* inputs, uint32_t num_inputs)
+      :m_inputs{inputs}, m_num_inputs{num_inputs},m_expressions{nullptr}
       {
          for ( uint32_t i = 0; i < num_outputs; ++i){
             m_outputs[i] = nullptr;
@@ -40,6 +50,15 @@ namespace apm_mix{
           }
           m_outputs[n] = output_expr;
           return true;
+      }
+      abc_expr* find_input(const char* name)
+      {
+         for (uint32_t i = 0; i < m_num_inputs; ++i){
+            if ( strcmp(m_inputs[i].m_name, name ) == 0 ){
+               return m_inputs[i].m_input;
+            }
+         }
+         return nullptr;
       }
       void eval_outputs()
       {
@@ -70,11 +89,14 @@ namespace apm_mix{
          }
       }
     private:
+      input_pair * m_inputs;
+      uint32_t m_num_inputs;
       abc_expr* m_expressions;
       abc_expr* m_outputs[num_outputs] ;
+
    };
 
-   void mixer_init();
+   void mixer_init(input_pair* inputs, uint32_t num_inputs);
    void eval_mixer_outputs();
 }
 

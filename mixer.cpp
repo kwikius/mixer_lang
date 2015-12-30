@@ -251,9 +251,9 @@ namespace {
    }
 }
 
-void apm_mix::mixer_init()
+void apm_mix::mixer_init(input_pair* inputs, uint32_t num_inputs)
 {
-    mixer = new apm_mix::mixer_t;
+    mixer = new apm_mix::mixer_t{inputs,num_inputs};
     symtab = new apm_mix::symtab_t;
 }
 
@@ -357,6 +357,29 @@ namespace{
                return nullptr;
             }
          } 
+         case INPUT:{
+            if ( apm_lexer::yylex() == '(' ){
+               if (apm_lexer::yylex() == NAME){
+                  apm_mix::abc_expr* expr = mixer->find_input(apm_lexer::get_lexer_string());
+                     if ( expr){
+                        if (apm_lexer::yylex() == ')'){
+                           return expr;
+                        }else{
+                           apm_mix::yyerror("? )");
+                        }
+                     }else{
+                        apm_mix::yyerror("input[name] not found");
+                        return nullptr;
+                     }
+                }else{
+                   apm_mix::yyerror("? name");
+                   return nullptr;
+                }
+            }else{
+                apm_mix::yyerror("? (");
+                return nullptr;
+            }
+         }
          case '+': // Primary
          case '-':    {    //Primary
              apm_mix::abc_expr* expr = do_prim_expr();
