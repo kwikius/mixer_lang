@@ -9,10 +9,9 @@ throttle_gain = 10.0;
 pulse_offset = 1500.0;
 thrt_pls_offset = 1000.0;
 
-# Provide names for the output array indices
+# Provide names for some of the output array indices
 elevon_left = 1;
 elevon_right = 2;
-throttle_out = 3;
 
 # An output in the mixer function is evaluated periodically
 # (Possibly when the inputs connected to it change)
@@ -21,15 +20,17 @@ mixer()
    # in the mixer function expression can be variables
    # (N.B. TODO next all here are constants...)
 
-   airspeed = 13.0;
-   min_airspeed = 13.0;
+   airspeed = 10.0;
+   min_airspeed = 10.0;
    F_deflection = (airspeed* airspeed)/( min_airspeed * min_airspeed) ;
-   pitch = 0.2 * pitch_gain;
-   roll  = -0.5 * roll_gain;
-   throttle = 10.0 * throttle_gain;
+   pitch = input(Pitch) * pitch_gain;
+   roll  = input(Roll) * roll_gain;
+   throttle = input(Throttle) * throttle_gain;
 
    # The output expressions
    output[elevon_left] = ( pitch + roll) / F_deflection + pulse_offset;
    output[elevon_right] = (pitch - roll) / F_deflection + pulse_offset;
-   output[throttle_out] = throttle + thrt_pls_offset;
+
+   # just to show literals work also for outputs
+   output[3] = throttle + thrt_pls_offset;
 }
