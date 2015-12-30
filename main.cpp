@@ -13,7 +13,9 @@ apm_mix::input_pair inputs[]
       apm_mix::input_pair{"Pitch",  static_cast<double(*)()>(get_pitch)},
       // example of lambda , seem to reuire static cast with c++11
       apm_mix::input_pair{"Roll", static_cast<double(*)()>([]()->double{return -0.5;})},
-      apm_mix::input_pair{"Throttle", static_cast<double(*)()>([]()->double{return 10.0;})}
+      apm_mix::input_pair{"Throttle", static_cast<double(*)()>([]()->double{return 10.0;})},
+      apm_mix::input_pair{"Airspeed", static_cast<double(*)()>([]()->double{return 15.0;})},
+      apm_mix::input_pair{"ARSPD_FBWA_MIN", static_cast<double(*)()>([]()->double{return 10.0;})}
    };
 int main()
 {
