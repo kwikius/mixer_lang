@@ -7,14 +7,15 @@ actuator output using the input script.
 See the [example1.mix](https://github.com/kwikius/mixer_lang/blob/master/example1.mix) file in this directory for example syntax. (Still in early stages)
 See [bison.y](https://github.com/kwikius/mixer_lang/blob/master/bison.y) for the grammar ( Again still being worked on)
 
-Each output expression can consist of [Inputs](#Inputs), intermediate constants and variables and other outputs.
+Each output expression can consist of [Inputs](#Inputs), intermediate symbolic values and [outputs](#Outputs).
 
 Inputs
 ------
 
 For ArduPlane, for example, the usual basic inputs are Pitch, Yaw, Roll, and Throttle, though others can be defined as you wish.
 As well as the basic inputs, every [ArduPlane parameter](http://plane.ardupilot.com/wiki/arduplane-parameters/)
-is available as a constant input. Other flight parameters are also available if you wish to add them as inputs.
+is available as a constant input. Other flight parameters, such as Airspeed, Attitude will also be available, 
+plucked staright from there latest runtime values in code.
 
 Outputs
 -------
@@ -53,13 +54,13 @@ If on Windows, I recommend installing [MinGW](http://www.mingw.org) or [Cygwin](
 Assuming your quan-trunk is installed in /d/user_me/lib , enter the mixer_lang source directory and invoke:
 
 ```
-<$ make QUAN_ROOT=/d/user_me/lib/
+~>$ make QUAN_ROOT=/d/user_me/lib/
 ```
 
 If successful there should be a mixer_lang.exe file in the directory. Invoke:
 
 ```
-<$ ./mixer_lang.exe
+~>$ ./mixer_lang.exe
 ```
 
 to run it.
