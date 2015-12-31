@@ -4,10 +4,10 @@ A library to build a control mixer from a script
 Intended specifically for [ArduPlane](http://plane.ardupilot.com), the mixer builds an expression for each 
 actuator output using the input script.
 
-See the example1.mix file in this directory for example syntax. (Still in early stages)
-See bison.y for grammar ( Again still being worked on)
+See the [example1.mix](https://github.com/kwikius/mixer_lang/blob/master/example1.mix) file in this directory for example syntax. (Still in early stages)
+See [bison.y](https://github.com/kwikius/mixer_lang/blob/master/bison.y) for the grammar ( Again still being worked on)
 
-Each output expression can consist of inputs, intermediate constants and variables and other outputs.
+Each output expression can consist of [Inputs](#Inputs), intermediate constants and variables and other outputs.
 
 Inputs
 ------
