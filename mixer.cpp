@@ -88,7 +88,7 @@ namespace {
        return lhs <= rhs;
    }
 
-    template <typename T>
+   template <typename T>
    bool fun_equal_to(T lhs , T rhs)
    {
        return lhs == rhs;

@@ -1,0 +1,45 @@
+
+
+# A Simple mixer
+# Provides separate aileron left and right flapperons
+# and v tail mixing
+
+# On this aircraft servos are placed symmetrically
+# so aileron servos pulse in same direction provides roll
+# opposite pulses for flap
+
+# similarly for v tail same pulse dir to each servo for yaw
+# different for elevator
+
+# On this plane a bit of rudder is mixed in with the ailerons
+
+#assign servo channels
+aileron_left = 1;
+v_tail_left  = 2;
+throttle = 3;
+aileron_right = 4;
+v_tail_right = 5;
+
+#gains
+elev_gain = 0.3;
+ail_roll_gain = 0.7;
+rudder_roll_gain = 0.3;
+yaw_gain  = 0.5;
+throttle_gain = 10.0;
+flap_gain = 1.0;
+
+mixer()
+{
+   # runtime constants
+   roll = input(Roll) ;
+   pitch = input(Pitch);
+   yaw = input(Yaw);
+   flap = input(Flap);
+
+   # assign outputs
+   output[throttle]      = input(Throttle) * throttle_gain;
+   output[aileron_left]  = roll * ail_roll_gain + flap * flap_gain;
+   output[aileron_right] = roll * ail_roll_gain - flap * flap_gain;
+   output[v_tail_left]   = yaw * yaw_gain - pitch * elev_gain + roll * rudder_roll_gain;
+   output[v_tail_right]  = yaw * yaw_gain + pitch * elev_gain + roll * rudder_roll_gain;
+}

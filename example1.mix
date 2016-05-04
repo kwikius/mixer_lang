@@ -2,6 +2,18 @@
 # mixer 
 # anything global must be a constant ...
 # type is deduced from the initialiser expression
+# There are 3 types integer, float bool
+# floats are differentiated by including a decimal point and fractional part
+# bools are either true or false
+# There is NO conversion between the different types
+#  x = 1 ; // x is an integer
+#  y = 1.0 ; // y is a float
+#  z1 = x + x ; // OK z1 is an integer
+#  z2 = x + y ; // Error : x and y are different types
+#  b = true;   // b is a bool
+#  c = b && x ;   // Error :  b and x are different types
+#  d = b && !b ; // ok ( c is false)
+#  w = x != 0  ; // w is bool 
 
 pitch_gain = 500.0; # pitch gain surprisingly ( Just here to test comments)
 roll_gain = 1000.0 - pitch_gain;
