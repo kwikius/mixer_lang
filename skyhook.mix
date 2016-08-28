@@ -1,0 +1,21 @@
+#Skyhook mixer
+
+#assign servo output channels
+
+port_ail_inner = 1;
+port_v_tail  = 2;
+throttle = 3;
+stbd_v_tail = 4;
+stbd_ail_inner = 5;
+port_ail_outer = 6;
+stbd_ail_outer = 7;
+
+
+
+mixer()
+{
+
+  
+
+}
+

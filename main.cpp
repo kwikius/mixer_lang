@@ -43,8 +43,13 @@ namespace {
    }
 }
 
-int main()
+
+int main(int argc , char* argv[])
 {
+   if ( argc < 2){
+      printf("Useage : %s <mixer_filename>\n",argv[0]);
+      return EXIT_SUCCESS;
+   }
    // Assign the inputs.
    // These can be any functions returning a double
    // that provide the aircraft runtime values
@@ -52,7 +57,7 @@ int main()
    apm_mix::mixer_init(inputs, sizeof(inputs)/sizeof(inputs[0]));
 
    bool success = false;
-   if ( apm_lexer::open_file("basic.mix")){
+   if ( apm_lexer::open_file(argv[1])){
       // fn_mix builds the mixer from the input stream
       if (fn_mix()){
         // if the build is succesfull
@@ -60,7 +65,7 @@ int main()
       }
       apm_lexer::close_file();
    }else{
-      printf("open file failed\n");
+      printf("open file %s failed\n",argv[1]);
    }
    
    if (success){
