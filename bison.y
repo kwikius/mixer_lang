@@ -6,8 +6,8 @@
 %token  
    INPUT OUTPUT NAME  
    IF TRUE FALSE LESS_EQUAL GREATER_EQUAL 
-   EQUAL_EQUAL NOT_EQUAL  FLOAT INTEGER
-   MIXER
+   EQUAL_EQUAL NOT_EQUAL FLOAT INTEGER BOOL VOID
+   MIXER FUN RETURN
 
 %%
 
@@ -23,6 +23,35 @@ Stmts:
 Stmt:
    NAME '=' Expr ';'
  | OUTPUT '[' Expr ']' '='  Expr ';'
+ | FunctionDef
+ | ReturnStmt
+;
+
+FunctionDef :
+   FUN NAME  FunParams ':' Typename '{' Stmts '}'
+;
+
+ReturnStmt:
+   RETURN Expr ';'
+;
+
+Typename:
+   FLOAT | INTEGER | BOOL
+;
+
+FunParams :
+   '('  ParamList ')'
+ | '(' ')'
+;
+
+ParamList:
+   Param
+|  ParamList ',' Param
+;
+
+Param:
+
+ NAME ':' Typename
 ;
 
 Expr:

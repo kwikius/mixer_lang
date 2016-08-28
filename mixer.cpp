@@ -21,6 +21,7 @@ namespace {
    apm_mix::abc_expr* do_add_expr();
    apm_mix::abc_expr* do_mul_expr();
    apm_mix::abc_expr* do_prim_expr();
+   apm_mix::abc_expr* do_if_expr();
 
    bool is_bool_expr(apm_mix::abc_expr* ptr)
    {
@@ -63,6 +64,7 @@ namespace {
    }
    
    bool do_assign_expr(const char*);
+   bool do_function_def();
    
    bool do_output_expr();
 
@@ -267,10 +269,19 @@ bool fn_mix()
    for (;;){
       switch(apm_lexer::yylex()){
          case NAME :
+             
              if ( !do_assign_expr(apm_lexer::get_lexer_string())){
                return false;
              }
              break;
+         case IF : {
+            
+             }
+         case FUN:
+            if ( !do_function_def()){
+               return false;
+            }
+            break;
          case MIXER:
            return do_mix_loop();
          default:
@@ -321,6 +332,64 @@ namespace{
       }else{
          return apm_mix::yyerror("? '='");
       }
+   }
+
+/*
+ NAME '(' ParamList '): TypeName '{' Stmts '}' 
+*/
+
+   bool do_function_def()
+   {
+     if ( apm_lexer::yylex()  != NAME){
+         apm_mix::yyerror("fun name ?");
+         return false;
+     }
+
+     // look for the name in functions
+     return apm_mix::yyerror("fun not done");
+   }
+
+   apm_mix::abc_expr* do_if_expr()
+   {
+      if ( apm_lexer::yylex() == '('){
+         apm_mix::abc_expr* cond = do_expr();
+         if (cond){
+            if ( ! is_bool_expr(cond)){
+               apm_mix::yyerror("cond not bool");
+               return nullptr;
+            }
+            if ( apm_lexer::yylex() == ','){
+               apm_mix::abc_expr * lhs = do_expr();
+               if ( lhs ){
+                  if ( apm_lexer::yylex() == ','){
+                     apm_mix::abc_expr * rhs = do_expr();
+                     if ( rhs){
+                        if ( apm_lexer::yylex() == ')'){
+
+                           if (!are_same_type(lhs,rhs)){
+                             apm_mix::yyerror("not same ?");
+                             return nullptr;
+                           }
+
+                           if (is_bool_expr(lhs)){
+                                return new apm_mix::if_op<bool>{(apm_mix::expr<bool>*)cond,(apm_mix::expr<bool>*)lhs,(apm_mix::expr<bool>*)rhs};
+                           }
+                           else {
+                              if ( is_float_expr(lhs)){
+                                 return new apm_mix::if_op<double>{(apm_mix::expr<bool>*)cond,(apm_mix::expr<double>*)lhs,(apm_mix::expr<double>*)rhs};
+                              }else{
+                                 return new apm_mix::if_op<int64_t>{(apm_mix::expr<bool>*)cond,(apm_mix::expr<int64_t>*)lhs,(apm_mix::expr<int64_t>*)rhs};
+                              }
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      }
+      apm_mix::yyerror("invalid if expr");
+      return nullptr;
    }
 
 /*
@@ -402,7 +471,8 @@ namespace{
              }
          }
          // case '!': Primary
-         // case IF : ( expr, Expr, Expr)
+         case IF : //( expr, Expr, Expr)
+            return do_if_expr();
          case '(': { //  expr ')' 
             auto * result = do_expr();
             if (result){

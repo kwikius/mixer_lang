@@ -25,7 +25,7 @@ namespace {
    constexpr uint32_t invalid_number_syntax = -4;
    constexpr uint32_t error_buffer_full = -5;
 
-   constexpr char simplepunct [] = "&|+-*/()[];,{}";
+   constexpr char simplepunct [] = "&|+-*/()[];,{}:";
    constexpr char punct1 [] = "<=>!";
    constexpr int  punct2 [] = {LESS_EQUAL,EQUAL_EQUAL,GREATER_EQUAL,NOT_EQUAL};
 
@@ -170,12 +170,16 @@ int apm_lexer::yylex()
          }
          ch = fn_read_char();
       }while( std::isalnum(ch) || (ch == '_') );
+      // 
       fn_unget_char(ch);
 
       // look for reserved names
       input_buffer[buffer_idx] ='\0';
       if (strcmp(input_buffer,"output") == 0 ){
          return OUTPUT;
+      }
+      if (strcmp(input_buffer,"if") == 0 ){
+         return IF;
       }
       if (strcmp(input_buffer,"input") == 0){
          return INPUT;
@@ -188,6 +192,24 @@ int apm_lexer::yylex()
       }
       if (strcmp(input_buffer,"false") == 0){
          return FALSE;
+      }
+      if (strcmp(input_buffer,"int") == 0){
+         return INTEGER;
+      }
+      if (strcmp(input_buffer,"float") == 0){
+         return FLOAT;
+      }
+      if (strcmp(input_buffer,"bool") == 0){
+         return BOOL;
+      }
+      if (strcmp(input_buffer,"fun") == 0){
+         return FUN;
+      }
+      if (strcmp(input_buffer,"void") == 0){
+         return VOID;
+      }
+      if (strcmp(input_buffer,"return") == 0){
+         return RETURN;
       }
       return NAME;
    }

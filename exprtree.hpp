@@ -146,7 +146,7 @@ namespace apm_mix{
    template <typename T>
    struct if_op : expr<T>{
          if_op ( expr<bool> * cond_in, expr<T>* true_expr_in, expr<T>* false_expr_in)
-         : m_condition{cond_in->fold()}, m_true_expr{true_expr_in->fold()},m_false_expr{false_expr_in->fold()}{}
+         : m_condition{(expr<bool> *)cond_in->fold()}, m_true_expr{(expr<T>*)true_expr_in->fold()},m_false_expr{(expr<T>*)false_expr_in->fold()}{}
          ~if_op(){delete m_condition; if(m_true_expr){delete m_true_expr;} if (m_false_expr){delete m_false_expr;} }
         T eval() const
         {
@@ -191,11 +191,11 @@ namespace apm_mix{
          }
          expr<T>* clone() const  
          {
-            return new if_op{this->m_condition->clone(),this->m_true_expr->clone(),this->m_false_expr->clone()};
+            return new if_op{(expr<bool> *)this->m_condition->clone(),(expr<T>*)this->m_true_expr->clone(),(expr<T>*)this->m_false_expr->clone()};
          }
       private:
          expr<bool> * m_condition;
-         expr<T> * m_true_expr;
+         expr<T>* m_true_expr;
          expr<T>* m_false_expr;
    };
 }
