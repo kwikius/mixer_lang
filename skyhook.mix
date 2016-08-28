@@ -10,12 +10,18 @@ stbd_ail_inner = 5;
 port_ail_outer = 6;
 stbd_ail_outer = 7;
 
+#fun x():void  {}
 
-
+# Positive roll means a roll to the right
+# Then stbd aileron goes up and port ail goes down
+# differential
+   up_ail_gain = 0.3;
+   down_ail_gain = 0.2;
 mixer()
 {
-
-  
+   roll = input(Roll);
+   positive_roll = roll > 0.0;
+   port_ail_gain = if(positive_roll,down_ail_gain, up_ail_gain);
 
 }
 
