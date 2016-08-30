@@ -13,7 +13,7 @@ With lots of inspiration from Bjarne Stroustup's calculator
 
 namespace {
    
-   constexpr uint32_t buffer_length = 20;
+   constexpr uint32_t buffer_length = 50;
    char input_buffer[buffer_length];
    uint32_t buffer_idx = 0;
    double  float_value;
