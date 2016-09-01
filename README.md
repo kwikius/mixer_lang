@@ -21,7 +21,8 @@ Inputs
 Inputs are used to get external values. Inputs are read only.
 
 syntax:
- ```   input{``` ***InputIdentifier*** ```}```
+
+ ***Result*** ``` = input{``` ***InputIdentifier*** ```}```
 
 Inputs can have any of the types Boolean, Float or Integer. The actual type is dependent on the InputIdentifier
 
@@ -29,7 +30,7 @@ example:
    
 ``` roll = input{Roll};```
 
-For ArduPlane
+For ArduPlane, the available inputs are as follows ( See [main.cpp](main.cpp#L31) for how this is implemented and can be changed)
 
 ```
 input{Pitch}    # float between 1.0 and -1.0 representing required pitch rate
@@ -38,20 +39,13 @@ input{Yaw}      # float between 1.0 and -1.0 representing required yaw rate
 input{Throttle} # float between 1.0 and -1.0 representing required throttle
 ```
 
-Thoughts
-As well as the basic inputs, some [ArduPlane parameter](http://plane.ardupilot.com/wiki/arduplane-parameters/)
-can be available as a constant input. Other flight parameters, such as Airspeed, Altitude, Attitude could also be available, 
-plucked straight from there latest runtime values in code.
-Could also have constant inputs
-
-
 Outputs
 -------
 Outputs represent actuators and escs using an array syntax.
 
 syntax:
 
- ```   output[``` ***OutputIndex*** ```]```
+ ```   output[``` ***OutputIndex*** ```] = ``` ***Expression*** ;```
 
 
 OutputIndex must be of type constant integer. 
@@ -63,25 +57,25 @@ example:
 ```
 #  send Roll input to actuator 1
 output[1] = input{Roll};
+```
 
 Symbols
 -------
 Symbols are used to hold intermediate calculation results.
 
 syntax:
-``` ***SymbolName*** = ***InitialiserExpression*** ;```
+
+***SymbolName*** ``` =  ``` ***InitialiserExpression***  ``` ; ```
 
 Symbols can have type integer, float or bool and are constant if they can be evaluated during the building of the mixer
 or in other words if their InitialiserExpression doesnt need to evaluate non-constant inputs.
 The type of the symbol is deduced from the InitialiserExpression.
 
-```
-
 Expressions
 -----------
 Expressions consists of operations on Symbols, Inputs and outputs.
 An operation can only be done on objects of the same type. For example an integer multiplication by a double is disallowed.
-The reason is to to keep operations as small as possible, so casting must be explicit.
+The reason is to to keep operations as small as possible, so casting must be explicit. (Casting TODO)
 
 Implementation
 --------------
