@@ -29,16 +29,21 @@ INCLUDE_ARGS = $(patsubst %,-I%,$(INCLUDES))
 
 CFLAGS = -std=gnu++11 -Wall -Os 
 
-objects = lexer.o main.o mixer.o symtab.o
+local_objects = lexer.o main.o mixer.o symtab.o
+
+objects = $(local_objects) key_was_pressed.o
 
 .PHONY: clean all
 
 all: mixer_lang.exe
 
-mixer_lang.exe : $(objects)
-	$(LD) $(objects) $(CFLAGS) -s -o mixer_lang.exe
+mixer_lang.exe : $(objects) 
+	$(LD) $(objects) $(CFLAGS) -s -o mixer_lang.exe -lpthread
 
-$(objects) : %.o : %.cpp
+$(local_objects) : %.o : %.cpp
+	$(CC) $(CFLAGS) $(INCLUDE_ARGS) -c $< -o $@
+
+key_was_pressed.o : $(QUAN_ROOT)/quan_matters/src/linux/key_was_pressed.cpp
 	$(CC) $(CFLAGS) $(INCLUDE_ARGS) -c $< -o $@
 
 clean:
