@@ -2,9 +2,12 @@ A flexible actuator output mixer for ArduPlane
 ================================================
 
 Intended specifically for [ArduPlane](http://plane.ardupilot.com), an actuator output mixer is 
-created by reading a script file. The script uses a simple intuitive language.
+created by reading a script file. The script uses a simple intuitive language. Currently the mixer
+works as a sim on a Linux PC, using an FrSky Taranis as Joystick input.
 
 As an example script, see [A very basic example mixer for an Easystar](EasyStar.mix)
+
+For a more complex example see [A mixer for a glider with differential aileron, variable camber and crow flaps](glider.mix)
 
 The script consists of statements and a mixer function.
 
@@ -114,12 +117,23 @@ Assuming your quan-trunk is installed in /d/user_me/lib , enter the mixer_lang s
 ~>$ make QUAN_ROOT=/d/user_me/lib/
 ```
 
-If successful there should be a mixer_lang.exe file in the directory. Invoke:
+Running
+-------
+
+If build is successful there should be a mixer_lang.exe file in the directory. To run, Switch on your Taranis , 
+then connect to your Linux PC via USB and Invoke:
 
 ```
-~>$ ./mixer_lang.exe
+~>$ ./mixer_lang.exe EasyStar.mix
 ```
 
-to run it.
+to run The App. (Alternatively call the app on your own mixer script). To start and stop press any key.
+When running, Twiddle the sticks and you should see some changing outputs.
 
-Note that though there are bison source and output, these are only used to check the grammar and not used in the build itself.
+Notes
+-----
+
+The Joystick is currently hardwired as "/dev/input/js0"
+If your outputs are  messy, try running through the Taranis calibration routine.
+
+
