@@ -44,17 +44,19 @@ down_flap_outer_gain = down_flap_gain * ail_outer_horn_len;
 # crow
 inner_crow_gain = 0.0 * ail_inner_horn_len;
 outer_crow_gain = -0.0 * ail_outer_horn_len;
+ 
+dummy = input{Roll};
 
 mixer()
 {
    # aileron part --------------------
-   roll = input(Roll);
+   roll = input{Roll};
    # positive roll is clockwise from pilots view
    positive_roll = roll > 0.0;
 
    # which mode crow, flap or none? -------------------
-   crow_mode = input(ControlMode) < -0.2;
-   flap_mode = input(ControlMode) > 0.2;
+   crow_mode = input{ControlMode} < -0.2;
+   flap_mode = input{ControlMode} > 0.2;
 
    # The servo angles must be offset by the crow gain in non crow mode
    # positive roll flap goes down, crow down
@@ -67,7 +69,7 @@ mixer()
    stbd_outer_ail = -roll * if(positive_roll, up_ail_outer_gain, down_ail_outer_gain) + if (crow_mode, 0.0, outer_crow_gain);
 
    # flap part --------------------
-   flap = input(Flap);
+   flap = input{Flap};
    up_flap = flap < 0.0;
 
    inner_flap = flap * 
@@ -84,14 +86,14 @@ mixer()
       ) 
    ;
 
-   output[throttle] = input(Throttle);
+   output[throttle] = input{Throttle};
 
    output[port_ail_inner] = (port_inner_ail + inner_flap) * port_ail_inner_dir ;
    output[port_ail_outer] = (port_outer_ail + outer_flap) * port_ail_outer_dir ;
    output[stbd_ail_inner] = (stbd_inner_ail + inner_flap) * stbd_ail_inner_dir ;
    output[stbd_ail_outer] = (stbd_outer_ail + outer_flap) * stbd_ail_outer_dir ;
 
-   output[port_v_tail] = -input(Pitch) * 0.5 + input(Yaw) * 0.5 ;
-   output[stbd_v_tail] = input(Pitch) * 0.5 + input(Yaw) * 0.5;
+   output[port_v_tail] = -input{Pitch} * 0.5 + input{Yaw} * 0.5 ;
+   output[stbd_v_tail] = input{Pitch} * 0.5 + input{Yaw} * 0.5;
 }
 

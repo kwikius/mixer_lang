@@ -427,11 +427,11 @@ namespace{
             }
          } 
          case INPUT:{
-            if ( apm_lexer::yylex() == '(' ){
+            if ( apm_lexer::yylex() == '{' ){
                if (apm_lexer::yylex() == NAME){
                   apm_mix::abc_expr* expr = mixer->find_input(apm_lexer::get_lexer_string());
                      if ( expr){
-                        if (apm_lexer::yylex() == ')'){
+                        if (apm_lexer::yylex() == '}'){
                            return expr;
                         }else{
                            apm_mix::yyerror("? )");

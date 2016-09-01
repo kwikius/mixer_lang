@@ -1,30 +1,84 @@
-A library to build a control mixer from a script
+A flexible actuator output mixer for ArduPlane
 ================================================
 
-Intended specifically for [ArduPlane](http://plane.ardupilot.com), the mixer builds an expression for each 
-actuator output using the input script.
+Intended specifically for [ArduPlane](http://plane.ardupilot.com), an actuator output mixer is 
+created by reading a script file. The script uses a simple intuitive language.
 
-See the examples mixer scripts in this directory
-   * [example1.mix](https://github.com/kwikius/mixer_lang/blob/master/example1.mix) 
-   * [basic.mix](https://github.com/kwikius/mixer_lang/blob/master/basic.mix) 
+As an example script, see [A very basic example mixer for an Easystar](EasyStar.mix)
 
-See [bison.y](https://github.com/kwikius/mixer_lang/blob/master/bison.y) for the grammar ( Again still being worked on)
+The script consists of statements and a mixer function.
 
-Each output expression can consist of [Inputs](#Inputs), intermediate symbolic values and [outputs](#Outputs).
+Statements
+----------
+Statements consist of expressions using Inputs, Outputs and symbols.
+
 
 Inputs
 ------
+Inputs are used to get external values. Inputs are read only.
 
-For ArduPlane, for example, the usual basic inputs are Pitch, Yaw, Roll, and Throttle, though others can be defined as you wish.
-As well as the basic inputs, every [ArduPlane parameter](http://plane.ardupilot.com/wiki/arduplane-parameters/)
-is available as a constant input. Other flight parameters, such as Airspeed, Attitude will also be available, 
+syntax:
+ ```   input{``` ***InputIdentifier*** ```}```
+
+Inputs can have any of the types Boolean, Float or Integer. The actual type is dependent on the InputIdentifier
+
+example:
+   
+``` roll = input{Roll};```
+
+For ArduPlane
+
+```
+input{Pitch}    # float between 1.0 and -1.0 representing required pitch rate
+input{Roll}     # float between 1.0 and -1.0 representing required roll rate
+input{Yaw}      # float between 1.0 and -1.0 representing required yaw rate
+input{Throttle} # float between 1.0 and -1.0 representing required throttle
+```
+
+Thoughts
+As well as the basic inputs, some [ArduPlane parameter](http://plane.ardupilot.com/wiki/arduplane-parameters/)
+can be available as a constant input. Other flight parameters, such as Airspeed, Altitude, Attitude could also be available, 
 plucked straight from there latest runtime values in code.
+Could also have constant inputs
+
 
 Outputs
 -------
+Outputs represent actuators and escs using an array syntax.
 
-Outputs are represented as an array. Expressions are assigned to the elements of the array.
-The output expressions are then evaluated and updated peridically.
+syntax:
+
+ ```   output[``` ***OutputIndex*** ```]```
+
+
+OutputIndex must be of type constant integer. 
+Expressions are assigned as if to an index of the array.
+The output expressions are then evaluated and updated periodically.
+
+example:
+
+```
+#  send Roll input to actuator 1
+output[1] = input{Roll};
+
+Symbols
+-------
+Symbols are used to hold intermediate calculation results.
+
+syntax:
+``` ***SymbolName*** = ***InitialiserExpression*** ;```
+
+Symbols can have type integer, float or bool and are constant if they can be evaluated during the building of the mixer
+or in other words if their InitialiserExpression doesnt need to evaluate non-constant inputs.
+The type of the symbol is deduced from the InitialiserExpression.
+
+```
+
+Expressions
+-----------
+Expressions consists of operations on Symbols, Inputs and outputs.
+An operation can only be done on objects of the same type. For example an integer multiplication by a double is disallowed.
+The reason is to to keep operations as small as possible, so casting must be explicit.
 
 Implementation
 --------------
@@ -32,7 +86,7 @@ Implementation
 In this implementation, the expression is built *once* using an expression-tree built on the heap. 
 Types are verified during building so there is no runtime casting or unboxing and no runtime
 bytecode interpreter or lookup, so the resulting tree is fast to execute. 
-During building of the tree, constants are folded so producing a fast,small footprint for the resulting expression.
+During building of the tree, constants are folded, producing a small, fast footprint for the resulting expression.
   
 Image Size
 ----------

@@ -70,7 +70,7 @@ Primary :
 ;
 
 IOExpr:
-   INPUT '(' NAME ')'
+   INPUT '{' NAME '}'
 |  OUTPUT '[' Expr ']'
 ;
 

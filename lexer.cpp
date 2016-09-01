@@ -147,9 +147,8 @@ int apm_lexer::yylex()
          if ( ch1 == '='){
             return punct2[idx];
          }else{
-               fn_unget_char(ch1);
-               return ch;
-           // }
+            fn_unget_char(ch1);
+            return ch;
          }
       }else{
          ++idx;

@@ -64,6 +64,10 @@ int main(int argc , char* argv[])
    }
    
    if (mixer_build_success){
+      printf("Press any key to start and once running press any key to quit\n");
+      fflush(stdin);
+      while (! quan::key_was_pressed()){;}
+      getchar(); // clear key pressed
       if ( open_joystick("/dev/input/js0")){
          while (get_joystick()->is_running() && ! quan::key_was_pressed()){
             sleep_ms(100);
