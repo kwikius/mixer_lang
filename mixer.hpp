@@ -16,7 +16,6 @@ namespace apm_mix{
       const char * m_name;
    };
 
-   // make type of outputs a template param ?
    struct mixer_t{
 
       static constexpr uint32_t num_outputs = 18;
