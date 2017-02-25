@@ -39,6 +39,10 @@ input{Yaw}      # float between 1.0 and -1.0 representing required yaw rate
 input{Throttle} # float between 1.0 and -1.0 representing required throttle
 ```
 
+Functions
+---------
+
+
 Outputs
 -------
 Outputs represent actuators and escs using an array syntax.
