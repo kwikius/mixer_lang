@@ -64,7 +64,7 @@ namespace {
    }
    
    bool do_assign_expr(const char*);
-   bool do_function_def();
+ //  bool do_function_def();
    
    bool do_output_expr();
 
@@ -274,14 +274,14 @@ bool fn_mix()
                return false;
              }
              break;
-         case IF : {
-            
-             }
-         case FUN:
-            if ( !do_function_def()){
-               return false;
-            }
-            break;
+//         case IF : {
+//            
+//             }
+//         case FUN:
+//            if ( !do_function_def()){
+//               return false;
+//            }
+//            break;
          case MIXER:
            return do_mix_loop();
          default:
@@ -338,16 +338,15 @@ namespace{
  NAME '(' ParamList '): TypeName '{' Stmts '}' 
 */
 
-   bool do_function_def()
-   {
-     if ( apm_lexer::yylex()  != NAME){
-         apm_mix::yyerror("fun name ?");
-         return false;
-     }
-
-     // look for the name in functions
-     return apm_mix::yyerror("fun not done");
-   }
+//   bool do_function_def()
+//   {
+//     if ( apm_lexer::yylex()  != NAME){
+//         apm_mix::yyerror("fun name ?");
+//         return false;
+//     }
+//     // look for the name in functions
+//     return apm_mix::yyerror("fun not done");
+//   }
 
    apm_mix::abc_expr* do_if_expr()
    {
