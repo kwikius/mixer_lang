@@ -1,0 +1,36 @@
+
+# A simple flying wing mixer
+
+pitch_gain = 500.0; 
+roll_gain = 1000.0 - pitch_gain;
+throttle_gain = 500.0;
+pulse_offset = 1500.0;
+thrt_pls_offset = 1500.0;
+
+# Symbolic constant names of the actuator output channels for legibility
+elevon_left = 1;
+elevon_right = 2;
+
+# The mixer is evaluated periodically
+mixer()
+{   
+   # How the deflection of a control surface affects the angular acceleration
+   # of the aircraft depends on airspeed.
+   # Here we try to make the effect of a particular input independent of airspeed.
+   # Must make sure that the airspeed is capped if it goes below min airspeed
+   # to avoid division by zero
+   # (TODO needs a max function here)
+   #lim_airspeed = if (input{Airspeed} > input{ARSPD_FBWA_MIN},input{Airspeed},1.0);
+   lim_airspeed = min(input{Airspeed},1.);
+   csfc_gain = (lim_airspeed * lim_airspeed)/( input{ARSPD_FBWA_MIN} * input{ARSPD_FBWA_MIN}) ;
+   # needs a max function here to make sure csfc is > 0
+   pitch = input{Pitch} * pitch_gain;
+   roll  = input{Roll} * roll_gain;
+
+   # The output expressions
+   output[elevon_left] = ( pitch + roll) / csfc_gain + pulse_offset;
+   output[elevon_right] = (pitch - roll) / csfc_gain + pulse_offset;
+
+   # literals work also for outputs
+   output[3] = input{Throttle} * throttle_gain + thrt_pls_offset;
+}
