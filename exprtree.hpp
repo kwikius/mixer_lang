@@ -198,6 +198,12 @@ namespace apm_mix{
          expr<T>* m_true_expr;
          expr<T>* m_false_expr;
    };
+
+
+   template <typename T> 
+   struct function_call : expr<T>{
+
+   };
 }
 
 #endif // MICER_LANG_EXPRTREE_HPP_INCLUDED
