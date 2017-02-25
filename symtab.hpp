@@ -1,7 +1,6 @@
 #ifndef MIXERLANG_SYMTAB_HPP_INCLUDED
 #define MIXERLANG_SYMTAB_HPP_INCLUDED
 
-
 #include "exprtree.hpp"
 
 namespace apm_mix{
@@ -28,15 +27,11 @@ namespace apm_mix{
       }
       symtab_item * find_item( const char* name); 
       symtab_item * add_item(const char* name, abc_expr* m_node);
-      private:
-         symtab_item * m_first;
-         symtab_item * m_last;
-
+   private:
+      symtab_item * m_first;
+      symtab_item * m_last;
    };
-
-   struct mixer_t;
-
-   
+  
 } // apm_mix
 
 #endif // MIXERLANG_SYMTAB_HPP_INCLUDED
