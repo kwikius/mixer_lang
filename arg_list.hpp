@@ -22,6 +22,8 @@ namespace apm_mix{
    abc_expr* get_arg(arg_list const* p, uint32_t i);
 
    // push_back
+   // n.b returns a new arg_list for nullptr
+   // always assign ret
    arg_list* add_arg(arg_list* p, abc_expr* expr);
 
    bool delete_args(arg_list* p);
