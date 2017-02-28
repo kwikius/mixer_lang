@@ -13,6 +13,7 @@ With lots of inspiration from Bjarne Stroustup's calculator
 
 namespace {
    
+   // iow max string chars = 49;
    constexpr uint32_t buffer_length = 50;
    char input_buffer[buffer_length];
    uint32_t buffer_idx = 0;
@@ -38,6 +39,11 @@ namespace {
    int  buffered_tok = 0;
   
     FILE * file_pointer = stdin;
+}
+
+uint32_t apm_lexer::get_max_string_chars()
+{
+    return buffer_length - 1;
 }
 
 bool apm_lexer::open_file( const char * name)

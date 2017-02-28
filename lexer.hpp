@@ -12,6 +12,8 @@ namespace apm_lexer{
 
    bool open_file( const char * name);
    void close_file();
+
+   uint32_t get_max_string_chars();
 }
 
 #endif // MIXER_LANG_LEXER_HPP_INCLUDED
