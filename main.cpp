@@ -57,6 +57,7 @@ int main(int argc , char* argv[])
       if (fn_mix()){
         // if the build is succesfull
        mixer_build_success = true;
+       printf("mixer \"%s\" created OK!\n",argv[1]);
       }
       apm_lexer::close_file();
    }else{
