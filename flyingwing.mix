@@ -20,10 +20,10 @@ mixer()
    # Must make sure that the airspeed is capped if it goes below min airspeed
    # to avoid division by zero
    # (TODO needs a max function here)
-   #lim_airspeed = if (input{Airspeed} > input{ARSPD_FBWA_MIN},input{Airspeed},1.0);
-   lim_airspeed = min(input{Airspeed},1.);
+   lim_airspeed = if (input{Airspeed} > input{ARSPD_FBWA_MIN},input{Airspeed},input{ARSPD_FBWA_MIN});
+   #lim_airspeed = max(input{Airspeed},input{ARSPD_FBWA_MIN});
    csfc_gain = (lim_airspeed * lim_airspeed)/( input{ARSPD_FBWA_MIN} * input{ARSPD_FBWA_MIN}) ;
-   # needs a max function here to make sure csfc is > 0
+ 
    pitch = input{Pitch} * pitch_gain;
    roll  = input{Roll} * roll_gain;
 
