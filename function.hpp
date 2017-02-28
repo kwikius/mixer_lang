@@ -1,9 +1,11 @@
 #ifndef MIXER_LANG_FUNCTION_HPP_INCLUDED
 #define MIXER_LANG_FUNCTION_HPP_INCLUDED
 
-#include "exprtree.hpp"
+#include "abc_expr.hpp"
 
 namespace apm_mix{
+
+   struct abc_expr;
 
    struct arg_list{
       abc_expr * m_arg;

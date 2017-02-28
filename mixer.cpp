@@ -3,7 +3,7 @@
 #include <malloc.h>
 #include "bison.tab.h"
 #include "exprtree.hpp"
-#include "symtab.hpp"
+#include "lookup.hpp"
 #include "lexer.hpp"
 #include "mixer.hpp"
 #include <cassert>
@@ -12,7 +12,7 @@
 
 namespace {
    apm_mix::mixer_t* mixer;
-   apm_mix::symtab_t * symtab;
+   apm_mix::lookup_t<apm_mix::abc_expr> * symtab;
    bool do_mix_loop();
    apm_mix::abc_expr* do_expr(); // or_expr
    apm_mix::abc_expr* do_and_expr();
@@ -256,7 +256,7 @@ namespace {
 void apm_mix::mixer_init(input_pair* inputs, uint32_t num_inputs)
 {
     mixer = new apm_mix::mixer_t{inputs,num_inputs};
-    symtab = new apm_mix::symtab_t;
+    symtab = new apm_mix::lookup_t<apm_mix::abc_expr>;
 }
 
 void apm_mix::eval_mixer_outputs()

@@ -7,7 +7,9 @@
 namespace apm_mix{
    
    struct abc_expr;
-   struct symtab_t;
+
+   template <typename Node>
+   struct lookup_t;
 
    struct input_pair{
       template <typename T>
