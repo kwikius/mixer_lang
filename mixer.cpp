@@ -27,6 +27,9 @@ namespace {
    apm_mix::abc_expr* do_mul_expr();
    apm_mix::abc_expr* do_prim_expr();
    apm_mix::abc_expr* do_if_expr();
+}
+
+namespace apm_mix{
 
    bool is_bool_expr(apm_mix::abc_expr* ptr)
    {
@@ -67,7 +70,9 @@ namespace {
    {
       return are_same_type(lhs,rhs) && are_numeric(lhs,rhs);
    }
+}
    
+namespace {
    bool do_assign_expr(const char*);
  //  bool do_function_def();
    
@@ -323,6 +328,7 @@ namespace{
          char* name1 = strdup(name);
          apm_mix::abc_expr* expr = do_expr();
          if ( expr){
+            expr = expr->fold();
             if ( apm_lexer::yylex() == ';'){
                symtab->add_item(name1,expr);
                mixer->add(expr);
@@ -446,7 +452,7 @@ namespace{
                   while(! done){
                      auto * arg = do_expr();
                      if ( arg ){
-                        add_arg(args,arg);
+                        args = add_arg(args,arg);
                         tok = apm_lexer::yylex();
                         switch( tok ){
                            case ',':
@@ -459,6 +465,7 @@ namespace{
                               return nullptr;
                         }
                      }else {
+                        apm_mix::yyerror("no args");
                         return nullptr;
                      }
                   }
