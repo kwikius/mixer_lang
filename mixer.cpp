@@ -3,6 +3,9 @@
 #include <malloc.h>
 #include "bison.tab.h"
 #include "exprtree.hpp"
+#include "arg_list.hpp"
+#include "function.hpp"
+#include "fn_max.hpp"
 #include "lookup.hpp"
 #include "lexer.hpp"
 #include "mixer.hpp"
@@ -13,6 +16,8 @@
 namespace {
    apm_mix::mixer_t* mixer;
    apm_mix::lookup_t<apm_mix::abc_expr> * symtab;
+   apm_mix::lookup_t<apm_mix::function_builder> * funtab;
+  
    bool do_mix_loop();
    apm_mix::abc_expr* do_expr(); // or_expr
    apm_mix::abc_expr* do_and_expr();
@@ -257,6 +262,8 @@ void apm_mix::mixer_init(input_pair* inputs, uint32_t num_inputs)
 {
     mixer = new apm_mix::mixer_t{inputs,num_inputs};
     symtab = new apm_mix::lookup_t<apm_mix::abc_expr>;
+    funtab = new apm_mix::lookup_t<apm_mix::function_builder>;
+    funtab->add_item("max",new apm_mix::fn_max);
 }
 
 void apm_mix::eval_mixer_outputs()
@@ -430,14 +437,46 @@ namespace{
             name[max_name_len] = '\0';
             tok = apm_lexer::yylex();
             if ( tok == '(' ){
-               // function_call
-                apm_mix::yyerror("functions not avail yet");
-                return nullptr;
+            // function_call
+               auto * fn_builder = funtab->find_item(name);
+               if( fn_builder != nullptr ) {
+                  apm_mix::arg_list * args = nullptr;
+                  bool done = false;
+                  // all function have at least 1 arg
+                  while(! done){
+                     auto * arg = do_expr();
+                     if ( arg ){
+                        add_arg(args,arg);
+                        tok = apm_lexer::yylex();
+                        switch( tok ){
+                           case ',':
+                           break;
+                           case ')':
+                              done = true;
+                           break;
+                           default:
+                              apm_mix::yyerror("function args syntax error");
+                              return nullptr;
+                        }
+                     }else {
+                        return nullptr;
+                     }
+                  }
+                  if ( done) {
+                     return fn_builder->make_function(args);
+                  }
+               }else{
+                  char buf[100];
+                  snprintf(buf,100,"function \"%s()\" not found",name);
+                  apm_mix::yyerror(buf);
+                  return nullptr;
+               }
+
             }else{
                apm_lexer::putback(tok);
                auto * result = symtab->find_item(name);
                if (result){
-                  return result->m_node->clone();
+                  return result->clone();
                }else{
                   apm_mix::yyerror("name not found");
                   return nullptr;
