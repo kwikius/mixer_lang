@@ -351,19 +351,27 @@ namespace{
    apm_mix::abc_expr* do_if_expr()
    {
       if ( apm_lexer::yylex() == '('){
+        // parse args list
+         // first arg
          apm_mix::abc_expr* cond = do_expr();
          if (cond){
-            if ( ! is_bool_expr(cond)){
-               apm_mix::yyerror("cond not bool");
-               return nullptr;
-            }
+           
             if ( apm_lexer::yylex() == ','){
+               // 2nd arg
                apm_mix::abc_expr * lhs = do_expr();
                if ( lhs ){
                   if ( apm_lexer::yylex() == ','){
+                     // 3rd arg
                      apm_mix::abc_expr * rhs = do_expr();
                      if ( rhs){
+                        
                         if ( apm_lexer::yylex() == ')'){
+
+                            // type checking
+                           if ( ! is_bool_expr(cond)){
+                              apm_mix::yyerror("cond not bool");
+                              return nullptr;
+                           }
 
                            if (!are_same_type(lhs,rhs)){
                              apm_mix::yyerror("not same ?");
@@ -416,13 +424,24 @@ namespace{
          case FLOAT:
              return new apm_mix::constant<double>{apm_lexer::get_lexer_float()};
          case NAME:{
-            // todo add function call
-            auto * result = symtab->find_item(apm_lexer::get_lexer_string());
-            if (result){
-               return result->m_node->clone();
+            uint32_t const max_name_len = apm_lexer::get_max_string_chars();
+            char name[max_name_len + 1];
+            strncpy(name,apm_lexer::get_lexer_string(),max_name_len);
+            name[max_name_len] = '\0';
+            tok = apm_lexer::yylex();
+            if ( tok == '(' ){
+               // function_call
+                apm_mix::yyerror("functions not avail yet");
+                return nullptr;
             }else{
-               apm_mix::yyerror("name not found");
-               return nullptr;
+               apm_lexer::putback(tok);
+               auto * result = symtab->find_item(name);
+               if (result){
+                  return result->m_node->clone();
+               }else{
+                  apm_mix::yyerror("name not found");
+                  return nullptr;
+               }
             }
          } 
          case INPUT:{
