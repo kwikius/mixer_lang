@@ -16,7 +16,7 @@ namespace apm_mix{
    };
 
    struct symtab_t{
-      symtab_t(): m_first{nullptr}, m_last{nullptr}{}
+      symtab_t(): m_first{nullptr}{}
       ~symtab_t()
       {
          while ( m_first != nullptr ){
@@ -25,11 +25,15 @@ namespace apm_mix{
             delete temp;
          }
       }
+
       symtab_item * find_item( const char* name); 
-      symtab_item * add_item(const char* name, abc_expr* m_node);
+
+      // preconditions, name is not in the symtab.
+      // do check name isnt in there first!
+      void add_item(const char* name, abc_expr* m_node);
    private:
       symtab_item * m_first;
-      symtab_item * m_last;
+      //symtab_item * m_last;
    };
   
 } // apm_mix

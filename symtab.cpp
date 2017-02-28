@@ -17,13 +17,15 @@ symtab_item * symtab_t::find_item( const char* name)
   return nullptr;
 }
 
-symtab_item*  symtab_t::add_item(const char* name, abc_expr* node)
+void symtab_t::add_item(const char* name, abc_expr* node)
 {
-   if ( m_last == nullptr){
-      return m_last = m_first = new symtab_item{name, node};
+   if ( m_first != nullptr){
+       auto * temp = m_first;
+       while ( temp->m_next != nullptr){
+         temp = temp->m_next;
+       }
+       temp->m_next = new symtab_item{name, node};
    }else{
-      return m_last = m_last->m_next = new symtab_item{name, node};
+      m_first = new symtab_item{name, node};
    }
 }
-
-
