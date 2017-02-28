@@ -25,7 +25,7 @@ namespace apm_mix{
             delete temp;
          }
       }
-      lookup_item<Node> * find_item( const char* name); 
+      Node * find_item( const char* name); 
       // preconditions, name is not in the symtab.
       // do check name isnt in there first!
       void add_item(const char* name, Node* node);

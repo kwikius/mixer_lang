@@ -3,12 +3,12 @@
 #include <cstring>
 
 template <typename Node>
-apm_mix::lookup_item<Node> * apm_mix::lookup_t<Node>::find_item( const char* name)
+Node* apm_mix::lookup_t<Node>::find_item( const char* name)
 {
   lookup_item<Node>* ptr = m_first;
   while(ptr){
       if ( strcmp(name,ptr->m_name) ==0){
-         return ptr;
+         return ptr->m_node;
       }else{
          ptr = ptr->m_next;
       }
