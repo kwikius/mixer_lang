@@ -15,8 +15,8 @@
 
 namespace {
    apm_mix::mixer_t* mixer;
-   apm_mix::lookup_t<apm_mix::abc_expr> * symtab;
-   apm_mix::lookup_t<apm_mix::function_builder> * funtab;
+   apm_mix::lookup_t<apm_mix::abc_expr*> * symtab;
+   apm_mix::lookup_t<apm_mix::function_builder*> * funtab;
   
    bool do_mix_loop();
    apm_mix::abc_expr* do_expr(); // or_expr
@@ -266,8 +266,8 @@ namespace {
 void apm_mix::mixer_init(input_pair* inputs, uint32_t num_inputs)
 {
     mixer = new apm_mix::mixer_t{inputs,num_inputs};
-    symtab = new apm_mix::lookup_t<apm_mix::abc_expr>;
-    funtab = new apm_mix::lookup_t<apm_mix::function_builder>;
+    symtab = new apm_mix::lookup_t<apm_mix::abc_expr*>;
+    funtab = new apm_mix::lookup_t<apm_mix::function_builder*>;
     funtab->add_item("max",new apm_mix::fn_max);
 }
 
@@ -323,7 +323,7 @@ namespace{
    {
       if (apm_lexer::yylex() == '='){
          if ( symtab->find_item(name)){
-            return apm_mix::yyerror("name n//a");
+            return apm_mix::yyerror("name already defined");
          }
          char* name1 = strdup(name);
          apm_mix::abc_expr* expr = do_expr();

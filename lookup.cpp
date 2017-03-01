@@ -3,7 +3,7 @@
 #include <cstring>
 
 template <typename Node>
-Node* apm_mix::lookup_t<Node>::find_item( const char* name)
+Node apm_mix::lookup_t<Node>::find_item( const char* name)
 {
   lookup_item<Node>* ptr = m_first;
   while(ptr){
@@ -17,7 +17,7 @@ Node* apm_mix::lookup_t<Node>::find_item( const char* name)
 }
 
 template <typename Node>
-void apm_mix::lookup_t<Node>::add_item(const char* name, Node* node)
+void apm_mix::lookup_t<Node>::add_item(const char* name, Node node)
 {
    if ( m_first != nullptr){
        auto * temp = m_first;

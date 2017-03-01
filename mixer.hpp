@@ -18,6 +18,7 @@ namespace apm_mix{
       const char * m_name;
    };
 
+   // TODO destructor for mixer
    struct mixer_t{
 
       static constexpr uint32_t num_outputs = 18;

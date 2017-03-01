@@ -6,11 +6,14 @@ namespace apm_mix{
    template <typename Node>
    struct lookup_item{
        // symtab owns name but not node
-       lookup_item(const char* name_in, Node* node_in)
+       lookup_item(const char* name_in, Node node_in)
        : m_name{name_in}, m_node{node_in}, m_next{nullptr}{}
-       ~lookup_item(){ delete m_name; }
+       // currently wrong so 
+       // TODO memory management for name
+       // currently created with strdup
+       ~lookup_item(){ delete  m_name; }
        const char* m_name;
-       Node * m_node;
+       Node m_node;
        lookup_item<Node>* m_next;
    };
 
@@ -25,10 +28,10 @@ namespace apm_mix{
             delete temp;
          }
       }
-      Node * find_item( const char* name); 
+      Node find_item( const char* name); 
       // preconditions, name is not in the symtab.
       // do check name isnt in there first!
-      void add_item(const char* name, Node* node);
+      void add_item(const char* name, Node node);
    private:
       lookup_item<Node> * m_first;
    };
