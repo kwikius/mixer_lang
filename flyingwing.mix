@@ -36,11 +36,14 @@ mixer()
    # use airspeed for mixing?
    use_aspd_mix = aspd_mix_on & (input{FAILSAFE_ON} == false);
 
+   #limit range of useful airspeed
+   # TODO constrain function
    constrain_aspd 
       = if(use_aspd_mix,
-            max(input{Airspeed},input{ARSPD_MIN}),
+            min(max(input{Airspeed},input{ARSPD_MIN}),input{ARSPD_MAX}),
             input{ARSPD_CRUISE}
         );
+
    # control surface gain
    csfc_gain = ( input{ARSPD_MIN} * input{ARSPD_MIN})/(constrain_aspd * constrain_aspd) ;
  
