@@ -9,6 +9,7 @@ namespace apm_mix{
     typedef abc_expr* (*function_builder)(arg_list* args);
 
     abc_expr * make_function_max(arg_list* args);
+    abc_expr * make_function_min(arg_list* args);
     abc_expr * make_function_if(arg_list* args);
 
 }

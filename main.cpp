@@ -40,6 +40,7 @@ apm_mix::input_pair inputs[]
       apm_mix::input_pair{"ControlMode", static_cast<double(*)()>(get_control_mode)},
       apm_mix::input_pair{"ARSPD_MIN", static_cast<double(*)()>([]()->double{return 10.0;})},
       apm_mix::input_pair{"ARSPD_CRUISE",static_cast<double(*)()>([]()->double{return 12.0;})},
+      apm_mix::input_pair{"ARSPD_MAX", static_cast<double(*)()>([]()->double{return 20.0;})},
       apm_mix::input_pair{"FAILSAFE_ON", static_cast<bool(*)()>([]()->bool{return in_failsafe;})}
    };
 

@@ -267,8 +267,9 @@ void apm_mix::mixer_init(input_pair* inputs, uint32_t num_inputs)
     mixer = new apm_mix::mixer_t{inputs,num_inputs};
     symtab = new apm_mix::lookup_t<apm_mix::abc_expr*>;
     funtab = new apm_mix::lookup_t<apm_mix::function_builder>;
-    funtab->add_item("max",apm_mix::make_function_max);
     funtab->add_item("if",apm_mix::make_function_if);
+    funtab->add_item("max",apm_mix::make_function_max);
+    funtab->add_item("min",apm_mix::make_function_min);
 }
 
 void apm_mix::eval_mixer_outputs()
@@ -281,19 +282,10 @@ bool fn_mix()
    for (;;){
       switch(apm_lexer::yylex()){
          case NAME :
-             
              if ( !do_assign_expr(apm_lexer::get_lexer_string())){
                return false;
              }
              break;
-//         case IF : {
-//            
-//             }
-//         case FUN:
-//            if ( !do_function_def()){
-//               return false;
-//            }
-//            break;
          case MIXER:
            return do_mix_loop();
          default:
@@ -346,72 +338,6 @@ namespace{
          return apm_mix::yyerror("? '='");
       }
    }
-
-/*
- NAME '(' ParamList '): TypeName '{' Stmts '}' 
-*/
-
-//   bool do_function_def()
-//   {
-//     if ( apm_lexer::yylex()  != NAME){
-//         apm_mix::yyerror("fun name ?");
-//         return false;
-//     }
-//     // look for the name in functions
-//     return apm_mix::yyerror("fun not done");
-//   }
-#if 0
-   apm_mix::abc_expr* do_if_expr()
-   {
-      if ( apm_lexer::yylex() == '('){
-        // parse args list
-         // first arg
-         apm_mix::abc_expr* cond = do_expr();
-         if (cond){
-           
-            if ( apm_lexer::yylex() == ','){
-               // 2nd arg
-               apm_mix::abc_expr * lhs = do_expr();
-               if ( lhs ){
-                  if ( apm_lexer::yylex() == ','){
-                     // 3rd arg
-                     apm_mix::abc_expr * rhs = do_expr();
-                     if ( rhs){
-                        
-                        if ( apm_lexer::yylex() == ')'){
-
-                            // type checking
-                           if ( ! is_bool_expr(cond)){
-                              apm_mix::yyerror("cond not bool");
-                              return nullptr;
-                           }
-
-                           if (!are_same_type(lhs,rhs)){
-                             apm_mix::yyerror("not same ?");
-                             return nullptr;
-                           }
-
-                           if (is_bool_expr(lhs)){
-                                return new apm_mix::if_op<bool>{(apm_mix::expr<bool>*)cond,(apm_mix::expr<bool>*)lhs,(apm_mix::expr<bool>*)rhs};
-                           }
-                           else {
-                              if ( is_float_expr(lhs)){
-                                 return new apm_mix::if_op<double>{(apm_mix::expr<bool>*)cond,(apm_mix::expr<double>*)lhs,(apm_mix::expr<double>*)rhs};
-                              }else{
-                                 return new apm_mix::if_op<int64_t>{(apm_mix::expr<bool>*)cond,(apm_mix::expr<int64_t>*)lhs,(apm_mix::expr<int64_t>*)rhs};
-                              }
-                           }
-                        }
-                     }
-                  }
-               }
-            }
-         }
-      }
-      apm_mix::yyerror("invalid if expr");
-      return nullptr;
-   }
-#endif
 
 /*
  Literal

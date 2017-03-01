@@ -7,23 +7,28 @@
 
 apm_mix::abc_expr * apm_mix::make_function_if(apm_mix::arg_list* args)
 {
+
+//signature_check pattern <bool_same_type2(
+
    if ( get_num_elements(args) != 3 ){
       printf("got %u args\n", get_num_elements(args));
       yyerror("expected 3 args");
       return nullptr;
    }
-   auto * cond = get_arg(args,0);
+
+   auto * abc_cond = get_arg(args,0);
    auto * lhs = get_arg(args,1);
    auto * rhs = get_arg(args,2);
 
-   if (  is_bool_expr(cond) && are_same_type(lhs,rhs) ){
+   if (  is_bool_expr(abc_cond) && are_same_type(lhs,rhs) ){
+      auto* cond = (apm_mix::expr<bool>*)abc_cond;
       switch(lhs->get_ID()){
          case abc_expr::exprID::FLOAT:
-            return new apm_mix::if_op<double>{(apm_mix::expr<bool>*)cond,(apm_mix::expr<double>*)lhs,(apm_mix::expr<double>*)rhs};
+            return new apm_mix::if_op<double>{cond,(apm_mix::expr<double>*)lhs,(apm_mix::expr<double>*)rhs};
          case abc_expr::exprID::INT:
-            return new apm_mix::if_op<int64_t>{(apm_mix::expr<bool>*)cond,(apm_mix::expr<int64_t>*)lhs,(apm_mix::expr<int64_t>*)rhs};
+            return new apm_mix::if_op<int64_t>{cond,(apm_mix::expr<int64_t>*)lhs,(apm_mix::expr<int64_t>*)rhs};
          case abc_expr::exprID::BOOL:
-            return new apm_mix::if_op<bool>{(apm_mix::expr<bool>*)cond,(apm_mix::expr<bool>*)lhs,(apm_mix::expr<bool>*)rhs};
+            return new apm_mix::if_op<bool>{cond,(apm_mix::expr<bool>*)lhs,(apm_mix::expr<bool>*)rhs};
          default:
             apm_mix::yyerror("unexpected");
             return nullptr;
