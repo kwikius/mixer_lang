@@ -1,6 +1,0 @@
-#ifndef MIXER_LANG_FUNTAB_HPP_INCLUDED
-#define MIXER_LANG_FUNTAB_HPP_INCLUDED
-
-#include "function.hpp"
-
-#endif // MIXER_LANG_FUNTAB_HPP_INCLUDED
