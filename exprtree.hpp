@@ -4,6 +4,7 @@
 #include <cstdint>
 #include "abc_expr.hpp"
 
+
 namespace apm_mix{
 
    bool yyerror(const char* str = nullptr);
@@ -15,17 +16,17 @@ namespace apm_mix{
 
    template<>
    struct get_type_id<int64_t>{
-      static constexpr uint32_t value = abc_expr::exprID::INT;
+      static constexpr auto value = abc_expr::exprID::INT;
    };
 
    template<>
    struct get_type_id<double>{
-      static constexpr uint32_t value = abc_expr::exprID::FLOAT;
+      static constexpr auto value = abc_expr::exprID::FLOAT;
    };
 
    template<>
    struct get_type_id<bool>{
-      static constexpr uint32_t value = abc_expr::exprID::BOOL;
+      static constexpr auto value = abc_expr::exprID::BOOL;
    };
       
    template <typename T>

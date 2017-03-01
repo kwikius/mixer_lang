@@ -2,6 +2,7 @@
 #define MIXER_LANG_MIXER_HPP_INCLUDED
 
 #include "exprtree.hpp"
+#include "arg_list.hpp"
 #include <cstring>
 
 namespace apm_mix{
@@ -33,12 +34,7 @@ namespace apm_mix{
 
       void add(abc_expr* expr)
       {
-         if ( m_expressions == nullptr){
-            m_expressions = expr;
-         }else{
-            expr->m_next = m_expressions;
-            m_expressions = expr;
-         }
+         add_arg(m_expressions,expr);
       }
 
       bool add_output(uint32_t n, abc_expr* output_expr)
@@ -97,7 +93,7 @@ namespace apm_mix{
     private:
       input_pair * m_inputs;
       uint32_t m_num_inputs;
-      abc_expr* m_expressions;
+      arg_list* m_expressions;
       abc_expr* m_outputs[num_outputs] ;
 
    };
