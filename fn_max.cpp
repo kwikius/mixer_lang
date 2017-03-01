@@ -22,7 +22,7 @@ namespace {
 }
 
 // 2 args
-apm_mix::abc_expr * apm_mix::fn_max::make_function(arg_list* args)
+apm_mix::abc_expr * apm_mix::make_function_max(apm_mix::arg_list* args)
 {
    if ( get_num_elements(args) != 2 ){
       printf("got %u args\n", get_num_elements(args));

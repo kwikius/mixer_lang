@@ -16,7 +16,7 @@
 namespace {
    apm_mix::mixer_t* mixer;
    apm_mix::lookup_t<apm_mix::abc_expr*> * symtab;
-   apm_mix::lookup_t<apm_mix::function_builder*> * funtab;
+   apm_mix::lookup_t<apm_mix::function_builder> * funtab;
   
    bool do_mix_loop();
    apm_mix::abc_expr* do_expr(); // or_expr
@@ -267,8 +267,8 @@ void apm_mix::mixer_init(input_pair* inputs, uint32_t num_inputs)
 {
     mixer = new apm_mix::mixer_t{inputs,num_inputs};
     symtab = new apm_mix::lookup_t<apm_mix::abc_expr*>;
-    funtab = new apm_mix::lookup_t<apm_mix::function_builder*>;
-    funtab->add_item("max",new apm_mix::fn_max);
+    funtab = new apm_mix::lookup_t<apm_mix::function_builder>;
+    funtab->add_item("max",apm_mix::make_function_max);
 }
 
 void apm_mix::eval_mixer_outputs()
@@ -444,11 +444,12 @@ namespace{
             tok = apm_lexer::yylex();
             if ( tok == '(' ){
             // function_call
-               auto * fn_builder = funtab->find_item(name);
+               apm_mix::function_builder fn_builder = funtab->find_item(name);
                if( fn_builder != nullptr ) {
                   apm_mix::arg_list * args = nullptr;
                   bool done = false;
                   // all function have at least 1 arg
+                  // TODO cap at N args
                   while(! done){
                      auto * arg = do_expr();
                      if ( arg ){
@@ -470,7 +471,7 @@ namespace{
                      }
                   }
                   if ( done) {
-                     return fn_builder->make_function(args);
+                     return fn_builder(args);
                   }
                }else{
                   char buf[100];
