@@ -10,7 +10,8 @@ apm_mix::mixer_t* fn_mix();
 
 namespace {
 
-   double airspeed = 20.0;
+   double airspeed = 0.0; // test pathological on airspeed based mixer
+   bool in_failsafe = false;  //
 
    double get_pitch();
    double get_yaw();
@@ -30,16 +31,16 @@ namespace {
 // TODO make inputs optionally constant
 apm_mix::input_pair inputs[]
  = { 
-      apm_mix::input_pair{"Pitch",  static_cast<double(*)()>(get_pitch)},
+      apm_mix::input_pair{"Pitch", static_cast<double(*)()>(get_pitch)},
       apm_mix::input_pair{"Yaw",  static_cast<double(*)()>(get_yaw)},
       apm_mix::input_pair{"Roll", static_cast<double(*)()>(get_roll)},
       apm_mix::input_pair{"Throttle", static_cast<double(*)()>(get_throttle)},
       apm_mix::input_pair{"Flap", static_cast<double(*)()>(get_flap)},
       apm_mix::input_pair{"Airspeed", static_cast<double(*)()>(get_airspeed)},
       apm_mix::input_pair{"ControlMode", static_cast<double(*)()>(get_control_mode)},
-      apm_mix::input_pair{"ARSPD_FBWA_MIN", static_cast<double(*)()>([]()->double{return 10.0;})},
-      apm_mix::input_pair{"ID", static_cast<int64_t(*)()>([]()->int64_t{return 999;})},
-      apm_mix::input_pair{"boolean", static_cast<bool(*)()>([]()->bool{return true;})}
+      apm_mix::input_pair{"ARSPD_MIN", static_cast<double(*)()>([]()->double{return 10.0;})},
+      apm_mix::input_pair{"ARSPD_CRUISE",static_cast<double(*)()>([]()->double{return 12.0;})},
+      apm_mix::input_pair{"FAILSAFE_ON", static_cast<bool(*)()>([]()->bool{return in_failsafe;})}
    };
 
 int main(int argc , char* argv[])

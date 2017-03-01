@@ -1,5 +1,8 @@
 
-# A simple flying wing mixer
+# A simple flying wing mixer, but with throw adjusted by airspeed
+# In practise it is a good idea to be able to switch that off
+# in case the sensor fails
+# so only use airspeed to adjust control throw if not in failsafe mode
 
 pitch_gain = 500.0; 
 roll_gain = 1000.0 - pitch_gain;
@@ -7,22 +10,39 @@ throttle_gain = 500.0;
 pulse_offset = 1500.0;
 thrt_pls_offset = 1500.0;
 
-# Symbolic constant names of the actuator output channels for legibility
+# The output channels are addressed by index ( 0 to .. N) , but
+# optionally symbolic constant names can be used
+# for legibility as here
 elevon_left = 1;
 elevon_right = 2;
 
+#false to turn off airspeed mixing
+#could also be a mode like expo mode or a parameter
+aspd_mix_on = true;
+
 # The mixer is evaluated periodically
+# The mixer update rate could be an eeprom parameter
+
 mixer()
 {   
    # How the deflection of a control surface affects the angular acceleration
-   # of the aircraft depends on airspeed.
-   # Here we try to make the effect of a particular input independent of airspeed.
-   # Must make sure that the airspeed is capped if it goes below min airspeed
-   # to avoid division by zero
-   # (TODO needs a max function here)
-   #lim_airspeed = if (input{Airspeed} > input{ARSPD_FBWA_MIN},input{Airspeed},input{ARSPD_FBWA_MIN});
-   lim_airspeed = max(input{Airspeed},input{ARSPD_FBWA_MIN});
-   csfc_gain = (lim_airspeed * lim_airspeed)/( input{ARSPD_FBWA_MIN} * input{ARSPD_FBWA_MIN}) ;
+   # of the aircraft depends on airspeed ^2, so reduce the throw proportionaly
+   # as airspeed increases.
+   # Make sure that the airspeed is capped if it goes below min airspeed 
+   # ,(the eeprom parameter ARSPD_MIN) to avoid huge throws at low airspeed
+   # and on the ground and to avoid division by zero.
+   # Also only use if not in failsafe, else just use cruise airspeed
+
+   # use airspeed for mixing?
+   use_aspd_mix = aspd_mix_on & (input{FAILSAFE_ON} == false);
+
+   constrain_aspd 
+      = if(use_aspd_mix,
+            max(input{Airspeed},input{ARSPD_MIN}),
+            input{ARSPD_CRUISE}
+        );
+   # control surface gain
+   csfc_gain = (constrain_aspd * constrain_aspd)/( input{ARSPD_MIN} * input{ARSPD_MIN}) ;
  
    pitch = input{Pitch} * pitch_gain;
    roll  = input{Roll} * roll_gain;
