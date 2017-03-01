@@ -30,7 +30,8 @@ INCLUDE_ARGS = $(patsubst %,-I%,$(INCLUDES))
 
 CFLAGS = -std=gnu++11 -Wall -Os 
 
-local_objects = lexer.o main.o mixer.o symtab.o function.o arg_list.o fn_max.o
+local_objects = lexer.o main.o mixer.o symtab.o function.o arg_list.o \
+fn_max.o fn_if.o
 
 objects = $(local_objects) key_was_pressed.o
 

@@ -1,5 +1,5 @@
 
-#include "fn_max.hpp"
+#include "function.hpp"
 #include "exprtree.hpp"
 #include "abc_expr.hpp"
 #include "arg_list.hpp"
@@ -16,7 +16,7 @@ namespace {
    template <typename T>
    T fun_max(T lhs , T rhs)
    {
-       return (lhs > rhs) ? lhs : rhs;
+      return (lhs > rhs) ? lhs : rhs;
    }
 
 }
@@ -45,5 +45,3 @@ apm_mix::abc_expr * apm_mix::make_function_max(apm_mix::arg_list* args)
          return nullptr;
    }
 }
-
-

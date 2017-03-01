@@ -5,7 +5,6 @@
 #include "exprtree.hpp"
 #include "arg_list.hpp"
 #include "function.hpp"
-#include "fn_max.hpp"
 #include "lookup.hpp"
 #include "lexer.hpp"
 #include "mixer.hpp"
@@ -26,7 +25,7 @@ namespace {
    apm_mix::abc_expr* do_add_expr();
    apm_mix::abc_expr* do_mul_expr();
    apm_mix::abc_expr* do_prim_expr();
-   apm_mix::abc_expr* do_if_expr();
+  // apm_mix::abc_expr* do_if_expr();
 }
 
 namespace apm_mix{
@@ -269,6 +268,7 @@ void apm_mix::mixer_init(input_pair* inputs, uint32_t num_inputs)
     symtab = new apm_mix::lookup_t<apm_mix::abc_expr*>;
     funtab = new apm_mix::lookup_t<apm_mix::function_builder>;
     funtab->add_item("max",apm_mix::make_function_max);
+    funtab->add_item("if",apm_mix::make_function_if);
 }
 
 void apm_mix::eval_mixer_outputs()
@@ -360,7 +360,7 @@ namespace{
 //     // look for the name in functions
 //     return apm_mix::yyerror("fun not done");
 //   }
-
+#if 0
    apm_mix::abc_expr* do_if_expr()
    {
       if ( apm_lexer::yylex() == '('){
@@ -411,6 +411,7 @@ namespace{
       apm_mix::yyerror("invalid if expr");
       return nullptr;
    }
+#endif
 
 /*
  Literal
@@ -536,8 +537,8 @@ namespace{
              }
          }
          // case '!': Primary
-         case IF : //( expr, Expr, Expr)
-            return do_if_expr();
+//         case IF : //( expr, Expr, Expr)
+//            return do_if_expr();
          case '(': { //  expr ')' 
             auto * result = do_expr();
             if (result){
@@ -726,6 +727,7 @@ namespace{
                      }else{
                         apm_mix::yyerror("bool & bool");
                         delete left;
+                        delete right;
                         return nullptr;
                      }    
                    }else{
@@ -765,6 +767,7 @@ namespace{
                      }else{
                         apm_mix::yyerror("bool | bool");
                         delete left;
+                        delete right;
                         return nullptr;
                      }    
                    }else{

@@ -48,20 +48,19 @@ extern int yydebug;
     INPUT = 258,
     OUTPUT = 259,
     NAME = 260,
-    IF = 261,
-    TRUE = 262,
-    FALSE = 263,
-    LESS_EQUAL = 264,
-    GREATER_EQUAL = 265,
-    EQUAL_EQUAL = 266,
-    NOT_EQUAL = 267,
-    FLOAT = 268,
-    INTEGER = 269,
-    BOOL = 270,
-    VOID = 271,
-    MIXER = 272,
-    FUN = 273,
-    RETURN = 274
+    TRUE = 261,
+    FALSE = 262,
+    LESS_EQUAL = 263,
+    GREATER_EQUAL = 264,
+    EQUAL_EQUAL = 265,
+    NOT_EQUAL = 266,
+    FLOAT = 267,
+    INTEGER = 268,
+    BOOL = 269,
+    VOID = 270,
+    MIXER = 271,
+    FUN = 272,
+    RETURN = 273
   };
 #endif
 

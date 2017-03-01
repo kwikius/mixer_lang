@@ -183,9 +183,9 @@ int apm_lexer::yylex()
       if (strcmp(input_buffer,"output") == 0 ){
          return OUTPUT;
       }
-      if (strcmp(input_buffer,"if") == 0 ){
-         return IF;
-      }
+//      if (strcmp(input_buffer,"if") == 0 ){
+//         return IF;
+//      }
       if (strcmp(input_buffer,"input") == 0){
          return INPUT;
       }
