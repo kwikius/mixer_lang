@@ -25,7 +25,6 @@ namespace {
    apm_mix::abc_expr* do_add_expr();
    apm_mix::abc_expr* do_mul_expr();
    apm_mix::abc_expr* do_prim_expr();
-  // apm_mix::abc_expr* do_if_expr();
 }
 
 namespace apm_mix{
@@ -322,6 +321,7 @@ namespace{
          if ( expr){
             expr = expr->fold();
             if ( apm_lexer::yylex() == ';'){
+               // symtab can be deleted once tree is built
                symtab->add_item(name1,expr);
                mixer->add(expr);
               // printf("got assign\n");
@@ -768,6 +768,9 @@ namespace{
          v = apm_lexer::yylex(); 
       }
       if ( (pre[0] =='(' ) && (pre[1] == ')') && (pre[2] == '{')){
+         // TODO
+         // at this point evaluate all the current symbols
+         // forcing constants e.g whatever the value read is now is the constant value
          for (;;){
             switch(apm_lexer::yylex()){
              case NAME :
@@ -780,7 +783,12 @@ namespace{
                   return false;
                 }
                 break;
-            case '}':
+            case '}':  // end of mixer function body done!
+                       // at this point the symtab can be deleted 
+                       // maybe only now copy the expressions to the mixer
+                       // and thereby consolidate memory
+               delete symtab;
+               symtab = nullptr;
                return true;
             default:
                 return apm_mix::yyerror("? input");
