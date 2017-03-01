@@ -1,5 +1,5 @@
-#ifndef MICER_LANG_EXPRTREE_HPP_INCLUDED
-#define MICER_LANG_EXPRTREE_HPP_INCLUDED
+#ifndef MIXER_LANG_EXPRTREE_HPP_INCLUDED
+#define MIXER_LANG_EXPRTREE_HPP_INCLUDED
 
 #include <cstdint>
 #include "abc_expr.hpp"
@@ -9,20 +9,6 @@ namespace apm_mix{
    bool yyerror(const char* str = nullptr);
 
    struct mixer_t;
-//
-//   struct abc_expr{
-//      enum exprID{BOOL,INT,FLOAT} ;
-//      abc_expr(uint32_t id_in): m_id{id_in}, m_next{nullptr}{}
-//      uint32_t get_ID()const { return m_id;}  
-//      virtual bool is_constant() const = 0;
-//      virtual abc_expr* fold () = 0;
-//      virtual abc_expr* clone() const =0; 
-//      virtual ~abc_expr(){}
-//     private:
-//      uint32_t const m_id;
-//      abc_expr* m_next;
-//      friend class apm_mix:: mixer_t;
-//   };
 
    template <typename T>
    struct get_type_id;
@@ -45,8 +31,6 @@ namespace apm_mix{
    template <typename T>
    struct expr: abc_expr{
       virtual T eval() const =0;
-     // virtual ~ expr(){}
-
       expr():abc_expr{get_type_id<T>::value}{}
       expr & operator = (expr const &) = delete;
       expr (expr const &) = delete;
@@ -91,7 +75,6 @@ namespace apm_mix{
       expr<Result>* fold()
       {
          if ( m_arg->is_constant() ){
-        //     std:: cout << "folding unary\n";
              auto* result = new constant<Result>(this->eval());
              delete this;
              return result;
@@ -126,7 +109,6 @@ namespace apm_mix{
       expr<Result>* fold()
       {
          if (this->is_constant()){
-           // std:: cout << "folding binary\n";
             auto * result = new constant<Result>(this->eval());
             delete this;
             return result;
@@ -158,6 +140,7 @@ namespace apm_mix{
                return m_false_expr->eval();
             }
         }
+
         bool is_constant() const 
         { 
             if ( m_condition->is_constant()){
@@ -170,18 +153,17 @@ namespace apm_mix{
                return false;
             }
          }
+
          expr<T> * fold()
          {
              if ( m_condition->is_constant()){
                
                expr<T>* & active_expr = (m_condition->eval())? m_true_expr: m_false_expr;
                if ( active_expr->is_constant()){
-              //    std::cout << "if active folding \n"; 
                   auto * result = new constant<T>(active_expr->eval());
                   delete this;
                   return result;
                }else{
-               //   std::cout << "if folding \n";
                   auto* result = active_expr;
                   active_expr = nullptr;
                   delete this;
@@ -201,11 +183,6 @@ namespace apm_mix{
          expr<T>* m_false_expr;
    };
 
-
-   template <typename T> 
-   struct function_call : expr<T>{
-
-   };
 }
 
-#endif // MICER_LANG_EXPRTREE_HPP_INCLUDED
+#endif // MIXER_LANG_EXPRTREE_HPP_INCLUDED

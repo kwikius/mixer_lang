@@ -30,6 +30,7 @@ namespace apm_mix{
             m_outputs[i] = nullptr;
          }
       }
+
       void add(abc_expr* expr)
       {
          if ( m_expressions == nullptr){
@@ -39,6 +40,7 @@ namespace apm_mix{
             m_expressions = expr;
          }
       }
+
       bool add_output(uint32_t n, abc_expr* output_expr)
       {
           
@@ -53,6 +55,7 @@ namespace apm_mix{
           m_outputs[n] = output_expr;
           return true;
       }
+
       abc_expr* find_input(const char* name)
       {
          for (uint32_t i = 0; i < m_num_inputs; ++i){
@@ -62,6 +65,7 @@ namespace apm_mix{
          }
          return nullptr;
       }
+
       void eval_outputs()
       {
          for ( uint32_t i = 0; i < num_outputs; ++i){
