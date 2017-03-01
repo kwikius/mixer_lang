@@ -72,7 +72,7 @@ int main(int argc , char* argv[])
       getchar(); // clear key pressed
       if ( open_joystick("/dev/input/js0")){
          while (get_joystick()->is_running() && ! quan::key_was_pressed()){
-            sleep_ms(100);
+            sleep_ms(20);
             apm_mix::eval_mixer_outputs();
          }
       }
