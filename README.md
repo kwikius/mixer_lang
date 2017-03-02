@@ -172,7 +172,7 @@ I hope it will be smaller when built as a library for STM32 arm. The aim is unde
 Dependencies
 ------------
 
-Requires my [quan](https://github.com/kwikius/quan-trunk.git) library  
+None  
 
 Compilation/ Building
 ---------------------
@@ -181,10 +181,10 @@ There is a Make file included . See [Gnu Make](https://www.gnu.org/software/make
 
 If on Windows, I recommend installing [MinGW](http://www.mingw.org) or [Cygwin](https://www.cygwin.com).
 
-Assuming your quan-trunk is installed in /d/user_me/lib , enter the mixer_lang source directory and invoke:
+Enter the mixer_lang source directory and invoke:
 
 ```
-~>$ make QUAN_ROOT=/d/user_me/lib/
+~>$ make 
 ```
 
 Running
