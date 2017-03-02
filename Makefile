@@ -14,10 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>
 
-# QUAN_ROOT is path to my quan library https://github.com/kwikius/quan-trunk.git
+ QUAN_ROOT is path to my quan library https://github.com/kwikius/quan-trunk.git
 ifneq ($(MAKECMDGOALS),clean)
 ifndef QUAN_ROOT
-$(error "QUAN_ROOT must be defined to path to my quan library --> https://github.com/kwikius/quan-trunk.git")
+QUAN_ROOT = ${CURDIR}/lib/quan
+ifeq ("$(wildcard $(QUAN_ROOT))", "")
+$(error "QUAN_ROOT path missing or quan library missing.  Set path or do git submodule update to get library")
+endif
 endif
 endif
 
@@ -27,6 +30,8 @@ CC = g++
 LD = g++
 
 INCLUDE_ARGS = $(patsubst %,-I%,$(INCLUDES))
+
+$(info $$INCLUDE_ARGS is [${INCLUDE_ARGS}])
 
 CFLAGS = -std=gnu++11 -Wall -Os 
 
