@@ -17,14 +17,14 @@ namespace {
    apm_mix::lookup_t<apm_mix::abc_expr*> * symtab;
    apm_mix::lookup_t<apm_mix::function_builder> * funtab;
   
-   bool create_mixer_function();
-   apm_mix::abc_expr* do_expr(); // or_expr
-   apm_mix::abc_expr* do_and_expr();
-   apm_mix::abc_expr* do_rel_expr();
-   apm_mix::abc_expr* do_equality_expr();
-   apm_mix::abc_expr* do_add_expr();
-   apm_mix::abc_expr* do_mul_expr();
-   apm_mix::abc_expr* do_prim_expr();
+   bool parse_mixer_function();
+   apm_mix::abc_expr* parse_expr(); // or_expr
+   apm_mix::abc_expr* parse_and_expr();
+   apm_mix::abc_expr* parse_rel_expr();
+   apm_mix::abc_expr* parse_equality_expr();
+   apm_mix::abc_expr* parse_add_expr();
+   apm_mix::abc_expr* parse_mul_expr();
+   apm_mix::abc_expr* parse_prim_expr();
 }
 
 namespace apm_mix{
@@ -71,10 +71,8 @@ namespace apm_mix{
 }
    
 namespace {
-   bool do_assign_expr(const char*);
- //  bool do_function_def();
-   
-   bool do_output_expr();
+   bool parse_assign_expr(const char*);
+   bool parse_output_expr();
 
    bool  binary_fn_or(bool lhs, bool rhs)
    {
@@ -281,12 +279,12 @@ bool apm_mix::mixer_create()
    for (;;){
       switch(apm_lexer::yylex()){
          case NAME :
-             if ( !do_assign_expr(apm_lexer::get_lexer_string())){
+             if ( !parse_assign_expr(apm_lexer::get_lexer_string())){
                 return false;
              }
              break;
          case MIXER:
-           return create_mixer_function();
+           return parse_mixer_function();
          default:
             return apm_mix::yyerror();
       }     
@@ -310,14 +308,14 @@ namespace{
 
 // name '=' Expr ';'
 // name is lexer name
-   bool do_assign_expr(const char* name)
+   bool parse_assign_expr(const char* name)
    {
       if (apm_lexer::yylex() == '='){
          if ( symtab->find_item(name)){
             return apm_mix::yyerror("name already defined");
          }
          char* name1 = strdup(name);
-         apm_mix::abc_expr* expr = do_expr();
+         apm_mix::abc_expr* expr = parse_expr();
          if ( expr){
             expr = expr->fold();
             if ( apm_lexer::yylex() == ';'){
@@ -351,7 +349,7 @@ namespace{
 |  '(' Expr ')'
 ;
 */
-    apm_mix::abc_expr* do_prim_expr()
+    apm_mix::abc_expr* parse_prim_expr()
     {
       int tok = apm_lexer::yylex();
       switch(tok){
@@ -378,7 +376,7 @@ namespace{
                   // all function have at least 1 arg
                   // TODO cap at N args
                   while(! done){
-                     auto * arg = do_expr();
+                     auto * arg = parse_expr();
                      if ( arg ){
                         args = add_arg(args,arg);
                         tok = apm_lexer::yylex();
@@ -443,7 +441,7 @@ namespace{
          }
          case '+': // Primary
          case '-':    {    //Primary
-             apm_mix::abc_expr* expr = do_prim_expr();
+             apm_mix::abc_expr* expr = parse_prim_expr();
              if (expr){
                 if ( is_numeric(expr) ){
                   if (tok == '-'){
@@ -462,11 +460,9 @@ namespace{
                return nullptr;
              }
          }
-         // case '!': Primary
-//         case IF : //( expr, Expr, Expr)
-//            return do_if_expr();
+
          case '(': { //  expr ')' 
-            auto * result = do_expr();
+            auto * result = parse_expr();
             if (result){
                if (apm_lexer::yylex() == ')'){
                      return result;
@@ -485,16 +481,16 @@ namespace{
       }
     }
 
-    apm_mix::abc_expr* do_mul_expr()
+    apm_mix::abc_expr* parse_mul_expr()
     {
-       apm_mix::abc_expr* left = do_prim_expr();
+       apm_mix::abc_expr* left = parse_prim_expr();
        if (left){
          int tok = apm_lexer::yylex() ;
          for (;;){
             switch (tok){
                case '*':
                case '/':{
-                  apm_mix::abc_expr* right = do_prim_expr();
+                  apm_mix::abc_expr* right = parse_prim_expr();
                   if (right){
                      if ( are_same_numeric(left,right) ){
                          left = make_math_op(tok, left,right);
@@ -521,16 +517,16 @@ namespace{
        }
     }
 
-    apm_mix::abc_expr* do_add_expr()
+    apm_mix::abc_expr* parse_add_expr()
     {
-       apm_mix::abc_expr* left = do_mul_expr();
+       apm_mix::abc_expr* left = parse_mul_expr();
        if (left){
          int tok = apm_lexer::yylex() ;
          for (;;){
             switch (tok){
                case '+':
                case '-':{
-                  apm_mix::abc_expr* right = do_mul_expr();
+                  apm_mix::abc_expr* right = parse_mul_expr();
                   if (right){
                      if ( are_same_numeric(left,right) ){
                          left = make_math_op(tok, left,right);
@@ -558,9 +554,9 @@ namespace{
     }
 
     // n.b cant really continue indfinitely
-    apm_mix::abc_expr* do_rel_expr()
+    apm_mix::abc_expr* parse_rel_expr()
     {
-        apm_mix::abc_expr* left = do_add_expr();
+        apm_mix::abc_expr* left = parse_add_expr();
         if ( left){
             int tok = apm_lexer::yylex() ;
             for(;;){
@@ -569,7 +565,7 @@ namespace{
                   case  GREATER_EQUAL:
                   case  '<':
                   case  '>': {
-                     apm_mix::abc_expr* right = do_add_expr();
+                     apm_mix::abc_expr* right = parse_add_expr();
                      if (right){
                          if ( are_same_numeric(left,right) ){
                             left = make_rel_op(tok, left,right);
@@ -596,16 +592,16 @@ namespace{
         }
     }
 
-    apm_mix::abc_expr* do_equality_expr()
+    apm_mix::abc_expr* parse_equality_expr()
     {
-       apm_mix::abc_expr* left = do_rel_expr();
+       apm_mix::abc_expr* left = parse_rel_expr();
        if ( left){
           int tok = apm_lexer::yylex() ;
           for(;;){
             switch( tok){
                case EQUAL_EQUAL:
                case NOT_EQUAL: {
-                   apm_mix::abc_expr* right = do_rel_expr();
+                   apm_mix::abc_expr* right = parse_rel_expr();
                    if (right){
                      if ( are_same_type(left,right)){
                         left = make_equality_op(tok,left,right);
@@ -632,21 +628,21 @@ namespace{
       
     }
 
-    apm_mix::abc_expr* do_and_expr()
+    apm_mix::abc_expr* parse_and_expr()
     {
-       apm_mix::abc_expr* left = do_equality_expr();
+       apm_mix::abc_expr* left = parse_equality_expr();
        if ( left){
           int tok = apm_lexer::yylex() ;
           for(;;){
             switch( tok){
                case '&':{
-                   apm_mix::abc_expr* right = do_equality_expr();
+                   apm_mix::abc_expr* right = parse_equality_expr();
                    if ( right){
                      if ( are_boolean(left,right)){
                         left = new apm_mix::binary_op<bool,bool>{
                               binary_fn_and,
                               (apm_mix::expr<bool>*) left, 
-                                (apm_mix::expr<bool>*) right
+                              (apm_mix::expr<bool>*) right
                         };
                         tok = apm_lexer::yylex() ;
                         break;
@@ -672,15 +668,15 @@ namespace{
     }
 
    // or expr
-   apm_mix::abc_expr* do_expr()
+   apm_mix::abc_expr* parse_expr()
    {
-       apm_mix::abc_expr* left = do_and_expr();
+       apm_mix::abc_expr* left = parse_and_expr();
        if ( left){
           int tok = apm_lexer::yylex() ;
           for(;;){
             switch( tok){
                case '|':{
-                   apm_mix::abc_expr* right = do_and_expr();
+                   apm_mix::abc_expr* right = parse_and_expr();
                    if ( right){
                      if ( are_boolean(left,right)){
                         left = new apm_mix::binary_op<bool,bool>{
@@ -712,10 +708,10 @@ namespace{
    }
 
    //expect  ( expr ) = expr1
-   bool do_output_expr()
+   bool parse_output_expr()
    {
       if ( apm_lexer::yylex() == '['){
-            apm_mix::abc_expr* expr = do_expr();
+            apm_mix::abc_expr* expr = parse_expr();
             if ( expr){
               if ( apm_lexer::yylex() == ']'){
                   if ( (expr->get_ID() == apm_mix::abc_expr::exprID::INT) && (expr->is_constant())){
@@ -724,7 +720,7 @@ namespace{
                      delete expr; expr = nullptr;
                      
                      if ( apm_lexer::yylex() == '='){
-                         apm_mix::abc_expr* expr2 = do_expr();
+                         apm_mix::abc_expr* expr2 = parse_expr();
                          if( expr2){
                            if (apm_lexer::yylex() == ';'){
                               if ( mixer->add_output(idx,expr2) ){
@@ -761,7 +757,7 @@ namespace{
 
    // make the mixer loop function
    //mixer '(' ')' '{' Stmts '}'
-   bool create_mixer_function()
+   bool parse_mixer_function()
    { 
       int pre[3] = {0,0,0};
       for ( auto & v : pre){
@@ -774,19 +770,20 @@ namespace{
          for (;;){
             switch(apm_lexer::yylex()){
              case NAME :
-                if ( !do_assign_expr(apm_lexer::get_lexer_string())){
+                if ( !parse_assign_expr(apm_lexer::get_lexer_string())){
                   return false;
                 }
                 break;
             case OUTPUT :
-                if (! do_output_expr()){
+                if (! parse_output_expr()){
                   return false;
                 }
                 break;
-            case '}':  // end of mixer function body done!
-                       // at this point the symtab can be deleted 
-                       // maybe only now copy the expressions to the mixer
-                       // and thereby consolidate memory
+            case '}': 
+         // end of mixer function body done!
+         // at this point the symtab can be deleted 
+         // maybe only now copy the expressions to the mixer
+         // and thereby consolidate memory
                delete symtab;
                symtab = nullptr;
                return true;
