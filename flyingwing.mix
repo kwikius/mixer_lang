@@ -1,5 +1,5 @@
 
-# A simple flying wing mixer, but with throw adjusted by airspeed
+# A flying wing mixer, but with throw adjusted by airspeed
 # In practise it is a good idea to be able to switch that off
 # in case the sensor fails
 # so only use airspeed to adjust control throw if not in failsafe mode
