@@ -98,7 +98,7 @@ min
 max
 ===
 
-   T max( T A, T B)  # requires a is same type as b and type is not bool.
+   T max( T a, T b)  # requires a is same type as b and type is not bool.
    If a is greater than b return a else returns b 
 
    syntax:
