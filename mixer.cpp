@@ -271,7 +271,7 @@ void apm_mix::mixer_init(input_pair* inputs, uint32_t num_inputs)
     funtab->add_item("min",apm_mix::make_function_min);
 }
 
-void apm_mix::eval_mixer_outputs()
+void apm_mix::mixer_eval()
 {
    mixer->eval_outputs();
 }
