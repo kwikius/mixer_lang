@@ -34,7 +34,7 @@ syntax:
 
 Statements
 ----------
-Statements consist of expressions using Inputs, Outputs Volatiles and symbols.
+Statements consist of expressions using Inputs, Outputs, Volatiles and symbols.
 
 
 Inputs
@@ -199,6 +199,7 @@ then connect to your Linux PC via USB and Invoke:
 
 to run The App. (Alternatively call the app on your own mixer script). To start and stop press any key.
 When running, Twiddle the sticks and you should see some changing outputs.
+Note: To make sense of the output you will need to set up an "Ideal" model where the Taranis doesnt do any mixing of course, just sends stick inputs to outputs
 
 Notes
 -----
