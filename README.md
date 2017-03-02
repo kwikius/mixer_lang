@@ -87,6 +87,7 @@ Functions
 
    min
    ===
+
    T min( T a, T b)  # requires a is same type as a and type is not bool.
    If a is less than b return a else returns b
 
@@ -96,6 +97,7 @@ Functions
 
    max
    ===
+
    T max( T A, T B)  # requires a is same type as b and type is not bool.
    If a is greater than b return a else returns b 
 
@@ -105,6 +107,7 @@ Functions
 
    if
    ==
+
    T if(bool cond, T v_true, T v_false) # requires cond is type bool, v_true is same type as v_false.
    If the condition is true return v_true else return v_false
 
