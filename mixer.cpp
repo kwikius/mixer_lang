@@ -17,7 +17,7 @@ namespace {
    apm_mix::lookup_t<apm_mix::abc_expr*> * symtab;
    apm_mix::lookup_t<apm_mix::function_builder> * funtab;
   
-   bool do_mix_loop();
+   bool create_mixer_function();
    apm_mix::abc_expr* do_expr(); // or_expr
    apm_mix::abc_expr* do_and_expr();
    apm_mix::abc_expr* do_rel_expr();
@@ -286,7 +286,7 @@ bool apm_mix::mixer_create()
              }
              break;
          case MIXER:
-           return do_mix_loop();
+           return create_mixer_function();
          default:
             return apm_mix::yyerror();
       }     
@@ -761,7 +761,7 @@ namespace{
 
    // make the mixer loop function
    //mixer '(' ')' '{' Stmts '}'
-   bool do_mix_loop()
+   bool create_mixer_function()
    { 
       int pre[3] = {0,0,0};
       for ( auto & v : pre){
