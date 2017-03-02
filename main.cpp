@@ -2,7 +2,6 @@
 #include <cstdio>
 #include "mixer.hpp"
 #include "lexer.hpp"
-#include <quan/utility/timer.hpp>
 #include <quan/joystick.hpp>
 #include <quan/key_was_pressed.hpp>
 
