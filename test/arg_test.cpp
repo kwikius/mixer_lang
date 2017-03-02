@@ -1,4 +1,5 @@
-#include <quan_matters/test/simple_test.hpp>
+
+#include "test.hpp"
 #include "../function.hpp"
 #include "../arg_list.hpp"
 #include "../exprtree.hpp"
@@ -17,7 +18,7 @@ using namespace apm_mix;
 void args_test()
 {
    abc_expr* expr1 = new constant<bool>{true};
-   QUAN_CHECK(expr1->get_ID() == abc_expr::BOOL);
+   QUAN_CHECK(expr1->get_ID() == abc_expr::exprID::BOOL);
    QUAN_CHECK(expr1->is_constant());
 
    arg_list* args = nullptr;

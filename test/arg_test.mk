@@ -1,15 +1,11 @@
 
-#  env  QUAN_ROOT is the parent of the quan directory
-ifeq ($(QUAN_ROOT),)
-QUAN_ROOT = /home/andy/cpp/projects/quan-trunk
-endif
 
 ifeq ($(USE_CONCEPTS),True)
 CXX         = g++-6
-CXXFLAGS    = -std=c++14 -fconcepts -I${QUAN_ROOT}
+CXXFLAGS    = -std=c++14 -fconcepts 
 else
 CXX         ?= /usr/local/bin/g++
-CXXFLAGS    ?= -std=c++11 -I${QUAN_ROOT}
+CXXFLAGS    ?= -std=c++11 
 endif
 
 TARGET = arg_test.exe

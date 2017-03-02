@@ -3,7 +3,7 @@
 #include <cstring>
 #include <cstdio>
 
-#include <quan/conversion/parse_number.hpp>
+#include "util/parse_number.hpp"
 #include "bison.tab.h"
 #include "lexer.hpp"
 
@@ -219,14 +219,14 @@ int apm_lexer::yylex()
       return NAME;
    }
    // numbers 
-   quan::detail::number_parser::num_tok tok = quan::detail::number_parser::get_tok(ch);
-   if ( tok != quan::detail::number_parser::num_tok::UNKNOWN){
+   apm_mix::util::number_parser::num_tok tok = apm_mix::util::number_parser::get_tok(ch);
+   if ( tok != apm_mix::util::number_parser::num_tok::UNKNOWN){
       input_buffer[0] = ch;
       buffer_idx = 1;
       while (1){
          if ( buffer_idx < (buffer_length -1)){
             ch = fn_read_char();
-            if (quan::detail::number_parser::get_tok(ch) != quan::detail::number_parser::num_tok::UNKNOWN) {
+            if (apm_mix::util::number_parser::get_tok(ch) != apm_mix::util::number_parser::num_tok::UNKNOWN) {
                input_buffer[buffer_idx] = ch;
                ++buffer_idx;
             }else{
@@ -240,12 +240,12 @@ int apm_lexer::yylex()
             return 0;
          }
       }
-      quan::detail::number_parser parser;
-      quan::detail::number_parser::num_type result = parser(input_buffer,&float_value,&int_value,buffer_idx);
+      apm_mix::util::number_parser parser;
+      apm_mix::util::number_parser::num_type result = parser(input_buffer,&float_value,&int_value,buffer_idx);
       switch (result){
-         case quan::detail::number_parser::num_type::FLOAT:
+         case apm_mix::util::number_parser::num_type::FLOAT:
             return FLOAT;
-         case quan::detail::number_parser::num_type::INT:
+         case apm_mix::util::number_parser::num_type::INT:
             return INTEGER;
          default:
             error_num = invalid_number_syntax;

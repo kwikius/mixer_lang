@@ -1,6 +1,9 @@
 #include <cstdio>
 #include <cstring>
 #include <malloc.h>
+#include <cassert>
+#include <limits>
+
 #include "bison.tab.h"
 #include "exprtree.hpp"
 #include "arg_list.hpp"
@@ -8,9 +11,6 @@
 #include "lookup.hpp"
 #include "lexer.hpp"
 #include "mixer.hpp"
-#include <cassert>
-#include <quan/meta/max.hpp>
-#include <quan/meta/min.hpp>
 
 namespace {
    apm_mix::mixer_t* mixer;
@@ -147,8 +147,8 @@ namespace {
           return lhs / rhs; 
        }else{
            return (lhs < T{0})
-              ? quan::meta::min_<T>::value
-              : quan::meta::max_<T>::value;
+             ? std::numeric_limits<T>::lowest() // <-- lowest() is correct. The obvious min() does something unexpected on float
+             : std::numeric_limits<T>::max();
        }
    }
 

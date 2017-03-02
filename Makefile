@@ -14,19 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>
 
-# QUAN_ROOT is path to my quan library https://github.com/kwikius/quan-trunk.git
-ifneq ($(MAKECMDGOALS),clean)
-ifndef QUAN_ROOT
-$(error "QUAN_ROOT must be defined to path to my quan library --> https://github.com/kwikius/quan-trunk.git")
-endif
-endif
-
-INCLUDES = $(QUAN_ROOT)
-
 CC = g++
 LD = g++
-
-INCLUDE_ARGS = $(patsubst %,-I%,$(INCLUDES))
 
 CFLAGS = -std=gnu++11 -Wall -Os 
 
@@ -43,10 +32,10 @@ mixer_lang.exe : $(objects)
 	$(LD) $(objects) $(CFLAGS) -s -o mixer_lang.exe -lpthread
 
 $(local_objects) : %.o : %.cpp
-	$(CC) $(CFLAGS) $(INCLUDE_ARGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
-key_was_pressed.o : $(QUAN_ROOT)/quan_matters/src/linux/key_was_pressed.cpp
-	$(CC) $(CFLAGS) $(INCLUDE_ARGS) -c $< -o $@
+key_was_pressed.o : util/key_was_pressed.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	-rm -rf *.o *.exe

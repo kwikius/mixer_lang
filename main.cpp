@@ -2,8 +2,8 @@
 #include <cstdio>
 #include "mixer.hpp"
 #include "lexer.hpp"
-#include <quan/joystick.hpp>
-#include <quan/key_was_pressed.hpp>
+#include "util/joystick.hpp"
+#include "util/key_was_pressed.hpp"
 
 apm_mix::mixer_t* fn_mix();
 
@@ -20,7 +20,7 @@ namespace {
    double get_flap();
    double get_control_mode();
    bool open_joystick(const  char * device_name);
-   quan::joystick* get_joystick();
+   apm_mix::util::joystick* get_joystick();
    void close_joystick();
    void sleep_ms(uint32_t ms)
    {
@@ -68,10 +68,10 @@ int main(int argc , char* argv[])
    if (mixer_build_success){
       printf("Press any key to start and once running press any key to quit\n");
       fflush(stdin);
-      while (! quan::key_was_pressed()){;}
+      while (! apm_mix::util::key_was_pressed()){;}
       getchar(); // clear key pressed
       if ( open_joystick("/dev/input/js0")){
-         while (get_joystick()->is_running() && ! quan::key_was_pressed()){
+         while (get_joystick()->is_running() && ! apm_mix::util::key_was_pressed()){
             sleep_ms(20);
             apm_mix::eval_mixer_outputs();
          }
@@ -84,14 +84,14 @@ int main(int argc , char* argv[])
 
 namespace {
 
-   quan::joystick* p_joystick = nullptr;
+   apm_mix::util::joystick* p_joystick = nullptr;
 
-   quan::joystick* get_joystick(){ return p_joystick;}
+   apm_mix::util::joystick* get_joystick(){ return p_joystick;}
 
    bool open_joystick(const char* device_name)
    {
       try{
-         p_joystick = new quan::joystick(device_name);
+         p_joystick = new apm_mix::util::joystick(device_name);
          return p_joystick != nullptr;
       }catch (std::exception & e){
          printf("Exception ; %s\n", e.what());
