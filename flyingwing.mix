@@ -57,3 +57,4 @@ mixer()
    # literals work also for outputs
    output[3] = input{Throttle} * throttle_gain + thrt_pls_offset;
 }
+
