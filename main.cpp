@@ -5,7 +5,7 @@
 #include "util/joystick.hpp"
 #include "util/key_was_pressed.hpp"
 
-apm_mix::mixer_t* fn_mix();
+bool fn_mix();
 
 namespace {
 
@@ -54,11 +54,9 @@ int main(int argc , char* argv[])
 
    bool mixer_build_success = false;
    if ( apm_lexer::open_file(argv[1])){
-      // fn_mix builds the mixer from the input stream
-      if (fn_mix()){
-        // if the build is succesfull
-       mixer_build_success = true;
-       printf("mixer \"%s\" created OK!\n",argv[1]);
+      if (apm_mix::mixer_create()){
+         mixer_build_success = true;
+         printf("mixer \"%s\" created OK!\n",argv[1]);
       }
       apm_lexer::close_file();
    }else{

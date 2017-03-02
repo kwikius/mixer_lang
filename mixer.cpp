@@ -276,13 +276,13 @@ void apm_mix::eval_mixer_outputs()
    mixer->eval_outputs();
 }
 
-bool fn_mix()
+bool apm_mix::mixer_create()
 {
    for (;;){
       switch(apm_lexer::yylex()){
          case NAME :
              if ( !do_assign_expr(apm_lexer::get_lexer_string())){
-               return false;
+                return false;
              }
              break;
          case MIXER:

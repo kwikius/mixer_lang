@@ -99,6 +99,7 @@ namespace apm_mix{
    };
 
    void mixer_init(input_pair* inputs, uint32_t num_inputs);
+   bool mixer_create();
    void eval_mixer_outputs();
 }
 
