@@ -3,7 +3,7 @@
 %}
 
 %token  
-   INPUT OUTPUT NAME  
+   INPUT OUTPUT VOLATILE NAME  
    TRUE FALSE LESS_EQUAL GREATER_EQUAL 
    EQUAL_EQUAL NOT_EQUAL FLOAT INTEGER BOOL 
    MIXER 
@@ -22,6 +22,7 @@ Stmts:
 Stmt:
    NAME '=' Expr ';'
  | OUTPUT '[' Expr ']' '='  Expr ';'
+ | VOLATILE '{' NAME '}' '='  Expr ';'
 ;
 
 Expr:
@@ -40,6 +41,7 @@ Primary :
 
 IOExpr:
    INPUT '{' NAME '}'
+   VOLATILE '{' NAME '}'
 |  OUTPUT '[' Expr ']'
 ;
 
