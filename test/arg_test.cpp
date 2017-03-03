@@ -1,8 +1,8 @@
 
 #include "test.hpp"
-#include "../function.hpp"
-#include "../arg_list.hpp"
-#include "../exprtree.hpp"
+#include "../src/function.hpp"
+#include "../src/arg_list.hpp"
+#include "../src/exprtree.hpp"
 
 int errors = 0;
 

@@ -14,7 +14,7 @@ local_objects = arg_test.o
 local_files =  $(patsubst %.o,%.cpp,$(local_objects))
 
 parent_objects = function.o arg_list.o
-parent_files =  $(patsubst %.o,../%.cpp,$(parent_objects))
+parent_files =  $(patsubst %.o,../src/%.cpp,$(parent_objects))
 
 OBJECTS = $(local_objects) $(parent_objects)
 
@@ -28,7 +28,7 @@ $(TARGET) : $(OBJECTS)
 $(local_objects): %.o : %.cpp
 	$(CXX) -c $(CXXFLAGS) $< -o $@
 
-$(parent_objects) : %.o : ../%.cpp
+$(parent_objects) : %.o : ../src/%.cpp
 	$(CXX) -c $(CXXFLAGS) $< -o $@
  
 .PHONY : clean
