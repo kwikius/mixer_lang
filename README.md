@@ -16,12 +16,12 @@ mixer()
 }
 ```
 
-For other example scripts, see [A very basic example mixer for an Easystar](EasyStar.mix)
+For other example scripts, see [A very basic example mixer for an Easystar](https://github.com/kwikius/mixer_lang/blob/master/mixers/generic/EasyStar.mix)
 
-For a more complex example see [A mixer for a glider with differential aileron, variable camber and crow flaps](glider.mix)
+For a more complex example see [A mixer for a glider with differential aileron, variable camber and crow flaps](https://github.com/kwikius/mixer_lang/blob/master/mixers/generic/glider.mix)
 
 Below is a non technical description of the language. For a more technical description, consult the 
-[grammar](https://github.com/kwikius/mixer_lang/blob/master/bison.grammar). 
+[grammar](https://github.com/kwikius/mixer_lang/blob/master/grammar/bison.grammar). 
 The grammar can be parsed using [GNU Bison](https://www.gnu.org/software/bison/).
 
 
@@ -50,7 +50,7 @@ syntax:
 ``` 
    myint = 1 * 2 * 3 * 4; # myint is deduced as type integer
    pi = 3.14159; # pi is a float
-   myfloat = 2.0 * pi; # myfloat is deduced as float beacuse its initialiser expression has type float
+   myfloat = 2.0 * pi; # myfloat is deduced as float because its initialiser expression has type float
    mybool = true; #// deduced as a boolean type
 ```
 
@@ -237,7 +237,7 @@ There is a Make file included . See [Gnu Make](https://www.gnu.org/software/make
 
 If on Windows, I recommend installing [MinGW](http://www.mingw.org) or [Cygwin](https://www.cygwin.com).
 
-Enter the mixer_lang source directory and invoke:
+Enter the [examples/TaranisUSBJoystick directory](https://github.com/kwikius/mixer_lang/blob/master/examples/TaranisUSBJoystick/) and invoke:
 
 ```
 ~>$ make 
@@ -246,14 +246,15 @@ Enter the mixer_lang source directory and invoke:
 Running
 -------
 
-If build is successful there should be a mixer_lang.exe file in the directory. To run, Switch on your Taranis , 
-then connect to your Linux PC via USB and Invoke:
+If build is successful there should be a mixer_lang.exe file in the [https://github.com/kwikius/mixer_lang/blob/master/TaranisUSBJoystick/bin](https://github.com/kwikius/mixer_lang/blob/master/examples/TaranisUSBJoystick/bin)) sub-directory. 
+To run , Switch on your Taranis , then connect to your Linux PC via USB and Invoke:
 
 ```
+~>cd bin
 ~>$ ./mixer_lang.exe EasyStar.mix
 ```
 
-to run The App. (Alternatively call the app on your own mixer script). To start and stop press any key.
+(Alternatively call the app on your own mixer script). To start and stop press any key.
 When running, Twiddle the sticks and you should see some changing outputs.
 Note: To make sense of the output you will need to set up an "Ideal" model where the Taranis doesnt do any mixing of course, just sends stick inputs to outputs
 
