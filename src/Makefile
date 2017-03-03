@@ -16,6 +16,8 @@
 
 TARGET = ../build/mixer_lang.a
 
+.PHONY: clean all sources
+
 CC = g++
 LD = g++
 
@@ -23,16 +25,20 @@ CFLAGS = -std=gnu++11 -Wall -Os
 
 local_objects = arg_list.o fn_if.o fn_max.o lexer.o mixer.o symtab.o  function.o
 
+sources  = $(patsubst %.o,%.cpp,$(local_objects))
+
+headers = abc_expr.hpp arg_list.hpp basic_char_ptr_converter.hpp exprtree.hpp \
+function.hpp lexer.hpp lookup.hpp mixer.hpp parse_number.hpp predicates.hpp stringfun.hpp
+
 objects = $(patsubst %.o,obj/%.o,$(local_objects))
  
-.PHONY: clean all
 
 all: $(TARGET)
 
 $(TARGET) : $(objects)
 	ar rcs $@ $(objects)
 
-$(objects) : obj/%.o : %.cpp
+$(objects) : obj/%.o : %.cpp $(headers)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
