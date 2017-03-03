@@ -5,11 +5,7 @@ Intended specifically for [ArduPlane](http://plane.ardupilot.com), an actuator o
 created by reading a script file. The script uses a simple intuitive language. Currently the mixer
 works as a sim on a Linux PC, using an FrSky Taranis as Joystick input.
 
-As an example script, see [A very basic example mixer for an Easystar](EasyStar.mix)
-
-For a more complex example see [A mixer for a glider with differential aileron, variable camber and crow flaps](glider.mix)
-
-The script consists of statements and a mixer function. example (to keep it simple, for a rudder only glider)
+The script consists of statements and a mixer function. For example (to keep it simple, for a rudder only glider)
 
 (N.B defining valid input and output ranges is TODO)
 
@@ -20,9 +16,20 @@ x = 0.5;
 mixer()
 {
    output[0] = input{Roll} * x;
-   
 }
 ```
+
+For other example scripts, see [A very basic example mixer for an Easystar](EasyStar.mix)
+
+For a more complex example see [A mixer for a glider with differential aileron, variable camber and crow flaps](glider.mix)
+
+
+-----------------------------
+-----------------------------
+
+
+A basic description of the language
+===================================
 
 Comments
 --------
@@ -36,6 +43,40 @@ Statements
 ----------
 Statements consist of expressions using Inputs, Outputs, Volatiles and symbols.
 
+Symbols
+-------
+Symbols are used to hold intermediate calculation results.
+
+syntax:
+
+***SymbolName*** ``` =  ``` ***InitialiserExpression***  ``` ; ```
+
+Symbols can have type integer, float or bool and are constant if they can be evaluated during the building of the mixer
+or in other words if their InitialiserExpression doesnt need to evaluate non-constant inputs.
+The type of the symbol is deduced from the InitialiserExpression.
+
+Volatile Symbols
+---------
+
+(Status: TODO)
+Volatile Symbols are Symbols that can be externally modified via hidden means or 'via the back door' while the mixer is running. 
+Volatile symbols can be used to tune a gain for example. Using a volatile, one could send a message from the GCS to increment a gain 
+a little while  the mixer is running.
+
+To create a Volatile symbol just add the ```volatile``` modifier in front of the symbol at the point of definition.
+
+The type of the volatile is deduced as with normal symbols from the type of its ***ConstInitialiserExpression***.
+The volatiles value is initialised with the initialiser expression **which expression must be a constant**.
+The volatile symbol will not be constant however so constant folding will not be done on a volatile symbol
+In other aspects the symbol is just like other symbols.
+
+Note: There will also be an option to not allow volatile symbols in a script 
+
+syntax:
+
+```volatile ``` ***SymbolName*** ``` = ``` ***ConstInitialiserExpression***  ``` ; ```
+
+`
 
 Inputs
 ------
@@ -61,24 +102,34 @@ input{Yaw}      # float between 1.0 and -1.0 representing required yaw rate
 input{Throttle} # float between 1.0 and -1.0 representing required throttle
 ```
 
-Volatiles
----------
 
-(Status: TODO)
-Volatiles are variables that can be externally modified via hidden means or 'via the back door' while the mixer is running. 
-The ***VolatileIdentifier*** is entirely up to the script author.
-They can be used to tune a gain for example. Using a volatile, one could send a message from the GCS to increment a gain 
-a little while  the mixer is running.
-
-The type of the volatile is deduced as with normal symbols from the type of its ***ConstInitialiserExpression***.
-The volatiles value is initialised with the initialiser expression **which expression must be a constant**.
-The current value can be read just like other symbols.
+Outputs
+-------
+Outputs represent actuators and escs using an array syntax.
 
 syntax:
 
-```volatile{``` ***VolatileIdentifier*** ```} = ``` ***ConstInitialiserExpression***  ``` ; ```
+ ```   output[``` ***OutputIndex*** ```] = ``` ***Expression*** ;```
 
-```roll_gain = volatile{RollGain};```
+
+OutputIndex must be of type constant integer. 
+Expressions are assigned as if to an index of the array.
+The output expressions are then evaluated and updated periodically.
+
+example:
+
+```
+#  send Roll input to actuator 1
+output[1] = input{Roll};
+```
+
+Expressions
+-----------
+Expressions consists of operations on Symbols, Inputs, Volatiles and Outputs.
+An operation can only be done on objects of the same type. For example an integer multiplication by a double is disallowed.
+The reason is to to keep operations as small as possible, so casting must be explicit. (Casting TODO)
+Operators ( e.g +,- *, etc) are similar to those used in C, except & and or are logical operators rather than 
+bit manipulation operators
 
 Functions
 ---------
@@ -113,45 +164,7 @@ if
 
    syntax:
 
-   ``` x = if(v1 < v1,v3,v4);```
-
-Outputs
--------
-Outputs represent actuators and escs using an array syntax.
-
-syntax:
-
- ```   output[``` ***OutputIndex*** ```] = ``` ***Expression*** ;```
-
-
-OutputIndex must be of type constant integer. 
-Expressions are assigned as if to an index of the array.
-The output expressions are then evaluated and updated periodically.
-
-example:
-
-```
-#  send Roll input to actuator 1
-output[1] = input{Roll};
-```
-
-Symbols
--------
-Symbols are used to hold intermediate calculation results.
-
-syntax:
-
-***SymbolName*** ``` =  ``` ***InitialiserExpression***  ``` ; ```
-
-Symbols can have type integer, float or bool and are constant if they can be evaluated during the building of the mixer
-or in other words if their InitialiserExpression doesnt need to evaluate non-constant inputs.
-The type of the symbol is deduced from the InitialiserExpression.
-
-Expressions
------------
-Expressions consists of operations on Symbols, Inputs, Volatiles and Outputs.
-An operation can only be done on objects of the same type. For example an integer multiplication by a double is disallowed.
-The reason is to to keep operations as small as possible, so casting must be explicit. (Casting TODO)
+   ``` x = if(v1 < v1,v3,v4);``
 
 Implementation
 --------------

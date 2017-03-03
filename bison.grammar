@@ -21,8 +21,8 @@ Stmts:
 
 Stmt:
    NAME '=' Expr ';'
+ | VOLATILE NAME  '='  Expr ';'
  | OUTPUT '[' Expr ']' '='  Expr ';'
- | VOLATILE '{' NAME '}' '='  Expr ';'
 ;
 
 Expr:
@@ -41,7 +41,6 @@ Primary :
 
 IOExpr:
    INPUT '{' NAME '}'
-   VOLATILE '{' NAME '}'
 |  OUTPUT '[' Expr ']'
 ;
 
