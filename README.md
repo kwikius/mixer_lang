@@ -5,10 +5,7 @@ Intended specifically for [ArduPlane](http://plane.ardupilot.com), an actuator o
 created by reading a script file. The script uses a simple intuitive language. Currently the mixer
 works as a sim on a Linux PC, using an FrSky Taranis as Joystick input.
 
-The script consists of statements and a mixer function. For example (to keep it simple, for a rudder only glider)
-
-(N.B defining valid input and output ranges is TODO)
-
+The script consists of statements and a mixer function. For example (to keep it simple), for a rudder only glider.
 
 ``` 
 x = 0.5;
@@ -23,6 +20,10 @@ For other example scripts, see [A very basic example mixer for an Easystar](Easy
 
 For a more complex example see [A mixer for a glider with differential aileron, variable camber and crow flaps](glider.mix)
 
+Below is a non technical description of the language. For a more technical description, consult the 
+[grammar](https://github.com/kwikius/mixer_lang/blob/master/bison.grammar). 
+The grammar can be parsed using [GNU Bison](https://www.gnu.org/software/bison/).
+
 
 -----------------------------
 -----------------------------
@@ -30,6 +31,7 @@ For a more complex example see [A mixer for a glider with differential aileron, 
 
 A basic description of the language
 ===================================
+
 
 Comments
 --------
@@ -41,15 +43,31 @@ syntax:
 
 Statements
 ----------
-Statements consist of expressions using Inputs, Outputs, Volatiles and symbols.
+Statements consist of expressions using Inputs, Outputs and symbols.
+
+syntax:
+
+``` 
+   myint = 1 * 2 * 3 * 4; # myint is deduced as type integer
+   pi = 3.14159; # pi is a float
+   myfloat = 2.0 * pi; # myfloat is deduced as float beacuse its initialiser expression has type float
+   mybool = true; #// deduced as a boolean type
+```
 
 Symbols
 -------
 Symbols are used to hold intermediate calculation results.
+Symbols are folded into constants as they are defined if possible.
 
 syntax:
 
 ***SymbolName*** ``` =  ``` ***InitialiserExpression***  ``` ; ```
+
+```
+   myint = 1 * 2 * 3 * 4; # myint is deduced as type integer with value 24 
+   # Note: (Symbols are folded to constants as they are defined if their 
+   # InitialiserExpression resolves to a constant, so myint is a constant)
+```
 
 Symbols can have type integer, float or bool and are constant if they can be evaluated during the building of the mixer
 or in other words if their InitialiserExpression doesnt need to evaluate non-constant inputs.
@@ -76,23 +94,29 @@ syntax:
 
 ```volatile ``` ***SymbolName*** ``` = ``` ***ConstInitialiserExpression***  ``` ; ```
 
-`
-
 Inputs
 ------
-Inputs are used to get external values. Inputs are read only.
+Inputs are used to get external values. Inputs are read only. They can be indexed by identifiers or numbers
+Inputs accesed by name are generic inputs
 
 syntax:
 
 ```my_value  = input{``` ***InputIdentifier*** ```};```
 
+```my_value  = input[``` ***IntegerExpression*** ```];```
+
+
 Inputs can have any of the types Boolean, Float or Integer. The actual type is dependent on the InputIdentifier
+(TODO: types indexed by number?)
 
 example:
    
-``` roll = input{Roll};```
+```
+   roll = input{Roll};
+   take_picture = input[12] > 1500; 
+```
 
-For ArduPlane, the available inputs are as follows ( See [main.cpp](main.cpp#L31) for how this is implemented and can be changed)
+For ArduPlane, the available generic inputs are as follows ( See [main.cpp](main.cpp#L31) for how this is implemented and can be changed)
 (Very preliminary)
 
 ```
