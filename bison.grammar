@@ -3,7 +3,7 @@
 %}
 
 %token  
-   INPUT OUTPUT VOLATILE NAME  
+   INPUT OUTPUT VOLATILE NAME IF ELIF ELSE ENDIF
    TRUE FALSE LESS_EQUAL GREATER_EQUAL 
    EQUAL_EQUAL NOT_EQUAL FLOAT INTEGER BOOL 
    MIXER 
@@ -21,8 +21,26 @@ Stmts:
 
 Stmt:
    NAME '=' Expr ';'
+   NAME '=' CurveDefinition ';'
  | VOLATILE NAME  '='  Expr ';'
  | OUTPUT '[' Expr ']' '='  Expr ';'
+ /* note IF is overloaded also as a function */
+ | IF '(' Expr ')' '{' Stmts '}' IfContinuation
+;
+
+IfContinuation:
+  ELIF '(' Expr ')' '{' Stmts '}' IfContinuation
+| ELSE '(' Expr ')' '{' Stmts '}' ENDIF
+| ENDIF
+;
+
+CurveDefinition:
+   CurveElement
+ |  CurveDefinition ',' CurveElement 
+;
+
+CurveElement:
+ '[' Expr ',' Expr ']'
 ;
 
 Expr:
@@ -47,6 +65,8 @@ IOExpr:
 NameOrFunction:
    NAME
 |  NAME '(' ExprList ')'
+/* note: IF is overloaded */
+|  IF   '(' ExprList ')'
 ;
 
 MulExpr:
