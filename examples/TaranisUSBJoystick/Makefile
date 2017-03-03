@@ -20,7 +20,7 @@ all: $(TARGET)
 $(TARGET) : $(objects) $(mixer_lang_lib)
 	$(LD) $(CFLAGS) -s $(objects) -o $@ $(mixer_lang_lib) -lpthread
 
-$(objects) : obj/%.o : %.cpp
+$(objects) : obj/%.o : %.cpp $(mixer_lang_lib)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(mixer_lang_lib):
