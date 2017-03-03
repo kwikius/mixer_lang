@@ -58,6 +58,7 @@ Symbols
 -------
 Symbols are used to hold intermediate calculation results.
 Symbols are folded into constants as they are defined if possible.
+(Constant folding can be switched off for debugging if required)
 
 syntax:
 
@@ -85,7 +86,7 @@ To create a Volatile symbol just add the ```volatile``` modifier in front of the
 
 The type of the volatile is deduced as with normal symbols from the type of its ***ConstInitialiserExpression***.
 The volatiles value is initialised with the initialiser expression **which expression must be a constant**.
-The volatile symbol will not be constant however so constant folding will not be done on a volatile symbol
+The volatile symbol will not be constant however so constant folding will not be done on a volatile symbol.
 In other aspects the symbol is just like other symbols.
 
 Note: There will also be an option to not allow volatile symbols in a script 
@@ -96,7 +97,7 @@ syntax:
 
 Inputs
 ------
-Inputs are used to get external values. Inputs are read only. They can be indexed by identifiers or numbers
+Inputs are used to get external values. Inputs are read only. They can be indexed by identifiers or numbers.
 Inputs accesed by name are generic inputs
 
 syntax:
@@ -106,8 +107,9 @@ syntax:
 ```my_value  = input[``` ***IntegerExpression*** ```];```
 
 
-Inputs can have any of the types Boolean, Float or Integer. The actual type is dependent on the InputIdentifier
-(TODO: types indexed by number?)
+Inputs can have any of the types Boolean, Float or Integer. The actual type is dependent on the InputIdentifier.
+Note: For Inputs accessed as array the type is TBD.
+
 
 example:
    
@@ -149,11 +151,11 @@ output[1] = input{Roll};
 
 Expressions
 -----------
-Expressions consists of operations on Symbols, Inputs, Volatiles and Outputs.
+Expressions consists of operations on Symbols, Inputs, Functions and Outputs.
 An operation can only be done on objects of the same type. For example an integer multiplication by a double is disallowed.
 The reason is to to keep operations as small as possible, so casting must be explicit. (Casting TODO)
 Operators ( e.g +,- *, etc) are similar to those used in C, except & and or are logical operators rather than 
-bit manipulation operators
+bit manipulation operators.
 
 Functions
 ---------

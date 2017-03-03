@@ -14,29 +14,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>
 
+TARGET = ../build/mixer_lang.a
+
 CC = g++
 LD = g++
 
 CFLAGS = -std=gnu++11 -Wall -Os 
 
-local_objects = lexer.o main.o mixer.o symtab.o function.o arg_list.o \
-fn_max.o fn_if.o
+local_objects = arg_list.o fn_if.o fn_max.o lexer.o mixer.o symtab.o  function.o
 
-objects = $(local_objects) key_was_pressed.o
-
+objects = $(patsubst %.o,obj/%.o,$(local_objects))
+ 
 .PHONY: clean all
 
-all: mixer_lang.exe
+all: $(TARGET)
 
-mixer_lang.exe : $(objects) 
-	$(LD) $(objects) $(CFLAGS) -s -o mixer_lang.exe -lpthread
+$(TARGET) : $(objects)
+	ar rcs $@ $(objects)
 
-$(local_objects) : %.o : %.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
-
-key_was_pressed.o : util/key_was_pressed.cpp
+$(objects) : obj/%.o : %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	-rm -rf *.o *.exe
+	-rm -rf obj/*.o $(TARGET)
 

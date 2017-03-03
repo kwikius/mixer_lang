@@ -1,10 +1,9 @@
 
 #include <cstdio>
-#include "mixer.hpp"
-#include "lexer.hpp"
-#include "util/joystick.hpp"
-#include "util/key_was_pressed.hpp"
-
+#include "../../src/mixer.hpp"
+#include "../../src/lexer.hpp"
+#include "joystick.hpp"
+#include "key_was_pressed.hpp"
 
 namespace util = mixer_lang_util;
 

@@ -1,5 +1,5 @@
 
-# EasyStar mixer
+# Generic EasyStar mixer
 
 # The EasyStar is a basic trainer with rudder, elevator and throttle.
 # In this simplest possible mixer, some of the available inputs are connected direct to the outputs.
