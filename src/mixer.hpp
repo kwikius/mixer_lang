@@ -32,11 +32,20 @@ namespace apm_mix{
          }
       }
 
+      /*
+         addan l_value ( assignment expression , named expression)
+         to the list of expressions in the mixer.
+       */
       void add(abc_expr* expr)
       {
          add_arg(m_expressions,expr);
       }
 
+      /*
+         add an output expression to the mixer
+         if is an unfilled slot for it,
+         else retrun false;
+      */
       bool add_output(uint32_t n, abc_expr* output_expr)
       {
           
@@ -52,7 +61,11 @@ namespace apm_mix{
           return true;
       }
 
-      abc_expr* find_input(const char* name)
+      /*
+         search the list of input_expressions (provided to the mixer when built)
+         for the one identified by name and return a ptr if found, else nullptr
+      */
+      abc_expr* find_input(const char* name)const
       {
          for (uint32_t i = 0; i < m_num_inputs; ++i){
             if ( strcmp(m_inputs[i].m_name, name ) == 0 ){
@@ -61,7 +74,10 @@ namespace apm_mix{
          }
          return nullptr;
       }
-
+      /*
+         TODO. Currently this goes nowhere, just dumps the values
+         Maybe hook up some output functions once the tree is built?
+      */
       void eval_outputs()
       {
          for ( uint32_t i = 0; i < num_outputs; ++i){
