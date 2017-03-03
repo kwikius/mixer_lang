@@ -59,6 +59,7 @@ Primary :
 
 IOExpr:
    INPUT '{' NAME '}'
+   INPUT '[' Expr ']'
 |  OUTPUT '[' Expr ']'
 ;
 
