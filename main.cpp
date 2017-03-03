@@ -5,8 +5,6 @@
 #include "util/joystick.hpp"
 #include "util/key_was_pressed.hpp"
 
-bool fn_mix();
-
 namespace {
 
    double airspeed = 0.0; // test pathological on airspeed based mixer
