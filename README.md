@@ -118,7 +118,7 @@ example:
    take_picture = input[12] > 1500; 
 ```
 
-For ArduPlane, the available generic inputs are as follows ( See [main.cpp](main.cpp#L31) for how this is implemented and can be changed)
+For ArduPlane, the available generic inputs are as follows ( See [./examples/TaranisUSBJoystick/main.cpp](https://github.com/kwikius/mixer_lang/blob/master/examples/TaranisUSBJoystick/main.cpp) for how this is implemented and can be changed)
 (Very preliminary)
 
 ```
