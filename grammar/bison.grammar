@@ -20,12 +20,20 @@ Stmts:
 ;
 
 Stmt:
-   NAME '=' Expr ';'
-   NAME '=' CurveDefinition ';'
- | VOLATILE NAME  '='  Expr ';'
+ ModifiedName '=' RValue ';'
  | OUTPUT '[' Expr ']' '='  Expr ';'
  /* note IF is overloaded also as a function */
  | IF '(' Expr ')' '{' Stmts '}' IfContinuation
+;
+
+ModifiedName:
+  NAME
+| VOLATILE NAME
+;
+
+RValue:
+   Expr 
+|  CurveDefinition 
 ;
 
 IfContinuation:
