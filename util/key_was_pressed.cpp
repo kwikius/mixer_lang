@@ -7,7 +7,7 @@
 #include "key_was_pressed.hpp"
 // from
 // http://stackoverflow.com/questions/22166074/is-there-a-way-to-detect-if-a-key-has-been-pressed
-namespace apm_mix{ namespace util{
+namespace mixer_lang_util{
 
    bool key_was_pressed()
    {
@@ -33,4 +33,4 @@ namespace apm_mix{ namespace util{
      }
      return input;
    }
-}}
+}

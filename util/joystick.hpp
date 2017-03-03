@@ -17,7 +17,8 @@
   link with pthread
 */
 
-namespace apm_mix { namespace util{
+// n.b namespace mixer_lang_util aliased to namespace util in examples (brevity v name collisions)
+namespace mixer_lang_util{
 
    struct joystick{
       static constexpr uint8_t num_channels = 8;
@@ -89,6 +90,6 @@ namespace apm_mix { namespace util{
       joystick & operator = (const joystick &)= delete;
    };
 
-}}  // mixer util
+}  // mixer_lang_util
 
 #endif // MIXER_LANG_UTIL_JOYSTICK_HPP_INCLUDED
