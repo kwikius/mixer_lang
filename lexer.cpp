@@ -4,7 +4,7 @@
 #include <cstdio>
 
 #include "util/parse_number.hpp"
-#include "bison.tab.h"
+//#include "bison.tab.h"
 #include "lexer.hpp"
 
 /*
@@ -28,17 +28,22 @@ namespace {
 
    constexpr char simplepunct [] = "&|+-*/()[];,{}:";
    constexpr char punct1 [] = "<=>!";
-   constexpr int  punct2 [] = {LESS_EQUAL,EQUAL_EQUAL,GREATER_EQUAL,NOT_EQUAL};
+   constexpr int  punct2 [] = {
+      apm_lexer::LESS_EQUAL
+      ,apm_lexer::EQUAL_EQUAL
+      ,apm_lexer::GREATER_EQUAL
+      ,apm_lexer::NOT_EQUAL
+   };
 
    // add line info
    uint32_t line_num = 1;
 // crude buffer
 // works ok
-// unless you put a string or num in there
+// unless you put a string or num in there! :(
    bool buffer_full = false;
    int  buffered_tok = 0;
   
-    FILE * file_pointer = stdin;
+   FILE * file_pointer = stdin;
 }
 
 uint32_t apm_lexer::get_max_string_chars()
@@ -115,6 +120,7 @@ bool apm_lexer::putback(int tok)
    }
 }
 
+using apm_mix::util::number_parser;
 // add checks for eof
 int apm_lexer::yylex()
 {
@@ -181,52 +187,50 @@ int apm_lexer::yylex()
       // look for reserved names
       input_buffer[buffer_idx] ='\0';
       if (strcmp(input_buffer,"output") == 0 ){
-         return OUTPUT;
+         return apm_lexer::OUTPUT;
       }
-//      if (strcmp(input_buffer,"if") == 0 ){
-//         return IF;
-//      }
+
       if (strcmp(input_buffer,"input") == 0){
-         return INPUT;
+         return apm_lexer::INPUT;
       }
       if (strcmp(input_buffer,"mixer") == 0){
-         return MIXER;
+         return apm_lexer::MIXER;
       }
       if (strcmp(input_buffer,"true") == 0){
-         return TRUE;
+         return apm_lexer::TRUE;
       }
       if (strcmp(input_buffer,"false") == 0){
-         return FALSE;
+         return apm_lexer::FALSE;
       }
       if (strcmp(input_buffer,"int") == 0){
-         return INTEGER;
+         return apm_lexer::INTEGER;
       }
       if (strcmp(input_buffer,"float") == 0){
-         return FLOAT;
+         return apm_lexer::FLOAT;
       }
       if (strcmp(input_buffer,"bool") == 0){
-         return BOOL;
+         return apm_lexer::BOOL;
       }
       if (strcmp(input_buffer,"fun") == 0){
-         return FUN;
+         return apm_lexer::FUN;
       }
       if (strcmp(input_buffer,"void") == 0){
-         return VOID;
+         return apm_lexer::VOID;
       }
       if (strcmp(input_buffer,"return") == 0){
-         return RETURN;
+         return apm_lexer::RETURN;
       }
-      return NAME;
+      return apm_lexer::NAME;
    }
    // numbers 
-   apm_mix::util::number_parser::num_tok tok = apm_mix::util::number_parser::get_tok(ch);
-   if ( tok != apm_mix::util::number_parser::num_tok::UNKNOWN){
+   number_parser::num_tok tok = number_parser::get_tok(ch);
+   if ( tok != number_parser::num_tok::UNKNOWN){
       input_buffer[0] = ch;
       buffer_idx = 1;
       while (1){
          if ( buffer_idx < (buffer_length -1)){
             ch = fn_read_char();
-            if (apm_mix::util::number_parser::get_tok(ch) != apm_mix::util::number_parser::num_tok::UNKNOWN) {
+            if (number_parser::get_tok(ch) != number_parser::num_tok::UNKNOWN) {
                input_buffer[buffer_idx] = ch;
                ++buffer_idx;
             }else{
@@ -240,13 +244,13 @@ int apm_lexer::yylex()
             return 0;
          }
       }
-      apm_mix::util::number_parser parser;
-      apm_mix::util::number_parser::num_type result = parser(input_buffer,&float_value,&int_value,buffer_idx);
+      number_parser parser;
+      number_parser::num_type result = parser(input_buffer,&float_value,&int_value,buffer_idx);
       switch (result){
-         case apm_mix::util::number_parser::num_type::FLOAT:
-            return FLOAT;
-         case apm_mix::util::number_parser::num_type::INT:
-            return INTEGER;
+         case number_parser::num_type::FLOAT:
+            return apm_lexer::FLOAT;
+         case number_parser::num_type::INT:
+            return apm_lexer::INTEGER;
          default:
             error_num = invalid_number_syntax;
             return 0;

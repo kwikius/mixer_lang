@@ -4,7 +4,6 @@
 #include <cassert>
 #include <limits>
 
-#include "bison.tab.h"
 #include "exprtree.hpp"
 #include "arg_list.hpp"
 #include "function.hpp"
@@ -161,10 +160,10 @@ namespace {
    {
       bool (*fun)( T, T) = nullptr;
       switch (op){
-         case  LESS_EQUAL:
+         case  apm_lexer::LESS_EQUAL:
             fun = fun_less_equal;
             break;
-         case  GREATER_EQUAL:
+         case  apm_lexer::GREATER_EQUAL:
             fun = fun_greater_equal;
             break;
          case  '<':
@@ -185,10 +184,10 @@ namespace {
    {
       bool (*fun)(T,T) = nullptr;
       switch (op){
-         case  EQUAL_EQUAL:
+         case  apm_lexer::EQUAL_EQUAL:
             fun = fun_equal_to;
             break;
-         case  NOT_EQUAL:
+         case  apm_lexer::NOT_EQUAL:
             fun = fun_not_equal;
             break;
          default:
@@ -278,12 +277,12 @@ bool apm_mix::mixer_create()
 {
    for (;;){
       switch(apm_lexer::yylex()){
-         case NAME :
+         case apm_lexer::NAME :
              if ( !parse_assign_expr(apm_lexer::get_lexer_string())){
                 return false;
              }
              break;
-         case MIXER:
+         case apm_lexer::MIXER:
            return parse_mixer_function();
          default:
             return apm_mix::yyerror();
@@ -353,15 +352,15 @@ namespace{
     {
       int tok = apm_lexer::yylex();
       switch(tok){
-         case TRUE:
+         case apm_lexer::TRUE:
             return new apm_mix::constant<bool>{true};
-         case FALSE:
+         case apm_lexer::FALSE:
             return new apm_mix::constant<bool>{false};
-         case INTEGER:
+         case apm_lexer::INTEGER:
              return new apm_mix::constant<int64_t>{apm_lexer::get_lexer_int()};
-         case FLOAT:
+         case apm_lexer::FLOAT:
              return new apm_mix::constant<double>{apm_lexer::get_lexer_float()};
-         case NAME:{
+         case apm_lexer::NAME:{
             uint32_t const max_name_len = apm_lexer::get_max_string_chars();
             char name[max_name_len + 1];
             strncpy(name,apm_lexer::get_lexer_string(),max_name_len);
@@ -416,9 +415,9 @@ namespace{
                }
             }
          } 
-         case INPUT:{
+         case apm_lexer::INPUT:{
             if ( apm_lexer::yylex() == '{' ){
-               if (apm_lexer::yylex() == NAME){
+               if (apm_lexer::yylex() == apm_lexer::NAME){
                   apm_mix::abc_expr* expr = mixer->find_input(apm_lexer::get_lexer_string());
                      if ( expr){
                         if (apm_lexer::yylex() == '}'){
@@ -561,8 +560,8 @@ namespace{
             int tok = apm_lexer::yylex() ;
             for(;;){
                switch( tok){
-                  case  LESS_EQUAL:
-                  case  GREATER_EQUAL:
+                  case  apm_lexer::LESS_EQUAL:
+                  case  apm_lexer::GREATER_EQUAL:
                   case  '<':
                   case  '>': {
                      apm_mix::abc_expr* right = parse_add_expr();
@@ -599,8 +598,8 @@ namespace{
           int tok = apm_lexer::yylex() ;
           for(;;){
             switch( tok){
-               case EQUAL_EQUAL:
-               case NOT_EQUAL: {
+               case apm_lexer::EQUAL_EQUAL:
+               case apm_lexer::NOT_EQUAL: {
                    apm_mix::abc_expr* right = parse_rel_expr();
                    if (right){
                      if ( are_same_type(left,right)){
@@ -769,12 +768,12 @@ namespace{
          // forcing constants e.g whatever the value read is now is the constant value
          for (;;){
             switch(apm_lexer::yylex()){
-             case NAME :
+             case apm_lexer::NAME :
                 if ( !parse_assign_expr(apm_lexer::get_lexer_string())){
                   return false;
                 }
                 break;
-            case OUTPUT :
+            case apm_lexer::OUTPUT :
                 if (! parse_output_expr()){
                   return false;
                 }

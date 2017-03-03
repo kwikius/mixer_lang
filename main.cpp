@@ -5,6 +5,9 @@
 #include "util/joystick.hpp"
 #include "util/key_was_pressed.hpp"
 
+
+namespace util = mixer_lang_util;
+
 namespace {
 
    double airspeed = 0.0; // test pathological on airspeed based mixer
@@ -18,7 +21,7 @@ namespace {
    double get_flap();
    double get_control_mode();
    bool open_joystick(const  char * device_name);
-   apm_mix::util::joystick* get_joystick();
+   util::joystick* get_joystick();
    void close_joystick();
    void sleep_ms(uint32_t ms)
    {
@@ -64,10 +67,10 @@ int main(int argc , char* argv[])
    if (mixer_build_success){
       printf("Press any key to start and once running press any key to quit\n");
       fflush(stdin);
-      while (! apm_mix::util::key_was_pressed()){;}
+      while (! util::key_was_pressed()){;}
       getchar(); // clear key pressed
       if ( open_joystick("/dev/input/js0")){
-         while (get_joystick()->is_running() && ! apm_mix::util::key_was_pressed()){
+         while (get_joystick()->is_running() && ! util::key_was_pressed()){
             sleep_ms(20);
             apm_mix::mixer_eval();
          }
@@ -80,14 +83,14 @@ int main(int argc , char* argv[])
 
 namespace {
 
-   apm_mix::util::joystick* p_joystick = nullptr;
+   util::joystick* p_joystick = nullptr;
 
-   apm_mix::util::joystick* get_joystick(){ return p_joystick;}
+   util::joystick* get_joystick(){ return p_joystick;}
 
    bool open_joystick(const char* device_name)
    {
       try{
-         p_joystick = new apm_mix::util::joystick(device_name);
+         p_joystick = new util::joystick(device_name);
          return p_joystick != nullptr;
       }catch (std::exception & e){
          printf("Exception ; %s\n", e.what());
