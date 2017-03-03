@@ -164,7 +164,24 @@ if
 
    syntax:
 
-   ``` x = if(v1 < v1,v3,v4);``
+   ``` x = if(v1 < v1,v3,v4);```
+
+Curves
+------
+
+A curve is basically a function defined as line graph. It can be used to map an input to an output.
+
+   syntax:
+
+   ```
+   my_curve = [a,b],[c,d],[e,f],[g,h]; # my curve type is deduced as a curve function
+
+   # modify roll input with expo or whatever
+   my_result = my_curve(input{Roll});
+   ```
+
+There are some rules re defining curves (TODO: rules)
+
 
 Implementation
 --------------
