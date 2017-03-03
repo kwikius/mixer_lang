@@ -4,6 +4,7 @@
 #include "../../src/lexer.hpp"
 #include "joystick.hpp"
 #include "key_was_pressed.hpp"
+#include <cstdio>
 
 namespace util = mixer_lang_util;
 
@@ -43,6 +44,26 @@ apm_mix::input_pair inputs[]
       apm_mix::input_pair{"FAILSAFE_ON", static_cast<bool(*)()>([]()->bool{return in_failsafe;})}
    };
 
+template<unsigned N>
+void action(double const & v)
+{
+   printf("!!! output[%u] = %f\n",N,v);
+}
+
+apm_mix::abc_expr* outputs[]
+= {
+   new apm_mix::output<double>{action<0>}
+  , new apm_mix::output<double>{action<1>}
+  , new apm_mix::output<double>{action<2>}
+  , new apm_mix::output<double>{action<3>}
+  , new apm_mix::output<double>{action<4>}
+  , new apm_mix::output<double>{action<5>}
+   ,new apm_mix::output<double>{action<6>}
+  , new apm_mix::output<double>{action<7>}
+  , new apm_mix::output<double>{action<8>}
+  , new apm_mix::output<double>{action<9>}
+};
+
 int main(int argc , char* argv[])
 {
    if ( argc < 2){
@@ -50,7 +71,10 @@ int main(int argc , char* argv[])
       return EXIT_SUCCESS;
    }
 
-   apm_mix::mixer_init(inputs, sizeof(inputs)/sizeof(inputs[0]));
+   apm_mix::mixer_init(
+      inputs, sizeof(inputs)/sizeof(inputs[0])
+      ,outputs, sizeof(outputs)/sizeof(outputs[0])
+   );
 
    bool mixer_build_success = false;
    if ( apm_lexer::open_file(argv[1])){

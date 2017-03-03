@@ -49,6 +49,8 @@ namespace apm_mix{
       T m_value;
    };
 
+   
+
    template <typename T>
    struct input : expr<T>{
       typedef T ( *pfn_get) ();
@@ -61,6 +63,41 @@ namespace apm_mix{
       
       private:
          pfn_get m_pfn_get;
+   };
+
+   template <typename T>
+   struct output : expr<T> {
+
+      typedef void (*pfn_send)( T const &);
+      output(pfn_send put_fn_in):m_pfn_send{put_fn_in}, m_expr{nullptr}{}
+      T eval()const 
+      { 
+         if ( m_expr) { 
+            return m_expr->eval();
+         }else {
+            return T{0} ;
+         }
+      }
+      bool has_output_expr() const { return m_expr != nullptr;}
+      bool set_output_expr(expr<T> * e) 
+      {
+         if (m_expr == nullptr){
+            m_expr = e; 
+            return true;
+         }else{ 
+            return false;
+         }
+      }
+      bool is_constant() const { return false;}
+      expr<T>* fold() { if ( m_expr) {m_expr = (expr<T>*)m_expr->fold();} return this;}
+      expr<T>* clone() const { return new output{this->m_pfn_send, m_expr};}
+      void apply() { m_pfn_send(this->eval());}
+      private:
+      // called by clone
+      output(pfn_send put_fn_in, expr<T> * e)
+      :m_pfn_send{put_fn_in}, m_expr{e}{}
+      pfn_send m_pfn_send;
+      expr<T> * m_expr;
    };
 
    template <typename Result , typename Arg>

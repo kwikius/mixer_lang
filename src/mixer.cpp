@@ -1,4 +1,4 @@
-#include <cstdio>
+//#include <cstdio>
 #include <cstring>
 #include <malloc.h>
 #include <cassert>
@@ -258,9 +258,9 @@ namespace {
    }
 }
 
-void apm_mix::mixer_init(input_pair* inputs, uint32_t num_inputs)
+void apm_mix::mixer_init(input_pair* inputs, uint32_t num_inputs,abc_expr** outputs, uint32_t num_outputs)
 {
-    mixer = new apm_mix::mixer_t{inputs,num_inputs};
+    mixer = new apm_mix::mixer_t{inputs,num_inputs,outputs,num_outputs};
     symtab = new apm_mix::lookup_t<apm_mix::abc_expr*>;
     funtab = new apm_mix::lookup_t<apm_mix::function_builder>;
     funtab->add_item("if",apm_mix::make_function_if);
