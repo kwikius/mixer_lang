@@ -23,6 +23,9 @@ test:
 clean_test :
 	make -C ./test clean
 
+run_taranis : taranis_joystick
+	./examples/TaranisUSBJoystick/bin/taranis_mixer.exe ./examples/TaranisUSBJoystick/bin/EasyStar.mix
+
 clean:
 	make -C ./examples/TaranisUSBJoystick clean
 	make -C ./src clean
