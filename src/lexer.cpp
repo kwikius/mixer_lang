@@ -16,8 +16,8 @@ namespace {
    constexpr uint32_t buffer_length = 50;
    char input_buffer[buffer_length];
    uint32_t buffer_idx = 0;
-   double  float_value;
-   int64_t int_value;
+   apm_mix::float_t  float_value;
+   apm_mix::int_t int_value;
    uint32_t error_num = 0;
 
    constexpr uint32_t name_too_long = -2;
@@ -80,12 +80,12 @@ const char* apm_lexer::get_lexer_string()
     return input_buffer;
 }
 
-int64_t apm_lexer::get_lexer_int()
+apm_mix::int_t apm_lexer::get_lexer_int()
 {
     return int_value;
 }
 
-double apm_lexer::get_lexer_float()
+apm_mix::float_t apm_lexer::get_lexer_float()
 {
     return float_value;
 }

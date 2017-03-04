@@ -224,9 +224,9 @@ namespace {
    apm_mix::abc_expr * make_math_op(int op, apm_mix::abc_expr* lhs, apm_mix::abc_expr* rhs)
    {
         if  (is_float_expr(lhs)){
-         return make_math_op_tpl(op,(apm_mix::expr<double>*) lhs,(apm_mix::expr<double>*) rhs);
+         return make_math_op_tpl(op,(apm_mix::expr<apm_mix::float_t>*) lhs,(apm_mix::expr<apm_mix::float_t>*) rhs);
        }else{
-         return make_math_op_tpl(op,(apm_mix::expr<int64_t>*) lhs,(apm_mix::expr<int64_t>*) rhs);
+         return make_math_op_tpl(op,(apm_mix::expr<apm_mix::int_t>*) lhs,(apm_mix::expr<apm_mix::int_t>*) rhs);
        }
    }
    // asumes that lhs and rhs are same type
@@ -235,10 +235,10 @@ namespace {
    {
        if  (is_float_expr(lhs)){
         // printf("in float rel op\n");
-         return make_rel_op_tpl(op,(apm_mix::expr<double>*) lhs,(apm_mix::expr<double>*) rhs);
+         return make_rel_op_tpl(op,(apm_mix::expr<apm_mix::float_t>*) lhs,(apm_mix::expr<apm_mix::float_t>*) rhs);
        }else{
          // printf("in float rel op\n");
-         return make_rel_op_tpl(op,(apm_mix::expr<int64_t>*) lhs,(apm_mix::expr<int64_t>*) rhs);
+         return make_rel_op_tpl(op,(apm_mix::expr<apm_mix::int_t>*) lhs,(apm_mix::expr<apm_mix::int_t>*) rhs);
        }
    }
 
@@ -247,10 +247,10 @@ namespace {
    {
        if  (is_float_expr(lhs)){
         // printf("in float rel op\n");
-         return make_equality_op_tpl(op,(apm_mix::expr<double>*) lhs,(apm_mix::expr<double>*) rhs);
+         return make_equality_op_tpl(op,(apm_mix::expr<apm_mix::float_t>*) lhs,(apm_mix::expr<apm_mix::float_t>*) rhs);
        }else{
            if ( is_int_expr(lhs)){
-               return make_equality_op_tpl(op,(apm_mix::expr<int64_t>*) lhs,(apm_mix::expr<int64_t>*) rhs);
+               return make_equality_op_tpl(op,(apm_mix::expr<apm_mix::int_t>*) lhs,(apm_mix::expr<apm_mix::int_t>*) rhs);
            }else{
                 return make_equality_op_tpl(op,(apm_mix::expr<bool>*) lhs,(apm_mix::expr<bool>*) rhs);
            }
@@ -365,9 +365,9 @@ namespace{
          case apm_lexer::FALSE:
             return new apm_mix::constant<bool>{false};
          case apm_lexer::INTEGER:
-             return new apm_mix::constant<int64_t>{apm_lexer::get_lexer_int()};
+             return new apm_mix::constant<apm_mix::int_t>{apm_lexer::get_lexer_int()};
          case apm_lexer::FLOAT:
-             return new apm_mix::constant<double>{apm_lexer::get_lexer_float()};
+             return new apm_mix::constant<apm_mix::float_t>{apm_lexer::get_lexer_float()};
          case apm_lexer::NAME:{
             uint32_t const max_name_len = apm_lexer::get_max_string_chars();
             char name[max_name_len + 1];
@@ -453,9 +453,9 @@ namespace{
                 if ( is_numeric(expr) ){
                   if (tok == '-'){
                      if ( is_float_expr(expr) ){
-                        return new apm_mix::unary_op<double,double>{fun_negate,(apm_mix::expr<double>*)expr};
+                        return new apm_mix::unary_op<apm_mix::float_t,apm_mix::float_t>{fun_negate,(apm_mix::expr<apm_mix::float_t>*)expr};
                      }else{
-                        return new apm_mix::unary_op<int64_t, int64_t>{fun_negate,(apm_mix::expr<int64_t>*)expr};
+                        return new apm_mix::unary_op<apm_mix::int_t, apm_mix::int_t>{fun_negate,(apm_mix::expr<apm_mix::int_t>*)expr};
                      }
                   }else{
                      return expr;
@@ -722,7 +722,7 @@ namespace{
             if ( expr){
               if ( apm_lexer::yylex() == ']'){
                   if ( (expr->get_ID() == apm_mix::abc_expr::exprID::INT) && (expr->is_constant())){
-                     auto* expr1 = (apm_mix::expr<int64_t>*) expr;
+                     auto* expr1 = (apm_mix::expr<apm_mix::int_t>*) expr;
                      uint32_t const idx  = expr1->eval();
                      delete expr; expr = nullptr;
                      

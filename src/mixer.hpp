@@ -1,8 +1,10 @@
 #ifndef MIXER_LANG_MIXER_HPP_INCLUDED
 #define MIXER_LANG_MIXER_HPP_INCLUDED
 
+#include "mixer_lang_types.hpp"
 #include "exprtree.hpp"
 #include "arg_list.hpp"
+
 #include <cstring>
 
 namespace apm_mix{
@@ -62,13 +64,13 @@ namespace apm_mix{
                return true;
             }
             case abc_expr::exprID::INT:{
-               auto * out = (output<int64_t>*)m_outputs[n];
-               out->set_output_expr( (expr<int64_t>*) output_expr);
+               auto * out = (output<apm_mix::int_t>*)m_outputs[n];
+               out->set_output_expr( (expr<apm_mix::int_t>*) output_expr);
                return true;
             }
             case abc_expr::exprID::FLOAT:{
-               auto * out = (output<double>*)m_outputs[n];
-               out->set_output_expr((expr<double>*) output_expr);
+               auto * out = (output<apm_mix::float_t>*)m_outputs[n];
+               out->set_output_expr((expr<apm_mix::float_t>*) output_expr);
                return true;
             }
             default:
@@ -104,12 +106,12 @@ namespace apm_mix{
             if ( m_outputs[i] != nullptr){
                switch ( m_outputs[i]->get_ID()){
                   case abc_expr::exprID::FLOAT:{
-                     auto * out = (output<double> *)m_outputs[i];
+                     auto * out = (output<apm_mix::float_t> *)m_outputs[i];
                      out->apply();
                      break;
                   }
                   case abc_expr::exprID::INT:{
-                     auto * out = (output<int64_t> *)m_outputs[i];
+                     auto * out = (output<apm_mix::int_t> *)m_outputs[i];
                      out->apply();
                      break;
                   }

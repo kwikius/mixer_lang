@@ -36,23 +36,23 @@ namespace {
       static constexpr uint8_t control_mode = 5;
    };
 
-   double get_joystick_value(uint8_t n){
+   apm_mix::float_t get_joystick_value(uint8_t n){
       if ( p_joystick){
-         return static_cast<double>(p_joystick->get_channel(n)) / 32767.0;
+         return static_cast<apm_mix::float_t>(p_joystick->get_channel(n) / 32767.0);
       }else{
-         return 0.0;
+         return static_cast<apm_mix::float_t>(0.0);
       }
    }
 }
 
-double get_pitch() { return get_joystick_value(idx::pitch);}
-double get_yaw()  { return get_joystick_value(idx::yaw);}
-double get_roll(){ return get_joystick_value(idx::roll);}
-double get_throttle() { return get_joystick_value(idx::throttle);}
-double get_flap() { return get_joystick_value(idx::flap);}
-double get_control_mode() { return get_joystick_value(idx::control_mode);}
+apm_mix::float_t get_pitch() { return get_joystick_value(idx::pitch);}
+apm_mix::float_t get_yaw()  { return get_joystick_value(idx::yaw);}
+apm_mix::float_t get_roll(){ return get_joystick_value(idx::roll);}
+apm_mix::float_t get_throttle() { return get_joystick_value(idx::throttle);}
+apm_mix::float_t get_flap() { return get_joystick_value(idx::flap);}
+apm_mix::float_t get_control_mode() { return get_joystick_value(idx::control_mode);}
 
 void sleep_ms(uint32_t ms)
 {
-  std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::milliseconds{ms});
+   std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::milliseconds{ms});
 }

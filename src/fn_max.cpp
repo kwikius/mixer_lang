@@ -48,9 +48,9 @@ apm_mix::abc_expr * apm_mix::make_function_max(apm_mix::arg_list* args)
 
    switch(arg1->get_ID()){
       case abc_expr::exprID::INT:
-         return new apm_mix::binary_op<int64_t,int64_t>{fun_max,(apm_mix::expr<int64_t>*)arg1,(apm_mix::expr<int64_t>*)arg2 };
+         return new apm_mix::binary_op<apm_mix::int_t,apm_mix::int_t>{fun_max,(apm_mix::expr<apm_mix::int_t>*)arg1,(apm_mix::expr<apm_mix::int_t>*)arg2 };
       case abc_expr::exprID::FLOAT:
-         return new apm_mix::binary_op<double,double>{fun_max,(apm_mix::expr<double>*)arg1,(apm_mix::expr<double>*)arg2 };
+         return new apm_mix::binary_op<apm_mix::float_t,apm_mix::float_t>{fun_max,(apm_mix::expr<apm_mix::float_t>*)arg1,(apm_mix::expr<apm_mix::float_t>*)arg2 };
       default:
          apm_mix::yyerror("unexpected");
          return nullptr;
@@ -76,9 +76,9 @@ apm_mix::abc_expr * apm_mix::make_function_min(apm_mix::arg_list* args)
 
    switch(arg1->get_ID()){
       case abc_expr::exprID::INT:
-         return new apm_mix::binary_op<int64_t,int64_t>{fun_min,(apm_mix::expr<int64_t>*)arg1,(apm_mix::expr<int64_t>*)arg2 };
+         return new apm_mix::binary_op<apm_mix::int_t,apm_mix::int_t>{fun_min,(apm_mix::expr<apm_mix::int_t>*)arg1,(apm_mix::expr<apm_mix::int_t>*)arg2 };
       case abc_expr::exprID::FLOAT:
-         return new apm_mix::binary_op<double,double>{fun_min,(apm_mix::expr<double>*)arg1,(apm_mix::expr<double>*)arg2 };
+         return new apm_mix::binary_op<apm_mix::float_t,apm_mix::float_t>{fun_min,(apm_mix::expr<apm_mix::float_t>*)arg1,(apm_mix::expr<apm_mix::float_t>*)arg2 };
       default:
          apm_mix::yyerror("unexpected");
          return nullptr;

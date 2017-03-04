@@ -24,9 +24,9 @@ apm_mix::abc_expr * apm_mix::make_function_if(apm_mix::arg_list* args)
       auto* cond = (apm_mix::expr<bool>*)abc_cond;
       switch(lhs->get_ID()){
          case abc_expr::exprID::FLOAT:
-            return new apm_mix::if_op<double>{cond,(apm_mix::expr<double>*)lhs,(apm_mix::expr<double>*)rhs};
+            return new apm_mix::if_op<apm_mix::float_t>{cond,(apm_mix::expr<apm_mix::float_t>*)lhs,(apm_mix::expr<apm_mix::float_t>*)rhs};
          case abc_expr::exprID::INT:
-            return new apm_mix::if_op<int64_t>{cond,(apm_mix::expr<int64_t>*)lhs,(apm_mix::expr<int64_t>*)rhs};
+            return new apm_mix::if_op<apm_mix::int_t>{cond,(apm_mix::expr<apm_mix::int_t>*)lhs,(apm_mix::expr<apm_mix::int_t>*)rhs};
          case abc_expr::exprID::BOOL:
             return new apm_mix::if_op<bool>{cond,(apm_mix::expr<bool>*)lhs,(apm_mix::expr<bool>*)rhs};
          default:

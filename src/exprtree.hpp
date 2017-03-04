@@ -2,8 +2,8 @@
 #define MIXER_LANG_EXPRTREE_HPP_INCLUDED
 
 #include <cstdint>
+#include "mixer_lang_types.hpp"
 #include "abc_expr.hpp"
-
 
 namespace apm_mix{
 
@@ -15,12 +15,12 @@ namespace apm_mix{
    struct get_type_id;
 
    template<>
-   struct get_type_id<int64_t>{
+   struct get_type_id<apm_mix::int_t>{
       static constexpr auto value = abc_expr::exprID::INT;
    };
 
    template<>
-   struct get_type_id<double>{
+   struct get_type_id<apm_mix::float_t>{
       static constexpr auto value = abc_expr::exprID::FLOAT;
    };
 

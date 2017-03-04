@@ -12,6 +12,7 @@
 #include <thread>    
 #include <chrono> 
 #include <atomic> 
+#include "../../src/mixer_lang_types.hpp"
 
 /*
   link with pthread
@@ -95,12 +96,12 @@ namespace mixer_lang_util{
 bool open_joystick(const  char * device_name);
 mixer_lang_util::joystick* get_joystick();
 void close_joystick();
-double get_pitch();
-double get_yaw();
-double get_roll();
-double get_throttle();
-double get_flap();
-double get_control_mode();
+apm_mix::float_t get_pitch();
+apm_mix::float_t get_yaw();
+apm_mix::float_t get_roll();
+apm_mix::float_t get_throttle();
+apm_mix::float_t get_flap();
+apm_mix::float_t get_control_mode();
 void sleep_ms(uint32_t ms);
 bool key_was_pressed();
 

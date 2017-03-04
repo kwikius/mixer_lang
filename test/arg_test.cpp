@@ -33,7 +33,7 @@ void args_test()
    QUAN_CHECK(get_arg(args,1) == nullptr);
    QUAN_CHECK(get_arg(args,2) == nullptr);
 
-   abc_expr* expr2 = new constant<double>{1000.0};
+   abc_expr* expr2 = new constant<apm_mix::float_t>{1000.0};
 
    auto * p = add_arg(args,expr2);
    QUAN_CHECK(p ==args);
@@ -42,7 +42,7 @@ void args_test()
    QUAN_CHECK(get_arg(args,1) == expr2);
    QUAN_CHECK(get_arg(args,2) == nullptr);
 
-   abc_expr* expr3 = new constant<int64_t>{100};
+   abc_expr* expr3 = new constant<apm_mix::int_t>{100};
 
    auto * p1 = add_arg(args,expr3);
    QUAN_CHECK(p1 ==args);

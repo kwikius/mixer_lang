@@ -6,17 +6,17 @@
 namespace {
 
    // This value simulates the airspeed sensor reading
-   // TODO make a way to vary it when running ... prob
+   // TODO make a way to vary it when running for sim ... prob
    // more suitable for a GUI version
-   double airspeed_m_per_s = 0.0; //
+   apm_mix::float_t airspeed_m_per_s = 0.0; //
 
-   // true simulates a posible sensor failure 
+   // true simulates a possible sensor failure 
    // which may mean airspeed reading is no good
    bool in_failsafe = false;  //
 
    // The mixer uses functions pointers  to get its inputs
    // The inputs can be of type Bool, Integer or Float 
-   double get_airspeed(){ return airspeed_m_per_s;}
+   apm_mix::float_t get_airspeed(){ return airspeed_m_per_s;}
 
    // The input array represents all the available inputs
    // which are passed to the mixer constructor
@@ -25,20 +25,20 @@ namespace {
 
    apm_mix::input_pair inputs[]
     = { 
-         apm_mix::input_pair{"Pitch", static_cast<double(*)()>(get_pitch)},
-         apm_mix::input_pair{"Yaw",  static_cast<double(*)()>(get_yaw)},
-         apm_mix::input_pair{"Roll", static_cast<double(*)()>(get_roll)},
-         apm_mix::input_pair{"Throttle", static_cast<double(*)()>(get_throttle)},
-         apm_mix::input_pair{"Flap", static_cast<double(*)()>(get_flap)},
-         apm_mix::input_pair{"Airspeed", static_cast<double(*)()>(get_airspeed)},
-         apm_mix::input_pair{"ControlMode", static_cast<double(*)()>(get_control_mode)},
-         apm_mix::input_pair{"ARSPD_MIN", static_cast<double(*)()>([]()->double{return 10.0;})},
-         apm_mix::input_pair{"ARSPD_CRUISE",static_cast<double(*)()>([]()->double{return 12.0;})},
-         apm_mix::input_pair{"ARSPD_MAX", static_cast<double(*)()>([]()->double{return 20.0;})},
+         apm_mix::input_pair{"Pitch", static_cast<apm_mix::float_t(*)()>(get_pitch)},
+         apm_mix::input_pair{"Yaw",  static_cast<apm_mix::float_t(*)()>(get_yaw)},
+         apm_mix::input_pair{"Roll", static_cast<apm_mix::float_t(*)()>(get_roll)},
+         apm_mix::input_pair{"Throttle", static_cast<apm_mix::float_t(*)()>(get_throttle)},
+         apm_mix::input_pair{"Flap", static_cast<apm_mix::float_t(*)()>(get_flap)},
+         apm_mix::input_pair{"Airspeed", static_cast<apm_mix::float_t(*)()>(get_airspeed)},
+         apm_mix::input_pair{"ControlMode", static_cast<apm_mix::float_t(*)()>(get_control_mode)},
+         apm_mix::input_pair{"ARSPD_MIN", static_cast<apm_mix::float_t(*)()>([]()->apm_mix::float_t{return 10.0;})},
+         apm_mix::input_pair{"ARSPD_CRUISE",static_cast<apm_mix::float_t(*)()>([]()->apm_mix::float_t{return 12.0;})},
+         apm_mix::input_pair{"ARSPD_MAX", static_cast<apm_mix::float_t(*)()>([]()->apm_mix::float_t{return 20.0;})},
          // for completeness a bool input
          apm_mix::input_pair{"FAILSAFE_ON", static_cast<bool(*)()>([]()->bool{return in_failsafe;})},
          // for completeness an int input
-         apm_mix::input_pair{"DUMMY_INT", static_cast<int64_t(*)()>([]()->int64_t{return 1000;})}
+         apm_mix::input_pair{"DUMMY_INT", static_cast<apm_mix::int_t(*)()>([]()->apm_mix::int_t{return 1000;})}
       };
 
    // The mixers also uses function pointers to send its outputs.
@@ -47,7 +47,7 @@ namespace {
    // that prints the output to stdout
    // The non type template parameter is handy to provide the index
    template<unsigned N>
-   void action(double const & v)
+   void action(apm_mix::float_t const & v)
    {
       printf("!!! output[%u] = %f\n",N,v);
    }
@@ -61,7 +61,6 @@ namespace {
       printf("!!! output[%u] = %s\n",N, (v? true_:false_));
    }
 
-   
    // Outputs can output a type of Integer, Bool or Float
    // Allowing different output types may be overkill
    // The types should probably be the same ( homogeneous)
@@ -73,15 +72,15 @@ namespace {
    apm_mix::abc_expr* outputs[]
    = {
       new apm_mix::output<bool>{action<0>}
-     , new apm_mix::output<double>{action<1>}
-     , new apm_mix::output<double>{action<2>}
-     , new apm_mix::output<double>{action<3>}
-     , new apm_mix::output<double>{action<4>}
-     , new apm_mix::output<double>{action<5>}
-      ,new apm_mix::output<double>{action<6>}
-     , new apm_mix::output<double>{action<7>}
-     , new apm_mix::output<double>{action<8>}
-     , new apm_mix::output<double>{action<9>}
+     , new apm_mix::output<apm_mix::float_t>{action<1>}
+     , new apm_mix::output<apm_mix::float_t>{action<2>}
+     , new apm_mix::output<apm_mix::float_t>{action<3>}
+     , new apm_mix::output<apm_mix::float_t>{action<4>}
+     , new apm_mix::output<apm_mix::float_t>{action<5>}
+      ,new apm_mix::output<apm_mix::float_t>{action<6>}
+     , new apm_mix::output<apm_mix::float_t>{action<7>}
+     , new apm_mix::output<apm_mix::float_t>{action<8>}
+     , new apm_mix::output<apm_mix::float_t>{action<9>}
    };
 }
 
