@@ -276,35 +276,24 @@ I hope it will be smaller when built as a library for STM32 arm. The aim is unde
 Dependencies
 ------------
 
-None  
+None.  
 
-Compilation/ Building
----------------------
+Compilation/ Building/ Running
+-----------------------------
+
+The library currently builds for linux systems
 
 There is a Make file included . See [Gnu Make](https://www.gnu.org/software/make).
 
-If on Windows, I recommend installing [MinGW](http://www.mingw.org) or [Cygwin](https://www.cygwin.com).
-
-Enter the [examples/TaranisUSBJoystick directory](https://github.com/kwikius/mixer_lang/blob/master/examples/TaranisUSBJoystick/) and invoke:
+After downloading the mixer_lang library, enter the top level mixer_lang directory andd invoke make with the following argument
 
 ```
-~>$ make 
+~>$ make run_taranis_easystar
 ```
-
-Running
--------
-
-If build is successful there should be a mixer_lang.exe file in the [https://github.com/kwikius/mixer_lang/blob/master/TaranisUSBJoystick/bin](https://github.com/kwikius/mixer_lang/blob/master/examples/TaranisUSBJoystick/bin)) sub-directory. 
-To run , Switch on your Taranis , then connect to your Linux PC via USB and Invoke:
-
-```
-~>cd bin
-~>$ ./mixer_lang.exe EasyStar.mix
-```
-
-(Alternatively call the app on your own mixer script). To start and stop press any key.
+This will build and start the mixer with the Easystar mixer. To start and stop press any key.
 When running, Twiddle the sticks and you should see some changing outputs.
-Note: To make sense of the output you will need to set up an "Ideal" model where the Taranis doesnt do any mixing of course, just sends stick inputs to outputs
+Note: To make sense of the output you will need to set up an "Ideal" model where the Taranis 
+doesnt do any mixing of course, just sends stick inputs to outputs.
 
 Notes
 -----
