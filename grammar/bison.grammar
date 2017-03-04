@@ -23,7 +23,7 @@ Stmt:
  ModifiedName '=' RValue ';'
  | OUTPUT '[' Expr ']' '='  Expr ';'
  /* note IF is overloaded also as a function */
- | IF '(' Expr ')' '{' Stmts '}' IfContinuation
+ | IF '(' Expr ')' Stmts  IfContinuation
 ;
 
 ModifiedName:
@@ -37,8 +37,8 @@ RValue:
 ;
 
 IfContinuation:
-  ELIF '(' Expr ')' '{' Stmts '}' IfContinuation
-| ELSE '(' Expr ')' '{' Stmts '}' ENDIF
+  ELIF '(' Expr ')'  Stmts  IfContinuation
+| ELSE '(' Expr ')'  Stmts  ENDIF
 | ENDIF
 ;
 
