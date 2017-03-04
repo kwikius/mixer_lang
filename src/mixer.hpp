@@ -19,27 +19,18 @@ namespace apm_mix{
       const char * m_name;
    };
 
-   
-
    // TODO destructor for mixer
    struct mixer_t{
-
-      //static constexpr uint32_t num_outputs = 18;
-      
       mixer_t(input_pair* inputs, uint32_t num_inputs, abc_expr ** outputs , uint32_t num_outputs )
          :m_inputs{inputs}
          ,m_num_inputs{num_inputs}
          ,m_outputs{outputs}
          ,m_num_outputs{num_outputs}
          ,m_expressions{nullptr}
-      {
-//         for ( uint32_t i = 0; i < num_outputs; ++i){
-//            m_outputs[i] = nullptr;
-//         }
-      }
+      {}
 
       /*
-         addan l_value ( assignment expression , named expression)
+         add an l_value ( assignment expression , named expression)
          to the list of expressions in the mixer.
        */
       void add(abc_expr* expr)
@@ -50,7 +41,7 @@ namespace apm_mix{
       /*
          add an output expression to the mixer
          if is an unfilled slot for it,
-         else retrun false;
+         else return false;
       */
       bool add_output(uint32_t n, abc_expr* output_expr)
       {
@@ -99,9 +90,13 @@ namespace apm_mix{
          }
          return nullptr;
       }
+
       /*
-         TODO. Currently this goes nowhere, just dumps the values
-         Maybe hook up some output functions once the tree is built?
+        The whole point of the mixer!
+        Evaluate the outputs periodically and send the results 
+        of the attached expresions to the output functions
+        It might be faster to make this homogeneous types only
+        but its lookup is probably not much overhead
       */
       void eval_outputs()
       {
@@ -110,13 +105,11 @@ namespace apm_mix{
                switch ( m_outputs[i]->get_ID()){
                   case abc_expr::exprID::FLOAT:{
                      auto * out = (output<double> *)m_outputs[i];
-                    // printf("output[%u] = %f\n",static_cast<unsigned>(i),out->eval());
                      out->apply();
                      break;
                   }
                   case abc_expr::exprID::INT:{
                      auto * out = (output<int64_t> *)m_outputs[i];
-                     //printf("output[%u] = %d\n",static_cast<unsigned>(i),static_cast<int>(out->eval()));
                      out->apply();
                      break;
                   }
@@ -140,9 +133,8 @@ namespace apm_mix{
       arg_list* m_expressions;
    };
 
-   //void mixer_init(input_pair* inputs, uint32_t num_inputs);
-   void mixer_init(input_pair* inputs, uint32_t num_inputs, abc_expr ** outputs , uint32_t num_outputs);
-   bool mixer_create();
+   bool mixer_create(const char * filename,
+     input_pair* inputs, uint32_t num_inputs, abc_expr ** outputs , uint32_t num_outputs);
    void mixer_eval();
 }
 

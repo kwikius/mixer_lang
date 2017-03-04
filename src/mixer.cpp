@@ -258,36 +258,44 @@ namespace {
    }
 }
 
-void apm_mix::mixer_init(input_pair* inputs, uint32_t num_inputs,abc_expr** outputs, uint32_t num_outputs)
+bool apm_mix::mixer_create(
+   const char* filename,
+   input_pair* inputs, uint32_t num_inputs,abc_expr** outputs, uint32_t num_outputs)
 {
-    mixer = new apm_mix::mixer_t{inputs,num_inputs,outputs,num_outputs};
-    symtab = new apm_mix::lookup_t<apm_mix::abc_expr*>;
-    funtab = new apm_mix::lookup_t<apm_mix::function_builder>;
-    funtab->add_item("if",apm_mix::make_function_if);
-    funtab->add_item("max",apm_mix::make_function_max);
-    funtab->add_item("min",apm_mix::make_function_min);
+
+   if (! apm_lexer::open_file(filename)){
+      printf("open \"%s\" failed\n",filename);
+      return false;
+   }
+   mixer = new apm_mix::mixer_t{inputs,num_inputs,outputs,num_outputs};
+   symtab = new apm_mix::lookup_t<apm_mix::abc_expr*>;
+   funtab = new apm_mix::lookup_t<apm_mix::function_builder>;
+   funtab->add_item("if",apm_mix::make_function_if);
+   funtab->add_item("max",apm_mix::make_function_max);
+   funtab->add_item("min",apm_mix::make_function_min);
+   for (;;){
+      switch(apm_lexer::yylex()){
+         case apm_lexer::NAME :
+             if ( !parse_assign_expr(apm_lexer::get_lexer_string())){
+                apm_lexer::close_file();
+                return false;
+             }
+             break;
+         case apm_lexer::MIXER:{
+           bool result =  parse_mixer_function();
+            apm_lexer::close_file();
+            return result;
+         }
+         default:
+            apm_lexer::close_file();
+            return apm_mix::yyerror();
+      }     
+   }
 }
 
 void apm_mix::mixer_eval()
 {
    mixer->eval_outputs();
-}
-
-bool apm_mix::mixer_create()
-{
-   for (;;){
-      switch(apm_lexer::yylex()){
-         case apm_lexer::NAME :
-             if ( !parse_assign_expr(apm_lexer::get_lexer_string())){
-                return false;
-             }
-             break;
-         case apm_lexer::MIXER:
-           return parse_mixer_function();
-         default:
-            return apm_mix::yyerror();
-      }     
-   }
 }
 
 bool apm_mix::yyerror(const char* str )

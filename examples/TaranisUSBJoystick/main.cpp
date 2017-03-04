@@ -1,9 +1,8 @@
 
 #include <cstdio>
 #include "../../src/mixer.hpp"
-#include "../../src/lexer.hpp"
+//#include "../../src/lexer.hpp"
 #include "joystick.hpp"
-#include <cstdio>
 
 namespace {
 
@@ -94,36 +93,27 @@ int main(int argc , char* argv[])
       return EXIT_SUCCESS;
    }
 
-   apm_mix::mixer_init(
-      inputs, sizeof(inputs)/sizeof(inputs[0])
-      ,outputs, sizeof(outputs)/sizeof(outputs[0])
-   );
-
-   bool mixer_build_success = false;
-   if ( apm_lexer::open_file(argv[1])){
-      if (apm_mix::mixer_create()){
-         mixer_build_success = true;
+   if ( apm_mix::mixer_create(
+         argv[1]
+         ,inputs, sizeof(inputs)/sizeof(inputs[0])
+         ,outputs, sizeof(outputs)/sizeof(outputs[0])
+      )){
          printf("mixer \"%s\" created OK!\n",argv[1]);
-      }
-      apm_lexer::close_file();
    }else{
-      printf("open file %s failed\n",argv[1]);
+      printf("create mixer from %s failed ... quitting\n",argv[1]);
+      return EXIT_FAILURE;
    }
    
-   if (mixer_build_success){
-      printf("Press any key to start and once running press any key to quit\n");
-      fflush(stdin);
-      while (! key_was_pressed()){;}
-      getchar(); // clear key pressed
-      if ( open_joystick("/dev/input/js0")){
-         while (get_joystick()->is_running() && ! key_was_pressed()){
-            sleep_ms(20);
-            apm_mix::mixer_eval();
-         }
+   printf("Press any key to start and once running press any key to quit\n");
+   fflush(stdin);
+   while (! key_was_pressed()){;}
+   getchar(); // clear key pressed
+   if ( open_joystick("/dev/input/js0")){
+      while (get_joystick()->is_running() && ! key_was_pressed()){
+         sleep_ms(20);
+         apm_mix::mixer_eval();
       }
+      close_joystick();
    }
-   close_joystick();
-   printf("Quitting\n");
-   return 0;
 }
 
