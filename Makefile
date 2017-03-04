@@ -1,7 +1,7 @@
 
 
 .PHONY: all mixer_lang_lib clean_mixer_lang_lib taranis_joystick \
-clean_taranis_joystick clean
+clean_taranis_joystick clean test clean_test
 
 all: mixer_lang_lib taranis_joystick
 
@@ -16,6 +16,12 @@ taranis_joystick :
 
 clean_taranis_joystick : 
 	make -C ./examples/TaranisUSBJoystick clean
+
+test:
+	make -C ./test
+
+clean_test :
+	make -C ./test clean
 
 clean:
 	make -C ./examples/TaranisUSBJoystick clean
