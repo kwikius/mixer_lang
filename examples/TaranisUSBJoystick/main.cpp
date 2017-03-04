@@ -1,7 +1,6 @@
 
 #include <cstdio>
 #include "../../src/mixer.hpp"
-//#include "../../src/lexer.hpp"
 #include "joystick.hpp"
 
 namespace {
