@@ -1,11 +1,59 @@
-A flexible actuator output mixer for ArduPlane
-================================================
+A flexible actuator output mixer for Flight controllers
+=======================================================
 
-Intended specifically for [ArduPlane](http://plane.ardupilot.com), an actuator output mixer is 
-created by reading a script file. The script uses a simple intuitive language. Currently the mixer
-works as a sim on a Linux PC, using an FrSky Taranis as Joystick input.
+Intended to replace hard coded mixers, an actuator output mixer is 
+specified using a script file. The script uses a simple intuitive language.
+The resulting mixer is fast to execute, compact and expressive.
+Currently the mixer works as a sim on a Linux PC, using an FrSky Taranis as Joystick input.
+A gui demo is also in progress.
 
-The script consists of statements and a mixer function. For example (to keep it simple), for a rudder only glider.
+Language Features
+-----------------
+   
+   *  High level Specification.
+
+      The specification is based on a context free grammar and well documented semantics. 
+      The goal is consistent semantics, so that you arent reliant on the vagaries of a particular implementation.
+
+   *  Strongly typed, type deduction.
+
+      Expressive economical language with type deduction, but strongly typed to give well defined and predictable qualities
+
+   *  Access to system values.
+
+      The language enables defining system values either constant or variable and of real, integer or bool type as inputs to the mixer.
+
+   *  Inputs and Outputs as Integers, floats or booleans. 
+
+      Inputs and Outputs can be comprised of combinations of integer real and boolean.
+      You can select the underlying integer and floating point types to the best combination for
+      space and performance on your system.
+
+   *  Tunable at runtime.
+
+      The language specifies how selected values in the mixer can be remotely modified in flight to tune best performance in real time.
+
+   *  Multipoint mixers specified in the language
+
+
+Implementation features
+-----------------------
+
+   *  Compiled to an expression tree with typed computations created during the build for maximum performance
+   *  Optimising compiler. Constants are folded during the construction for small code size and higher performance.
+   *  Can use integer or float calculations or both
+
+
+Acknowledgments
+---------------
+
+  Thanks to @crashmatt for his input so far to the language, particularly with regard to the volatile varaiables.
+
+   
+Introduction to the language
+----------------------------
+
+The script specifying the mixer consists of statements and a mixer function. For example (to keep it simple), for a rudder only glider.
 
 ``` 
 x = 0.5;
