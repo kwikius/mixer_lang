@@ -7,7 +7,7 @@ CFLAGS = -std=gnu++11 -Wall -Os
 
 TARGET = bin/taranis_mixer.exe
 
-local_objects = main.o key_was_pressed.o
+local_objects = main.o key_was_pressed.o joystick.o
 
 objects = $(patsubst %.o,obj/%.o,$(local_objects))
 
