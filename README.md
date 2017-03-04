@@ -282,9 +282,7 @@ None.
 Compilation Building Running
 ----------------------------
 
-The library currently builds for linux systems
-
-There is a Make file included . See [Gnu Make](https://www.gnu.org/software/make).
+The library currently builds and runs on linux systems
 
 After downloading the mixer_lang library, get your Taranis Tx and its usb to pc connector handy
 , enter the top level mixer_lang directory and invoke make with the following argument.
@@ -293,7 +291,7 @@ After downloading the mixer_lang library, get your Taranis Tx and its usb to pc 
 ~>$ make run_taranis_easystar
 ```
 This will build and start the mixer with the Easystar mixer. (Look in the Makefile to try other mixer scripts)
-At the prompt, first switch on your Tarnis and then connect your Taranis USB to PC connector.
+At the prompt, first switch on your Taranis and then connect your Taranis USB to PC connector.
 Once connected, to start and stop the app press any key.
 When running, twiddle the sticks and you should see some changing outputs.
 Note: To make sense of the output you will need to set up an "Ideal" model where the Taranis 
@@ -301,7 +299,7 @@ doesnt do any mixing of course, just sends stick inputs to outputs.
 
 Try editing the scripts in the mixers/generic directory and run them to see the effects of your changes.
 
-The executable is in the examples/TaranisUSBJoystick/bin/ subdirectory
+The example executable is in the examples/TaranisUSBJoystick/bin/ subdirectory
 To invoke the application with a mixer put the executable file in your path
 , enter your mixer directory and supply a mixer_lang script file as an argument.
 
