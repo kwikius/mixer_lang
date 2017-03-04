@@ -23,7 +23,7 @@ LD = g++
 
 CFLAGS = -std=gnu++11 -Wall -Os 
 
-local_objects = arg_list.o fn_if.o fn_max.o lexer.o mixer.o symtab.o  function.o
+local_objects = arg_list.o lexer.o mixer.o symtab.o function.o
 
 sources  = $(patsubst %.o,%.cpp,$(local_objects))
 

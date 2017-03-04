@@ -17,7 +17,6 @@
  along with this program. If not, see http://www.gnu.org/licenses./
  */
 
-#include "convert.hpp"
 #ifndef __AVR__
 #include <climits>
 #include <cstdint>
@@ -28,7 +27,8 @@
 #include <stddef.h>
 #include <ctype.h>
 #endif
-
+#include "mixer_lang_types.hpp"
+#include "convert.hpp"
 #include "basic_char_ptr_converter.hpp"
 
 namespace apm_mix{ namespace util{
@@ -59,7 +59,7 @@ namespace apm_mix{ namespace util{
 			}
 		}
       
-		num_type operator()(const char* str,  double * double_result, int64_t * int_result,long maxlen = LONG_MAX )
+		num_type operator()(const char* str,  apm_mix::float_t * float_result, apm_mix::int_t * int_result,long maxlen = LONG_MAX )
 		{
 // state1
           reset();
@@ -210,18 +210,21 @@ namespace apm_mix{ namespace util{
             #endif
              return num_type::UNKNOWN;
           }
+/*
+   TODO verify these arent bigger than the min/max of result type
+*/
           if (  number_type == num_type::FLOAT){
               if ( sign == -1){
-                 *double_result = -u.float_value;
+                 *float_result = static_cast<apm_mix::float_t>(-u.float_value);
               }else{
-                  *double_result = u.float_value;
+                  *float_result = static_cast<apm_mix::float_t>(u.float_value);
               }
               return num_type::FLOAT;
           }else{
               if ( sign == -1){
-                 *int_result = -u.int_value;
+                 *int_result = static_cast<apm_mix::int_t>(-u.int_value);
               }else{
-                  *int_result = u.int_value;
+                  *int_result = static_cast<apm_mix::int_t>( u.int_value);
               }
               return num_type::INT;
           }

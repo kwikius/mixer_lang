@@ -6,8 +6,8 @@
 namespace apm_mix{
 
    typedef bool bool_t;
-   typedef int64_t int_t;
-   typedef double float_t;
+   typedef int32_t int_t;
+   typedef float float_t;
 
 }
 
