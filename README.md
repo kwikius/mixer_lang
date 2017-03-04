@@ -36,7 +36,7 @@ Language Features
    *  Multipoint mixers specified in the language
 
 
-[Compiling building Running](#Compilation-Building-Running)
+[Compiling building Running](#compilation-building-running)
 
 
 Implementation features
