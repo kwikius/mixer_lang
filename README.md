@@ -7,6 +7,8 @@ The resulting mixer is fast to execute, compact and expressive.
 Currently the mixer works as a sim on a Linux PC, using an FrSky Taranis as Joystick input.
 A gui demo is also in progress.
 
+[Compiling building Running](#compilation-building-running)
+
 Language Features
 -----------------
    
@@ -34,10 +36,6 @@ Language Features
       The language specifies how selected values in the mixer can be remotely modified in flight to tune best performance in real time.
 
    *  Multipoint mixers specified in the language
-
-
-[Compiling building Running](#compilation-building-running)
-
 
 Implementation features
 -----------------------
@@ -288,15 +286,28 @@ The library currently builds for linux systems
 
 There is a Make file included . See [Gnu Make](https://www.gnu.org/software/make).
 
-After downloading the mixer_lang library, enter the top level mixer_lang directory andd invoke make with the following argument
+After downloading the mixer_lang library, get your Taranis Tx and its usb to pc connector handy
+, enter the top level mixer_lang directory and invoke make with the following argument.
 
 ```
 ~>$ make run_taranis_easystar
 ```
-This will build and start the mixer with the Easystar mixer. To start and stop press any key.
-When running, Twiddle the sticks and you should see some changing outputs.
+This will build and start the mixer with the Easystar mixer. (Look in the Makefile to try other mixer scripts)
+At the prompt, first switch on your Tarnis and then connect your Taranis USB to PC connector.
+Once connected, to start and stop the app press any key.
+When running, twiddle the sticks and you should see some changing outputs.
 Note: To make sense of the output you will need to set up an "Ideal" model where the Taranis 
 doesnt do any mixing of course, just sends stick inputs to outputs.
+
+Try editing the scripts in the mixers/generic directory and run them to see the effects of your changes.
+
+The executable is in the examples/TaranisUSBJoystick/bin/ subdirectory
+To invoke the application with a mixer put the executable file in your path
+, enter your mixer directory and supply a mixer_lang script file as an argument.
+
+```
+~>$ taranis_mixer.exe myfile.mix
+```
 
 Notes
 -----
