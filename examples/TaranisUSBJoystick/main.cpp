@@ -25,13 +25,16 @@ namespace {
 
    apm_mix::input_pair inputs[]
     = { 
-         apm_mix::input_pair{"Pitch", static_cast<apm_mix::float_t(*)()>(get_pitch)},
-         apm_mix::input_pair{"Yaw",  static_cast<apm_mix::float_t(*)()>(get_yaw)},
-         apm_mix::input_pair{"Roll", static_cast<apm_mix::float_t(*)()>(get_roll)},
-         apm_mix::input_pair{"Throttle", static_cast<apm_mix::float_t(*)()>(get_throttle)},
-         apm_mix::input_pair{"Flap", static_cast<apm_mix::float_t(*)()>(get_flap)},
-         apm_mix::input_pair{"Airspeed", static_cast<apm_mix::float_t(*)()>(get_airspeed)},
-         apm_mix::input_pair{"ControlMode", static_cast<apm_mix::float_t(*)()>(get_control_mode)},
+         // if the function is are unamiguous, the type of the input is deduced from the signature of the function
+         // the function signatures below are declared to return a float type in joystick.hpp
+         apm_mix::input_pair{"Pitch", get_pitch},
+         apm_mix::input_pair{"Yaw",  get_yaw},
+         apm_mix::input_pair{"Roll", get_roll},
+         apm_mix::input_pair{"Throttle", get_throttle},
+         apm_mix::input_pair{"Flap", get_flap},
+         apm_mix::input_pair{"Airspeed", get_airspeed},
+         apm_mix::input_pair{"ControlMode", get_control_mode},
+         // c++ lambda functions can also be used
          apm_mix::input_pair{"ARSPD_MIN", static_cast<apm_mix::float_t(*)()>([]()->apm_mix::float_t{return 10.0;})},
          apm_mix::input_pair{"ARSPD_CRUISE",static_cast<apm_mix::float_t(*)()>([]()->apm_mix::float_t{return 12.0;})},
          apm_mix::input_pair{"ARSPD_MAX", static_cast<apm_mix::float_t(*)()>([]()->apm_mix::float_t{return 20.0;})},
@@ -49,7 +52,14 @@ namespace {
    template<unsigned N>
    void action(apm_mix::float_t const & v)
    {
-      printf("!!! output[%u] = %f\n",N,v);
+      printf("output[%u] = %f\n",N,static_cast<double>(v));
+   }
+
+   // to show that bool can be assigned as an ouput function also
+   template<unsigned N>
+   void action(apm_mix::int_t const & v)
+   {
+      printf("output[%u] = %d\n",N, static_cast<int>(v));
    }
 
    // to show that bool can be assigned as an ouput function also
@@ -58,7 +68,7 @@ namespace {
    {
       const char * const true_ = "true";
       const char* const false_ = "false";
-      printf("!!! output[%u] = %s\n",N, (v? true_:false_));
+      printf("output[%u] = %s\n",N, (v? true_:false_));
    }
 
    // Outputs can output a type of Integer, Bool or Float
@@ -80,7 +90,7 @@ namespace {
       ,new apm_mix::output<apm_mix::float_t>{action<6>}
      , new apm_mix::output<apm_mix::float_t>{action<7>}
      , new apm_mix::output<apm_mix::float_t>{action<8>}
-     , new apm_mix::output<apm_mix::float_t>{action<9>}
+     , new apm_mix::output<apm_mix::int_t>{action<9>}
    };
 }
 
