@@ -36,6 +36,9 @@ Language Features
    *  Multipoint mixers specified in the language
 
 
+[Compiling building Running](#Compilation-Building-Running)
+
+
 Implementation features
 -----------------------
 
@@ -278,8 +281,8 @@ Dependencies
 
 None.  
 
-Compilation/ Building/ Running
------------------------------
+Compilation Building Running
+----------------------------
 
 The library currently builds for linux systems
 
