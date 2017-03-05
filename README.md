@@ -65,12 +65,12 @@ mixer()
 }
 ```
 
-For other example scripts, see [A very basic example mixer for an Easystar](https://github.com/kwikius/mixer_lang/blob/master/mixers/generic/EasyStar.mix)
+For other example scripts, see [A very basic example mixer for an Easystar](mixers/generic/EasyStar.mix)
 
-For a more complex example see [A mixer for a glider with differential aileron, variable camber and crow flaps](https://github.com/kwikius/mixer_lang/blob/master/mixers/generic/glider.mix)
+For a more complex example see [A mixer for a glider with differential aileron, variable camber and crow flaps](mixers/generic/glider.mix)
 
 Below is a non technical description of the language. For a more technical description, consult the 
-[grammar](https://github.com/kwikius/mixer_lang/blob/master/grammar/bison.grammar). 
+[grammar](grammar/bison.grammar). 
 The grammar can be parsed using [GNU Bison](https://www.gnu.org/software/bison/).
 
 
@@ -187,15 +187,16 @@ syntax:
  ```   output[``` ***OutputIndex*** ```] = ``` ***Expression*** ;```
 
 
-OutputIndex must be of type constant integer. 
+*OutputIndex* must be of type constant integer. 
 Expressions are assigned as if to an index of the array.
+Output indices start at 0. ( note: so output[0] will output to your traditional rc channel 1)
 The output expressions are then evaluated and updated periodically.
 
 example:
 
 ```
-#  send Roll input to actuator 1
-output[1] = input{Roll};
+#  send Roll input to output[0]
+output[0] = input{Roll};
 ```
 
 Expressions
