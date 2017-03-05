@@ -289,9 +289,20 @@ After downloading the mixer_lang library, get your Taranis Tx and its usb to pc 
 , enter the top level mixer_lang directory and invoke make with the following argument.
 
 ```
-~>$ make run_taranis_easystar
+~>$ make run_easystar
 ```
-This will build and start the mixer with the Easystar mixer. (Look in the Makefile to try other mixer scripts)
+This will build and start the [Easystar mixer](mixers/generic/EasyStar.mix). 
+
+To run the [flyingwing mixer](mixers/generic/flyingwing.mix).
+```
+~>$ make run_flyingwing
+```
+
+To run the [glider mixer](mixers/generic/glider.mix).
+```
+~>$ make run_glider
+```
+
 At the prompt, first switch on your Taranis and then connect your Taranis USB to PC connector.
 Once connected, to start and stop the app press any key.
 When running, twiddle the sticks and you should see some changing outputs.
