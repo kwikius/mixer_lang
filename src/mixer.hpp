@@ -116,17 +116,23 @@ namespace apm_mix{
                switch ( m_outputs[i]->get_ID()){
                   case abc_expr::exprID::FLOAT:{
                      auto * out = (output<apm_mix::float_t> *)m_outputs[i];
-                     out->apply();
+                     if ( out->has_output_expr()){
+                        out->apply();
+                     }
                      break;
                   }
                   case abc_expr::exprID::INT:{
                      auto * out = (output<apm_mix::int_t> *)m_outputs[i];
-                     out->apply();
+                     if ( out->has_output_expr()){
+                        out->apply();
+                     }
                      break;
                   }
                   case abc_expr::exprID::BOOL:{
                      auto * out = (output<bool> *)m_outputs[i];
-                     out->apply();
+                     if ( out->has_output_expr()){
+                        out->apply();
+                     }
                      break;
                   }
                   default:
