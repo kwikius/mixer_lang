@@ -13,8 +13,9 @@ thrt_pls_offset = 1500.0;
 # The output channels are addressed by index ( 0 to .. N) , but
 # optionally symbolic constant names can be used
 # for legibility as here
-elevon_left = 0;   
-elevon_right = 1;
+elevon_left   = 0;   
+elevon_right  = 1;
+throttle      = 2;
 
 #false to turn off airspeed mixing
 #could also be a mode like expo mode or a parameter
@@ -54,7 +55,7 @@ mixer()
    output[elevon_left] = ( pitch + roll) * csfc_gain + pulse_offset;
    output[elevon_right] = (pitch - roll) * csfc_gain + pulse_offset;
 
-   # literals work also for outputs
-   output[2] = input{Throttle} * throttle_gain + thrt_pls_offset;
+   output[throttle] = input{Throttle} * throttle_gain + thrt_pls_offset;
+
 }
 
