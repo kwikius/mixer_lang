@@ -4,18 +4,16 @@
 # in case the sensor fails
 # so only use airspeed to adjust control throw if not in failsafe mode
 
-pitch_gain = 500.0; 
-roll_gain = 1000.0 - pitch_gain;
-throttle_gain = 500.0;
-pulse_offset = 1500.0;
-thrt_pls_offset = 1500.0;
+pitch_gain = 0.5; 
+roll_gain = 1.0 - pitch_gain;
+throttle_gain = 1.0;
 
 # The output channels are addressed by index ( 0 to .. N) , but
 # optionally symbolic constant names can be used
 # for legibility as here
-elevon_left   = 0;   
-elevon_right  = 1;
-throttle      = 2;
+idx_elevon_left   = 0;   
+idx_elevon_right  = 1;
+idx_throttle      = 2;
 
 #false to turn off airspeed mixing
 #could also be a mode like expo mode or a parameter
@@ -50,11 +48,13 @@ mixer()
  
    pitch = input{Pitch} * pitch_gain;
    roll  = input{Roll} * roll_gain;
-
+   value_elevon_left = (pitch + roll) * csfc_gain;
+   value_elevon_right = (pitch - roll) * csfc_gain;
+   value_throttle = input{Throttle} * throttle_gain;
    # The output expressions
-   output[elevon_left] = ( pitch + roll) * csfc_gain + pulse_offset;
-   output[elevon_right] = (pitch - roll) * csfc_gain + pulse_offset;
-   output[throttle] = input{Throttle} * throttle_gain + thrt_pls_offset;
+   output[idx_elevon_left] =  min(max(value_elevon_left,-1.0),1.0);
+   output[idx_elevon_right] = min(max(value_elevon_right,-1.0),1.0);
+   output[idx_throttle] = min(max(value_throttle,-1.0),1.0);
 
 }
 
