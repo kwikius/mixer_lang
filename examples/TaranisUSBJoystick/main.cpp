@@ -56,14 +56,18 @@ namespace {
    template<unsigned N>
    void output_action(apm_mix::float_t const & v)
    {
-      printf("output[%u] = %f\n",N,static_cast<double>(v));
+      if ( v == static_cast<apm_mix::float_t>(0)){
+         printf("output[%u] = % 6.3f\n",N,static_cast<double>(v));
+      }else{
+         printf("output[%u] = %+6.3f\n",N,static_cast<double>(v));
+      }
    }
 
    // to show that int_t can be assigned as an output function also
    template<unsigned N>
    void output_action(apm_mix::int_t const & v)
    {
-      printf("output[%u] = %d\n",N, static_cast<int>(v));
+      printf("output[%u] = % 6d\n",N, static_cast<int>(v));
    }
 
    // to show that bool can be assigned as an output function also
