@@ -13,8 +13,8 @@ thrt_pls_offset = 1500.0;
 # The output channels are addressed by index ( 0 to .. N) , but
 # optionally symbolic constant names can be used
 # for legibility as here
-elevon_left = 1;
-elevon_right = 2;
+elevon_left = 0;   
+elevon_right = 1;
 
 #false to turn off airspeed mixing
 #could also be a mode like expo mode or a parameter

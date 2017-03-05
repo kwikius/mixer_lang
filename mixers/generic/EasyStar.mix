@@ -7,7 +7,7 @@
 
 mixer()
 {
-   output[1] = input{Roll};
-   output[2] = input{Pitch};
-   output[3] = input{Throttle};
+   output[0] = input{Roll};
+   output[1] = input{Pitch};
+   output[2] = input{Throttle};
 }
