@@ -23,7 +23,7 @@ LD = g++
 
 CFLAGS = -std=gnu++11 -Wall -Os 
 
-local_objects = arg_list.o lexer.o mixer.o symtab.o function.o
+local_objects = arg_list.o lexer.o mixer.o symtab.o function.o stringfun.o
 
 sources  = $(patsubst %.o,%.cpp,$(local_objects))
 
@@ -32,7 +32,6 @@ function.hpp lexer.hpp lookup.hpp mixer.hpp parse_number.hpp predicates.hpp stri
 
 objects = $(patsubst %.o,obj/%.o,$(local_objects))
  
-
 all: $(TARGET)
 
 $(TARGET) : $(objects)
@@ -43,4 +42,3 @@ $(objects) : obj/%.o : %.cpp $(headers)
 
 clean:
 	-rm -rf obj/*.o $(TARGET)
-

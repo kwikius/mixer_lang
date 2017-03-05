@@ -1,6 +1,23 @@
-//#include <cstdio>
+
+
+/*
+ Copyright (c) 2017 Andy Little 
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>
+*/
+
 #include <cstring>
-#include <malloc.h>
 #include <cassert>
 #include <limits>
 
@@ -10,6 +27,7 @@
 #include "lookup.hpp"
 #include "lexer.hpp"
 #include "mixer.hpp"
+#include "stringfun.hpp"
 
 namespace {
    apm_mix::mixer_t* mixer;
@@ -75,12 +93,12 @@ namespace {
 
    bool  binary_fn_or(bool lhs, bool rhs)
    {
-       return lhs || rhs;
+      return lhs || rhs;
    }
 
    bool  binary_fn_and(bool lhs, bool rhs)
    {
-       return lhs && rhs;
+      return lhs && rhs;
    }
 
    template <typename T>
@@ -321,22 +339,20 @@ namespace{
          if ( symtab->find_item(name)){
             return apm_mix::yyerror("name already defined");
          }
-         char* name1 = strdup(name);
+         char* name1 = apm_mix::duplicate_string(name);
          apm_mix::abc_expr* expr = parse_expr();
          if ( expr){
             expr = expr->fold();
             if ( apm_lexer::yylex() == ';'){
-               // symtab can be deleted once tree is built
                symtab->add_item(name1,expr);
                mixer->add(expr);
-              // printf("got assign\n");
                return true;
             }else{
+               apm_mix::delete_string(name1);
                return apm_mix::yyerror("? ';'");
             }
          }else{
-           // printf("assign fail\n");
-            free(name1);
+            apm_mix::delete_string(name1);
             return false;
          }
       }else{

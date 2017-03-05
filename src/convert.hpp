@@ -17,7 +17,6 @@
  along with this program. If not, see http://www.gnu.org/licenses./
  */
 
-
 namespace apm_mix{
 
    namespace detail{
@@ -33,7 +32,6 @@ namespace apm_mix{
      return conv(src);
    }
 
-  
 }
 
 #endif // MIXER_LANG_CONVERT_HPP_INCLUDED

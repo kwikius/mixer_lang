@@ -1,5 +1,5 @@
-#ifndef MIXER_LANG_TYPES_HPP_INCLUDED
-#define MIXER_LANG_TYPES_HPP_INCLUDED
+#ifndef MIXER_LANG_ERROR_HPP_INCLUDED
+#define MIXER_LANG_ERROR_HPP_INCLUDED
 
 /*
  Copyright (c) 2017 Andy Little 
@@ -18,14 +18,10 @@
  along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-#include <cstdint>
-
 namespace apm_mix{
 
-   typedef bool bool_t;
-   typedef int32_t int_t;
-   typedef float float_t;
+   bool yyerror(const char* str = nullptr);
 
 }
 
-#endif // MIXER_LANG_TYPES_HPP_INCLUDED
+#endif // MIXER_LANG_ERROR_HPP_INCLUDED

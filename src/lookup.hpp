@@ -1,20 +1,41 @@
 #ifndef MIXER_LANG_SYMTAB_HPP_INCLUDED
 #define MIXER_LANG_SYMTAB_HPP_INCLUDED
 
+/*
+ Copyright (c) 2017 Andy Little 
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>
+*/
+#include "stringfun.hpp"
+
 namespace apm_mix{
+   
+   template <typename Node>
+   struct lookup_t;
 
    template <typename Node>
    struct lookup_item{
-       // symtab owns name but not node
+     private:
+       // symtab owns name
+       //  but not node
        lookup_item(const char* name_in, Node node_in)
        : m_name{name_in}, m_node{node_in}, m_next{nullptr}{}
-       // currently wrong so 
-       // TODO memory management for name
-       // currently created with strdup
-       ~lookup_item(){ delete  m_name; }
+       ~lookup_item(){ delete_string(m_name); }
        const char* m_name;
        Node m_node;
        lookup_item<Node>* m_next;
+       friend class lookup_t<Node> ;
    };
 
    template <typename Node>
