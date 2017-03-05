@@ -23,13 +23,13 @@ test:
 clean_test :
 	make -C ./test clean
 
-run_taranis_easystar : taranis_joystick
+run_easystar : taranis_joystick
 	./examples/TaranisUSBJoystick/bin/taranis_mixer.exe ./mixers/generic/EasyStar.mix
 
-run_taranis_flyingwing : taranis_joystick
+run_flyingwing : taranis_joystick
 	./examples/TaranisUSBJoystick/bin/taranis_mixer.exe ./mixers/generic/flyingwing.mix
 
-run_taranis_glider : taranis_joystick
+run_glider : taranis_joystick
 	./examples/TaranisUSBJoystick/bin/taranis_mixer.exe ./mixers/generic/glider.mix
 
 clean:
