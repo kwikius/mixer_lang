@@ -1,5 +1,14 @@
 language: cpp
 sudo: false
 
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - build-essential
+    - g++-4.8
+    - gcc-4.8
+
 script: > 
-   make && make test
+   make CXX="g++-4.8" && make CXX="g++-4.8" test

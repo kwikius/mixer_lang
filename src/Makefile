@@ -18,8 +18,7 @@ TARGET = ../build/mixer_lang.a
 
 .PHONY: clean all sources
 
-CC = g++
-LD = g++
+CXX ?= g++
 
 CFLAGS = -std=gnu++11 -Wall -Os 
 
@@ -38,7 +37,7 @@ $(TARGET) : $(objects)
 	ar rcs $@ $(objects)
 
 $(objects) : obj/%.o : %.cpp $(headers)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CXX) $(CFLAGS) -c $< -o $@
 
 clean:
 	-rm -rf obj/*.o $(TARGET)

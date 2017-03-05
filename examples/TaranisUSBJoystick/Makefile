@@ -1,7 +1,7 @@
 
 
-CC = g++
-LD = g++
+CXX ?= g++
+
 
 INCLUDES = -I../../include/
 
@@ -20,10 +20,10 @@ mixer_lang_lib = ../../build/mixer_lang.a
 all: $(TARGET)
 
 $(TARGET) : $(objects) $(mixer_lang_lib)
-	$(LD) $(CFLAGS)  -s $(objects) -o $@ $(mixer_lang_lib) -lpthread
+	$(CXX) $(CFLAGS)  -s $(objects) -o $@ $(mixer_lang_lib) -lpthread
 
 $(objects) : obj/%.o : %.cpp $(mixer_lang_lib)
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(CXX) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(mixer_lang_lib):
 	make -C ../../src/

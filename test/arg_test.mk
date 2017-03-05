@@ -4,7 +4,7 @@ ifeq ($(USE_CONCEPTS),True)
 CXX         = g++-6
 CXXFLAGS    = -std=c++14 -fconcepts 
 else
-CXX         ?= /usr/local/bin/g++
+CXX         ?= g++
 CXXFLAGS    ?= -std=c++11 
 endif
 
