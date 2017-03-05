@@ -11,12 +11,13 @@ namespace {
    apm_mix::float_t airspeed_m_per_s = 0.0; //
 
    // true simulates a possible sensor failure 
-   // which may mean airspeed reading is no good
+   // which may mean (for example) airspeed reading is no good
    bool in_failsafe = false;  //
-
+   
    // The mixer uses functions pointers  to get its inputs
    // The inputs can be of type Bool, Integer or Float 
    apm_mix::float_t get_airspeed(){ return airspeed_m_per_s;}
+   bool failsafe_on() { return in_failsafe;}
 
 
    // The input array represents all the available inputs.
@@ -41,7 +42,7 @@ namespace {
       apm_mix::input_pair{"ARSPD_MIN", static_cast<apm_mix::float_t(*)()>([]()->apm_mix::float_t{return 10.0;})},
       apm_mix::input_pair{"ARSPD_CRUISE",static_cast<apm_mix::float_t(*)()>([]()->apm_mix::float_t{return 12.0;})},
       apm_mix::input_pair{"ARSPD_MAX", static_cast<apm_mix::float_t(*)()>([]()->apm_mix::float_t{return 20.0;})},
-      apm_mix::input_pair{"FAILSAFE_ON", static_cast<bool(*)()>([]()->bool{return in_failsafe;})},
+      apm_mix::input_pair{"FAILSAFE_ON", failsafe_on},
       apm_mix::input_pair{"DUMMY_INT", static_cast<apm_mix::int_t(*)()>([]()->apm_mix::int_t{return 1000;})}
    };
 
