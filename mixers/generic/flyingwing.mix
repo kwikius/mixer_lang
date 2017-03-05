@@ -55,6 +55,6 @@ mixer()
    output[elevon_right] = (pitch - roll) * csfc_gain + pulse_offset;
 
    # literals work also for outputs
-   output[3] = input{Throttle} * throttle_gain + thrt_pls_offset;
+   output[2] = input{Throttle} * throttle_gain + thrt_pls_offset;
 }
 
