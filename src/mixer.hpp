@@ -20,6 +20,7 @@
 
 #include <cstdio>
 #include <cstring>
+#include "input_pair.hpp"
 #include "exprtree.hpp"
 #include "arg_list.hpp"
 #include "error.hpp"
@@ -28,13 +29,6 @@ namespace apm_mix{
 
    template <typename Node>
    struct lookup_t;
-
-   struct input_pair{
-      template <typename T>
-      input_pair(const char* name, T (*pfn)() ): m_input{new input<T>{pfn}}, m_name{name}{}
-      abc_expr* m_input;
-      const char * m_name;
-   };
 
    // TODO destructor for mixer
    struct mixer_t{
@@ -152,6 +146,7 @@ namespace apm_mix{
 
    bool mixer_create(const char * filename,
      input_pair* inputs, uint32_t num_inputs, abc_expr ** outputs , uint32_t num_outputs);
+
    void mixer_eval();
 }
 

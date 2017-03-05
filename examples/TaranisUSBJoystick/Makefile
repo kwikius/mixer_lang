@@ -3,6 +3,8 @@
 CC = g++
 LD = g++
 
+INCLUDES = -I../../include/
+
 CFLAGS = -std=gnu++11 -Wall -Os 
 
 TARGET = bin/taranis_mixer.exe
@@ -18,10 +20,10 @@ mixer_lang_lib = ../../build/mixer_lang.a
 all: $(TARGET)
 
 $(TARGET) : $(objects) $(mixer_lang_lib)
-	$(LD) $(CFLAGS) -s $(objects) -o $@ $(mixer_lang_lib) -lpthread
+	$(LD) $(CFLAGS)  -s $(objects) -o $@ $(mixer_lang_lib) -lpthread
 
 $(objects) : obj/%.o : %.cpp $(mixer_lang_lib)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(mixer_lang_lib):
 	make -C ../../src/
