@@ -1,6 +1,8 @@
 # glider mixer
-# The glider has 2 part ailerons, which can be used as flaps and for crow braking
-#
+# The glider has 2 part ailerons, which can be used as flaps
+# and a V tail
+# N.B could do crow mode too but not done here for simplicity
+
 # assign servo output channels -------------------
 stbd_ail_outer = 0;
 stbd_ail_inner = 1;
@@ -19,33 +21,31 @@ port_ail_outer_dir = -1.0;
 
 #-------------------------------------------------
 
-ail_inner_horn_len = 0.7; # Required travel is roughly proportional to control horn length
-ail_outer_horn_len = 1.0; 
+ail_inner_horn_len = 1.0; # Required travel is roughly proportional to control horn length
+ail_outer_horn_len = 1.0; # for sim make these equal to prevent confusion
 
 # Positive roll means a roll to the right
 # Then stbd aileron goes up and port ail goes down
-# aileron differential
 
-up_ail_gain = 0.4;
-down_ail_gain = 0.2;
+# aileron differential
+# Giving the up going aileron more travel reduces the chance of tip stall
+# and reduces adverse yaw
+up_ail_gain = 1.0;
+down_ail_gain = 0.5;
 up_ail_inner_gain = up_ail_gain * ail_inner_horn_len;
 up_ail_outer_gain = up_ail_gain * ail_outer_horn_len;
 down_ail_inner_gain = down_ail_gain * ail_inner_horn_len;
 down_ail_outer_gain = down_ail_gain * ail_outer_horn_len;
 
 # flap differential 
-up_flap_gain = 0.04;
-down_flap_gain = 0.15;
+# Not much up flap is needed. Up flap for high speed
+# down flap for soaring.
+up_flap_gain = 0.2;
+down_flap_gain = 0.5;
 up_flap_inner_gain = up_flap_gain * ail_inner_horn_len;
 down_flap_inner_gain = down_flap_gain * ail_inner_horn_len;
 up_flap_outer_gain = up_flap_gain * ail_outer_horn_len;
 down_flap_outer_gain = down_flap_gain * ail_outer_horn_len;
-
-# crow gains
-inner_crow_gain = 0.5 * ail_inner_horn_len;
-outer_crow_gain = -0.3 * ail_outer_horn_len;
- 
-dummy = input{Roll};
 
 mixer()
 {
@@ -54,46 +54,30 @@ mixer()
    # positive roll is clockwise from pilots view
    positive_roll = roll > 0.0;
 
-   # which mode crow, flap or none? -------------------
-   crow_mode = input{ControlMode} < -0.2;
-   flap_mode = input{ControlMode} > 0.2;
-
-   # The servo angles must be offset by the crow gain in non crow mode
    # positive roll flap goes down, crow down
-   port_inner_ail = roll * if(positive_roll, down_ail_inner_gain, up_ail_inner_gain) - if (crow_mode, 0.0, inner_crow_gain) ;
+   port_inner_ail = roll * if(positive_roll, up_ail_inner_gain, down_ail_inner_gain) ;
    # positive roll flap goes down, crow up
-   port_outer_ail = roll * if(positive_roll, down_ail_outer_gain, up_ail_outer_gain) + if (crow_mode, 0.0, outer_crow_gain) ; 
+   port_outer_ail = roll * if(positive_roll, up_ail_outer_gain, down_ail_outer_gain)  ; 
    # positive roll flap goes up negative, crow down
-   stbd_inner_ail = -roll * if(positive_roll, up_ail_inner_gain, down_ail_inner_gain) - if (crow_mode, 0.0, outer_crow_gain) ;
+   stbd_inner_ail = -roll * if(positive_roll, down_ail_inner_gain, up_ail_inner_gain)  ;
    # positive roll flap goes up so negative, crow up
-   stbd_outer_ail = -roll * if(positive_roll, up_ail_outer_gain, down_ail_outer_gain) + if (crow_mode, 0.0, outer_crow_gain);
+   stbd_outer_ail = -roll * if(positive_roll, down_ail_outer_gain, up_ail_outer_gain) ;
 
    # flap part --------------------
-   flap = input{Flap};
+   flap = -input{Flap};
    up_flap = flap < 0.0;
 
-   inner_flap = flap * 
-      if(flap_mode,
-         if(up_flap,up_flap_inner_gain, down_flap_inner_gain),
-         if(crow_mode, inner_crow_gain,0.0)
-      )
-   ;
-
-   outer_flap = flap * 
-      if(flap_mode,
-         if(up_flap,up_flap_outer_gain,down_flap_outer_gain),
-         if(crow_mode, outer_crow_gain,0.0)
-      ) 
-   ;
+   inner_flap = flap * if(up_flap,up_flap_inner_gain,down_flap_inner_gain);
+   outer_flap = flap * if(up_flap,up_flap_outer_gain,down_flap_outer_gain);
 
    output[throttle] = input{Throttle};
 
-   output[port_ail_inner] = (port_inner_ail + inner_flap) * port_ail_inner_dir ;
-   output[port_ail_outer] = (port_outer_ail + outer_flap) * port_ail_outer_dir ;
-   output[stbd_ail_inner] = (stbd_inner_ail + inner_flap) * stbd_ail_inner_dir ;
-   output[stbd_ail_outer] = (stbd_outer_ail + outer_flap) * stbd_ail_outer_dir ;
+   output[port_ail_inner] = (port_inner_ail - inner_flap) * port_ail_inner_dir ;
+   output[port_ail_outer] = (port_outer_ail - outer_flap) * port_ail_outer_dir ;
+   output[stbd_ail_inner] = (stbd_inner_ail - inner_flap) * stbd_ail_inner_dir ;
+   output[stbd_ail_outer] = (stbd_outer_ail - outer_flap) * stbd_ail_outer_dir ;
 
-   output[port_v_tail] = -input{Pitch} * 0.5 + input{Yaw} * 0.5 ;
-   output[stbd_v_tail] = input{Pitch} * 0.5 + input{Yaw} * 0.5;
+   output[port_v_tail] = input{Pitch} * 0.5 + input{Yaw} * 0.5 ;
+   output[stbd_v_tail] = -input{Pitch} * 0.5 + input{Yaw} * 0.5;
 }
 
