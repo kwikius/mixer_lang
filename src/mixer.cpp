@@ -30,9 +30,13 @@
 #include "stringfun.hpp"
 
 namespace {
+
+// These need to go in an object!
+//###############################
    apm_mix::mixer_t* mixer;
    apm_mix::lookup_t<apm_mix::abc_expr*> * symtab;
    apm_mix::lookup_t<apm_mix::function_builder> * funtab;
+//##################################
   
    bool parse_mixer_function();
    apm_mix::abc_expr* parse_expr(); // or_expr
