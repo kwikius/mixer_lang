@@ -281,6 +281,11 @@ namespace {
    }
 }
 
+void apm_mix::close_mixer()
+{
+   apm_lexer::close_stream();
+}
+
 bool apm_mix::mixer_create(
    apm_lexer::stream_t* pstream,
    input_pair* inputs, uint32_t num_inputs,abc_expr** outputs, uint32_t num_outputs)

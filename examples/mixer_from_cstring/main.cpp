@@ -2,7 +2,7 @@
 #include <cstdio>
 
 #include <mixer_lang.hpp>
-#include <mixer_lang_filestream.hpp>
+#include <mixer_lang_cstrstream.hpp>
 
 #include "joystick.hpp"
 
@@ -99,15 +99,25 @@ namespace {
    };
 }
 
-int main(int argc , char* argv[])
-{
-   if ( argc < 2){
-      printf("Useage : %s <mixer_filename>\n",argv[0]);
-      return EXIT_SUCCESS;
-   }
+// use this c string to create an embedded mixer with reversed outputs
+const char mixer_string [] = 
+"throttle_sign = -1.0;\n"
+"roll_sign=-1.0;\n"
+"pitch_sign = -1.0;\n"
+"yaw_sign = -1.0;\n"
+"\n"
+"mixer(){\n"
+"  output[0] = input{Roll} * roll_sign;\n"
+"  output[1] = input{Pitch} * pitch_sign;\n"
+"  output[2] = input{Throttle} * throttle_sign;\n"
+"  output[3] = input{Yaw} * yaw_sign;\n"
+"}\n";
 
-   // create the mixer from a filestream
-   auto* pstream = new apm_lexer::filestream_t{argv[1]};
+int main()
+{
+
+   // create the mixer from a cstrstream using the above string
+   auto* pstream = new apm_lexer::cstrstream_t{mixer_string,1000};
 
    if ( apm_mix::mixer_create(
           pstream
@@ -119,15 +129,16 @@ int main(int argc , char* argv[])
       printf     ("#              Welcome to mixer_lang                    #\n");
       printf     ("#                                                       #\n");
       printf     ("#########################################################\n\n");
-      printf("mixer \"%s\" was created ...  OK!\n\n",argv[1]);
+      printf("................. c string mixer..................\"\n%s\n\""
+             "..................was created OK .................!\n\n",mixer_string);
    }else{
-      printf("create mixer from %s failed ... quitting\n",argv[1]);
+      printf("create mixer from %s failed ... quitting\n",mixer_string);
       delete pstream;
       return EXIT_FAILURE;
    }
 
    printf("Switch on your Taranis and once on, then connect it to your PC via USB\n\n");
-   printf("Then when ready,press any key to start and once running press any key to quit\n\n");
+   printf("Then when ready, press any key to start and, once running, press any key to quit\n\n");
    fflush(stdin);
    while (! key_was_pressed()){;}
    getchar(); // clear key pressed
