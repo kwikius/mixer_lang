@@ -52,10 +52,16 @@ namespace apm_lexer{
    int get_line_number();
    bool putback(int tok);
 
-   bool open_file( const char * name);
-   void close_file();
+  // bool open_file( const char * name);
+   //void close_file();
 
    uint32_t get_max_string_chars();
+
+   struct stream_t;
+
+   void set_stream(stream_t * p);
+   stream_t * get_stream();
+   void close_stream();
 }
 
 #endif // MIXER_LANG_LEXER_HPP_INCLUDED

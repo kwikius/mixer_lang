@@ -2,6 +2,7 @@
 #include <cstdio>
 
 #include <mixer_lang.hpp>
+#include <mixer_lang_filestream.hpp>
 
 #include "joystick.hpp"
 
@@ -105,8 +106,11 @@ int main(int argc , char* argv[])
       return EXIT_SUCCESS;
    }
 
+   // create the mixer from a filestream
+   auto* pstream = new apm_lexer::filestream_t{argv[1]};
+
    if ( apm_mix::mixer_create(
-         argv[1]
+          pstream
          ,inputs, sizeof(inputs)/sizeof(inputs[0])
          ,outputs, sizeof(outputs)/sizeof(outputs[0])
       )){
@@ -118,6 +122,7 @@ int main(int argc , char* argv[])
       printf("mixer \"%s\" was created ...  OK!\n\n",argv[1]);
    }else{
       printf("create mixer from %s failed ... quitting\n",argv[1]);
+      delete pstream;
       return EXIT_FAILURE;
    }
    printf("Switch on your Taranis and once on, then connect it to your PC via USB\n\n");
@@ -131,7 +136,9 @@ int main(int argc , char* argv[])
          apm_mix::mixer_eval();
       }
       close_joystick();
+      delete pstream;
       return EXIT_SUCCESS;
    }
+   delete pstream;
    return EXIT_FAILURE;
 }

@@ -28,6 +28,7 @@
 #include "lexer.hpp"
 #include "mixer.hpp"
 #include "stringfun.hpp"
+#include "lexer_stream.hpp"
 
 namespace {
 
@@ -281,14 +282,17 @@ namespace {
 }
 
 bool apm_mix::mixer_create(
-   const char* filename,
+   apm_lexer::stream_t* pstream,
    input_pair* inputs, uint32_t num_inputs,abc_expr** outputs, uint32_t num_outputs)
 {
-
-   if (! apm_lexer::open_file(filename)){
-      printf("open \"%s\" failed\n",filename);
+   if ( pstream == nullptr){
+      yyerror("null stream ptr in mixer create");
       return false;
    }
+   if (! pstream->open()){
+      return false;
+   }
+   apm_lexer::set_stream(pstream);
    mixer = new apm_mix::mixer_t{inputs,num_inputs,outputs,num_outputs};
    symtab = new apm_mix::lookup_t<apm_mix::abc_expr*>;
    funtab = new apm_mix::lookup_t<apm_mix::function_builder>;
@@ -298,18 +302,18 @@ bool apm_mix::mixer_create(
    for (;;){
       switch(apm_lexer::yylex()){
          case apm_lexer::NAME :
-             if ( !parse_assign_expr(apm_lexer::get_lexer_string())){
-                apm_lexer::close_file();
-                return false;
-             }
-             break;
+            if ( !parse_assign_expr(apm_lexer::get_lexer_string())){
+               apm_lexer::close_stream();
+               return false;
+            }
+            break;
          case apm_lexer::MIXER:{
            bool result =  parse_mixer_function();
-            apm_lexer::close_file();
+            apm_lexer::close_stream();
             return result;
          }
          default:
-            apm_lexer::close_file();
+            apm_lexer::close_stream();
             return apm_mix::yyerror();
       }     
    }
@@ -317,7 +321,7 @@ bool apm_mix::mixer_create(
 
 void apm_mix::mixer_eval()
 {
-   mixer->eval_outputs();
+    mixer->eval_outputs();
 }
 
 bool apm_mix::yyerror(const char* str )

@@ -150,7 +150,7 @@ namespace apm_mix{
       arg_list* m_expressions;
    };
 
-   bool mixer_create(const char * filename,
+   bool mixer_create(apm_lexer::stream_t * ,
      input_pair* inputs, uint32_t num_inputs, abc_expr ** outputs , uint32_t num_outputs);
 
    void mixer_eval();

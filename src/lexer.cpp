@@ -22,6 +22,7 @@
 
 #include "parse_number.hpp"
 #include "lexer.hpp"
+#include "lexer_stream.hpp"
 
 /*
 With lots of inspiration from Bjarne Stroustup's calculator
@@ -59,7 +60,8 @@ namespace {
    bool buffer_full = false;
    int  buffered_tok = 0;
   
-   FILE * file_pointer = stdin;
+  // FILE * file_pointer = stdin;
+   apm_lexer::stream_t * p_stream = nullptr;
 }
 
 uint32_t apm_lexer::get_max_string_chars()
@@ -67,24 +69,39 @@ uint32_t apm_lexer::get_max_string_chars()
     return buffer_length - 1;
 }
 
-bool apm_lexer::open_file( const char * name)
+void apm_lexer::set_stream(apm_lexer::stream_t * p)
 {
-   FILE* fp = fopen(name, "r");
-   if ( fp != NULL){
-      file_pointer = fp;
-      return true;
-   }else{
-      return false;
-   }
+   p_stream = p;
 }
 
-void apm_lexer::close_file()
+apm_lexer::stream_t* apm_lexer::get_stream()
 {
-  if ( file_pointer != stdin){
-      fclose(file_pointer);
-      file_pointer = stdin;
-  }
+   return p_stream;
 }
+
+void apm_lexer::close_stream()
+{
+  p_stream = nullptr;
+}
+
+//bool apm_lexer::open_file( const char * name)
+//{
+//   FILE* fp = fopen(name, "r");
+//   if ( fp != NULL){
+//      file_pointer = fp;
+//      return true;
+//   }else{
+//      return false;
+//   }
+//}
+
+//void apm_lexer::close_file()
+//{
+//  if ( file_pointer != stdin){
+//      fclose(file_pointer);
+//      file_pointer = stdin;
+//  }
+//}
 
 
 int apm_lexer::get_line_number()
@@ -109,12 +126,20 @@ apm_mix::float_t apm_lexer::get_lexer_float()
 
 int fn_read_char()
 {
-   return fgetc(file_pointer);
+   if ( p_stream != nullptr){
+      return p_stream->get_char();
+   }else{
+      return -1;
+   }
 }
 
 int fn_unget_char(int c)
 {
-   return ungetc(c,file_pointer);
+   if (p_stream != nullptr){
+      return p_stream->unget_char(c);
+   }else{
+      return -1;
+   }
 }
 
 int fn_peek_char()
