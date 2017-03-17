@@ -20,7 +20,8 @@
 
 namespace apm_mix{
 
-     // return a copy allocated on heap
+     // return a copy alocated on heap
+     // these need to be deined by user
      char * duplicate_string(const char *s);
      void  delete_string(const char* s);
      

@@ -18,7 +18,7 @@
  along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-#include <cstdio>
+//#include <cstdio>
 #include <cstring>
 #include "input_pair.hpp"
 #include "exprtree.hpp"
@@ -39,7 +39,11 @@ namespace apm_mix{
          ,m_num_outputs{num_outputs}
          ,m_expressions{nullptr}
       {}
-
+       ~mixer_t()
+       {
+          delete_args(m_expressions);
+          m_expressions = nullptr;
+       }
       /*
          add an l_value ( assignment expression , named expression)
          to the list of expressions in the mixer.
@@ -136,7 +140,8 @@ namespace apm_mix{
                      break;
                   }
                   default:
-                     printf("unknown value\n");
+                    // shouldnt get here
+                    // report
                      break;
                }
             }

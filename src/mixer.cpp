@@ -34,9 +34,9 @@ namespace {
 
 // These need to go in an object!
 //###############################
-   apm_mix::mixer_t* mixer;
-   apm_mix::lookup_t<apm_mix::abc_expr*> * symtab;
-   apm_mix::lookup_t<apm_mix::function_builder> * funtab;
+   apm_mix::mixer_t* mixer = nullptr;
+   apm_mix::lookup_t<apm_mix::abc_expr*> * symtab = nullptr;
+   apm_mix::lookup_t<apm_mix::function_builder> * funtab = nullptr;
 //##################################
   
    bool parse_mixer_function();
@@ -145,17 +145,20 @@ namespace {
    template <typename T>
    T fun_plus(T lhs , T rhs)
    {
+       // TODO check overflow? and sat
        return lhs + rhs;
    }
 
    template <typename T>
    T fun_minus(T lhs , T rhs)
    {
+       // TODO check overflow? and sat
        return lhs - rhs;
    }
    template <typename T>
    T fun_mul(T lhs , T rhs)
    {
+       // TODO check overflow? and sat
        return lhs * rhs;
    }
 
@@ -257,10 +260,8 @@ namespace {
    apm_mix::abc_expr * make_rel_op(int op, apm_mix::abc_expr* lhs, apm_mix::abc_expr* rhs)
    {
        if  (is_float_expr(lhs)){
-        // printf("in float rel op\n");
          return make_rel_op_tpl(op,(apm_mix::expr<apm_mix::float_t>*) lhs,(apm_mix::expr<apm_mix::float_t>*) rhs);
        }else{
-         // printf("in float rel op\n");
          return make_rel_op_tpl(op,(apm_mix::expr<apm_mix::int_t>*) lhs,(apm_mix::expr<apm_mix::int_t>*) rhs);
        }
    }
@@ -269,7 +270,6 @@ namespace {
    apm_mix::abc_expr * make_equality_op(int op, apm_mix::abc_expr* lhs, apm_mix::abc_expr* rhs)
    {
        if  (is_float_expr(lhs)){
-        // printf("in float rel op\n");
          return make_equality_op_tpl(op,(apm_mix::expr<apm_mix::float_t>*) lhs,(apm_mix::expr<apm_mix::float_t>*) rhs);
        }else{
            if ( is_int_expr(lhs)){
@@ -284,6 +284,9 @@ namespace {
 void apm_mix::close_mixer()
 {
    apm_lexer::close_stream();
+   delete mixer; mixer = nullptr;
+   delete symtab; symtab = nullptr;
+   delete funtab; funtab = nullptr;
 }
 
 bool apm_mix::mixer_create(
@@ -301,9 +304,12 @@ bool apm_mix::mixer_create(
    mixer = new apm_mix::mixer_t{inputs,num_inputs,outputs,num_outputs};
    symtab = new apm_mix::lookup_t<apm_mix::abc_expr*>;
    funtab = new apm_mix::lookup_t<apm_mix::function_builder>;
-   funtab->add_item("if",apm_mix::make_function_if);
-   funtab->add_item("max",apm_mix::make_function_max);
-   funtab->add_item("min",apm_mix::make_function_min);
+   // we need to copy any literal strings to get strings that are on heap
+   // for dtor. Seems Simplest option without making list items bigger
+   // allows user defined functions to be same as inbuilt ones
+   funtab->add_item(duplicate_string("if"),apm_mix::make_function_if);
+   funtab->add_item(duplicate_string("max"),apm_mix::make_function_max);
+   funtab->add_item(duplicate_string("min"),apm_mix::make_function_min);
    for (;;){
       switch(apm_lexer::yylex()){
          case apm_lexer::NAME :
@@ -327,19 +333,6 @@ bool apm_mix::mixer_create(
 void apm_mix::mixer_eval()
 {
     mixer->eval_outputs();
-}
-
-bool apm_mix::yyerror(const char* str )
-{
-   printf( "line %i , error : ", apm_lexer::get_line_number());
-   if (str){
-      printf("%s\n",str);
-   }else{
-      printf("\n");
-   }
-   delete mixer; mixer = nullptr;
-   delete symtab; symtab = nullptr;
-   return false;
 }
 
 namespace{
@@ -435,9 +428,7 @@ namespace{
                      return fn_builder(args);
                   }
                }else{
-                  char buf[100];
-                  snprintf(buf,100,"function \"%s()\" not found",name);
-                  apm_mix::yyerror(buf);
+                  apm_mix::yyerror<100>("function \"%s()\" not found",name);
                   return nullptr;
                }
 
@@ -447,7 +438,7 @@ namespace{
                if (result){
                   return result->clone();
                }else{
-                  apm_mix::yyerror("name not found");
+                  apm_mix::yyerror<100>("symbol \"%s\" not found ",name);
                   return nullptr;
                }
             }
@@ -455,7 +446,8 @@ namespace{
          case apm_lexer::INPUT:{
             if ( apm_lexer::yylex() == '{' ){
                if (apm_lexer::yylex() == apm_lexer::NAME){
-                  apm_mix::abc_expr* expr = mixer->find_input(apm_lexer::get_lexer_string());
+                  const char* const name = apm_lexer::get_lexer_string();
+                  apm_mix::abc_expr* expr = mixer->find_input(name);
                      if ( expr){
                         if (apm_lexer::yylex() == '}'){
                            return expr;
@@ -463,7 +455,7 @@ namespace{
                            apm_mix::yyerror("? )");
                         }
                      }else{
-                        apm_mix::yyerror("input[name] not found");
+                        apm_mix::yyerror<100>("input{\"%s\"} not found",name);
                         return nullptr;
                      }
                 }else{
@@ -471,6 +463,7 @@ namespace{
                    return nullptr;
                 }
             }else{
+                // can also do '[' integer ']'
                 apm_mix::yyerror("? (");
                 return nullptr;
             }

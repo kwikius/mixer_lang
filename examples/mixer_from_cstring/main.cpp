@@ -153,5 +153,8 @@ int main()
    }
    apm_mix::close_mixer();
    delete pstream; 
+   for ( unsigned i = 0; i < sizeof(outputs)/sizeof(outputs[0]);++i){
+      delete outputs[i];
+   }
    return result;
 }

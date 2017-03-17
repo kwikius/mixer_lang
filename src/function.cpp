@@ -16,7 +16,7 @@
  along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-#include <cstdio>
+//#include <cstdio>
 #include "error.hpp"
 #include "function.hpp"
 #include "exprtree.hpp"
@@ -29,9 +29,9 @@ template struct apm_mix::lookup_t<apm_mix::function_builder>;
 
 apm_mix::abc_expr* apm_mix::make_function_if(apm_mix::arg_list* args)
 {
-   if ( get_num_elements(args) != 3 ){
-      printf("got %u args\n", get_num_elements(args));
-      yyerror("expected 3 args");
+   int32_t const num_elements = get_num_elements(args);
+   if (  num_elements != 3 ){
+      yyerror<100>("expected 3 args, got %u",static_cast<unsigned>(num_elements));
       return nullptr;
    }
 

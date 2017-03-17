@@ -99,6 +99,13 @@ namespace {
    };
 }
 
+void delete_outputs()
+{
+   for ( auto* p : outputs){
+      delete p;
+   }
+}
+
 int main(int argc , char* argv[])
 {
    if ( argc < 2){
@@ -123,6 +130,7 @@ int main(int argc , char* argv[])
    }else{
       printf("create mixer from %s failed ... quitting\n",argv[1]);
       delete pstream;
+      delete_outputs();
       return EXIT_FAILURE;
    }
 
@@ -141,6 +149,7 @@ int main(int argc , char* argv[])
       result = EXIT_SUCCESS;
    }
    apm_mix::close_mixer();
-   delete pstream; 
+   delete pstream;
+   delete_outputs(); 
    return result;
 }

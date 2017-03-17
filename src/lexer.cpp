@@ -18,10 +18,11 @@
 
 #include <cctype>
 #include <cstring>
-#include <cstdio>
+//#include <cstdio>
 
 #include "parse_number.hpp"
 #include "lexer.hpp"
+#include "error.hpp"
 #include "lexer_stream.hpp"
 
 /*
@@ -83,26 +84,6 @@ void apm_lexer::close_stream()
 {
   p_stream = nullptr;
 }
-
-//bool apm_lexer::open_file( const char * name)
-//{
-//   FILE* fp = fopen(name, "r");
-//   if ( fp != NULL){
-//      file_pointer = fp;
-//      return true;
-//   }else{
-//      return false;
-//   }
-//}
-
-//void apm_lexer::close_file()
-//{
-//  if ( file_pointer != stdin){
-//      fclose(file_pointer);
-//      file_pointer = stdin;
-//  }
-//}
-
 
 int apm_lexer::get_line_number()
 {
@@ -172,13 +153,13 @@ int apm_lexer::yylex()
    int ch ;
    do{
        ch = fn_read_char();
-       if ( ch == EOF){
+       if ( ch == -1){
          return 0;
        }
        if ( ch == '#'){
          while (ch != '\n'){
              ch = fn_read_char();
-             if ( ch == EOF){
+             if ( ch == -1){
                return 0;
              }
          }
@@ -297,13 +278,6 @@ int apm_lexer::yylex()
             return 0;
       }
    }
-   printf("invalid input");
+   apm_mix::yyerror("invalid input");
    return 0;
 }
-
-
-
-
-
-
-

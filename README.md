@@ -123,6 +123,14 @@ Symbols can have type integer, float or bool and are constant if they can be eva
 or in other words if their InitialiserExpression doesnt need to evaluate non-constant inputs.
 The type of the symbol is deduced from the InitialiserExpression.
 
+The boolean type has only the 2 states true or false.
+
+The integer type is internally mapped to a 32 bit signed integer. TODO  will use saturating arithmetic.
+
+The float type is internally mapped to a float . TODO will use saturating arithmetic.
+For division by zero a +- max float value is returned but ideally check for div by zero in you script code
+since it is not possible to decide whether it should saturate positive or negative.
+
 Volatile Symbols
 ---------
 
@@ -157,7 +165,7 @@ syntax:
 
 
 Inputs can have any of the types Boolean, Float or Integer. The actual type is dependent on the InputIdentifier.
-Note: For Inputs accessed as array the type is TBD.
+Note: For Inputs accessed as array the type is float in range -1.0 to 1.0.
 
 
 example:
@@ -191,6 +199,13 @@ syntax:
 Expressions are assigned as if to an index of the array.
 Output indices start at 0. ( note: so output[0] will output to your traditional rc channel 1)
 The output expressions are then evaluated and updated periodically.
+
+For a standard mixer however outputs sfhould be floating point between -1 and 1.
+There is an open issue where an output represents an unsigned value
+such as a non reversible throttle, but outputs should be homogeneous or in other words
+it should be possible to switch the actuator channels without changing semantics.
+
+note that For a custom mixer outputs can have type integer boolean or float. This can be useful for debugging
 
 example:
 
@@ -272,8 +287,8 @@ Image Size
 
 During building some extra heap is used to hold symbolic names, but once the tree is built the symbol table memory is freed.
 With constant folding the resulting tree is expected to be compact.
-The code has only been tested on a 32 bit Linux PC so far and the complete app image is coming in at under 30K.
-I hope it will be smaller when built as a library for STM32 arm. The aim is under 10K of rom space but we shall see!
+On a 32 bit Linux PC so far and the complete app image is coming in at under 3kb.
+On  STM32F4 ARM  The library currently adds around 20 kb
 
 Dependencies
 ------------

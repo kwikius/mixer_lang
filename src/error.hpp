@@ -1,6 +1,10 @@
 #ifndef MIXER_LANG_ERROR_HPP_INCLUDED
 #define MIXER_LANG_ERROR_HPP_INCLUDED
 
+#include <cstdarg>
+#include <cstdint>
+#include <cstdio>
+
 /*
  Copyright (c) 2017 Andy Little 
 
@@ -21,6 +25,18 @@
 namespace apm_mix{
 
    bool yyerror(const char* str = nullptr);
+
+   template <uint32_t Buflen>
+   inline bool yyerror(const char * const format,  ...)
+   {
+     char buffer[Buflen];
+     va_list args;
+     va_start (args, format);
+     vsnprintf (buffer,Buflen,format, args);
+     apm_mix::yyerror(buffer);
+     va_end(args);
+     return true;
+   }
 
 }
 

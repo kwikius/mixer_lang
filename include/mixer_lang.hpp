@@ -3,6 +3,8 @@
 
 #include "../src/input_pair.hpp"
 #include "../src/lexer_stream.hpp"
+#include "../src/error.hpp"
+#include "../src/stringfun.hpp"
 
 namespace apm_mix{
 
@@ -14,6 +16,16 @@ namespace apm_mix{
 
    void mixer_eval();
    void close_mixer(); // clean up
+
+   //N.B. the app is required to implement this
+   // always returns false
+   bool yyerror(const char* str );
+}
+
+// for implementing yyerror. The line number of the error
+namespace apm_lexer{
+  int get_line_number();
+
 }
 
 #endif // MIXER_LANG_HPP_INCLUDED

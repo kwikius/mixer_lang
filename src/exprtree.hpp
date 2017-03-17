@@ -30,6 +30,7 @@ namespace apm_mix{
       bool is_constant() const { return true;}
       expr<T>* fold() { return this;}
       expr<T>* clone() const { return new constant{this->m_value};}
+      ~constant(){}
    private:
       T m_value;
    };

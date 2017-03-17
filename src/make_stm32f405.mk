@@ -14,31 +14,35 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>
 
-TARGET = ../build/mixer_lang.a
+QUANTRACKER_ROOT_DIR := /home/andy/cpp/projects/quantracker/
+OPTIMISATION_LEVEL  := Os
+
+include $(QUANTRACKER_ROOT_DIR)include/quantracker/build/osd.mk
+
+TARGET = ../build/stm32f405/mixer_lang.a
 
 .PHONY: clean all sources
 
-CXX ?= g++
+#CXX ?= g++
 
-CFLAGS = -std=gnu++11 -Wall -Os 
+#CFLAGS = -std=gnu++11 -Wall -Os 
 
-local_objects = arg_list.o lexer.o mixer.o symtab.o function.o 
+local_objects = arg_list.o lexer.o mixer.o symtab.o function.o stringfun.o
 
 sources  = $(patsubst %.o,%.cpp,$(local_objects))
 
 headers = abc_expr.hpp arg_list.hpp basic_char_ptr_converter.hpp exprtree.hpp \
-function.hpp lexer.hpp lookup.hpp mixer.hpp parse_number.hpp predicates.hpp stringfun.hpp \
-error.hpp
+function.hpp lexer.hpp lookup.hpp mixer.hpp parse_number.hpp predicates.hpp stringfun.hpp
 
-objects = $(patsubst %.o,obj/%.o,$(local_objects))
+objects = $(patsubst %.o,obj/stm32f405/%.o,$(local_objects))
  
 all: $(TARGET)
 
 $(TARGET) : $(objects)
-	ar rcs $@ $(objects)
+	$(AR) rcs $@ $(objects)
 
-$(objects) : obj/%.o : %.cpp $(headers)
-	$(CXX) $(CFLAGS) -c $< -o $@
+$(objects) : obj/stm32f405/%.o : %.cpp $(headers)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	-rm -rf obj/*.o $(TARGET)
+	-rm -rf obj/stm32f405/*.o $(TARGET)

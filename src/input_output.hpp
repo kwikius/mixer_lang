@@ -31,7 +31,7 @@ namespace apm_mix{
       expr<T>* clone() const { return new input{this->m_pfn_get};}
       input(pfn_get get_fn_in)
       : m_pfn_get{get_fn_in}{}
-      
+      ~input(){}
       private:
          pfn_get m_pfn_get;
    };
@@ -41,6 +41,9 @@ namespace apm_mix{
 
       typedef void (*pfn_send)( T const &);
       output(pfn_send put_fn_in):m_pfn_send{put_fn_in}, m_expr{nullptr}{}
+      // dont delete output expressions
+      // The output is owned by the app, but its expressions are owned by the mixer
+      ~output() { /*delete m_expr; */}
       T eval()const 
       { 
          if ( m_expr) { 
@@ -49,6 +52,7 @@ namespace apm_mix{
             return T{0} ;
          }
       }
+
       bool has_output_expr() const { return m_expr != nullptr;}
       bool set_output_expr(expr<T> * e) 
       {
@@ -59,6 +63,7 @@ namespace apm_mix{
             return false;
          }
       }
+
       bool is_constant() const { return false;}
       expr<T>* fold() { if ( m_expr) {m_expr = (expr<T>*)m_expr->fold();} return this;}
       expr<T>* clone() const { return new output{this->m_pfn_send, m_expr};}
