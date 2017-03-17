@@ -52,6 +52,7 @@ namespace apm_mix{
             return T{0} ;
          }
       }
+      void zero_expr(){ m_expr = nullptr;}
 
       bool has_output_expr() const { return m_expr != nullptr;}
       bool set_output_expr(expr<T> * e) 

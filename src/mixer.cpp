@@ -291,9 +291,10 @@ void apm_mix::close_mixer()
    mixer_valid = false;
 }
 
+
 bool apm_mix::mixer_create(
    apm_lexer::stream_t* pstream,
-   input_pair* inputs, uint32_t num_inputs,abc_expr** outputs, uint32_t num_outputs)
+   input_pair* inputs, uint32_t num_inputs,output<apm_mix::float_t>* outputs, uint32_t num_outputs)
 {
    close_mixer();
    if ( pstream == nullptr){
@@ -303,12 +304,16 @@ bool apm_mix::mixer_create(
    if (! pstream->open()){
       return false;
    }
+   // The same outputs are probably used. May have old expressions
+   for ( uint32_t i = 0U; i < num_outputs; ++i){
+      outputs[i].zero_expr();
+   }
    apm_lexer::set_stream(pstream);
    mixer = new apm_mix::mixer_t{inputs,num_inputs,outputs,num_outputs};
    symtab = new apm_mix::lookup_t<apm_mix::abc_expr*>;
    funtab = new apm_mix::lookup_t<apm_mix::function_builder>;
    // we need to copy any literal strings to get strings that are on heap
-   // for dtor. Seems Simplest option without making list items bigger
+   // for dtor. Seems simplest option without making list items bigger
    // allows user defined functions to be same as inbuilt ones
    funtab->add_item(duplicate_string("if"),apm_mix::make_function_if);
    funtab->add_item(duplicate_string("max"),apm_mix::make_function_max);
@@ -331,7 +336,7 @@ bool apm_mix::mixer_create(
          }
          default:
             close_mixer();
-            return apm_mix::yyerror("unknown error");
+            return apm_mix::yyerror("expected name or mixer");
       }     
    }
 }

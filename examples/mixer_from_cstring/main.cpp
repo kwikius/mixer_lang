@@ -1,9 +1,7 @@
 
 #include <cstdio>
-
 #include <mixer_lang.hpp>
 #include <mixer_lang_cstrstream.hpp>
-
 #include "joystick.hpp"
 
 namespace {
@@ -34,19 +32,19 @@ namespace {
    // you can use different input types as shown by the bool and int inputs at the end of the array
    apm_mix::input_pair inputs[] = { 
 
-      apm_mix::input_pair{"Pitch", get_pitch},
-      apm_mix::input_pair{"Yaw",  get_yaw},
-      apm_mix::input_pair{"Roll", get_roll},
-      apm_mix::input_pair{"Throttle", get_throttle},
-      apm_mix::input_pair{"Flap", get_flap},
-      apm_mix::input_pair{"Airspeed", get_airspeed},
-      apm_mix::input_pair{"ControlMode", get_control_mode},
+      {"Pitch", get_pitch},
+      {"Yaw",  get_yaw},
+      {"Roll", get_roll},
+      {"Throttle", get_throttle},
+      {"Flap", get_flap},
+      {"Airspeed", get_airspeed},
+      {"ControlMode", get_control_mode},
 
-      apm_mix::input_pair{"ARSPD_MIN", static_cast<apm_mix::float_t(*)()>([]()->apm_mix::float_t{return 10.0;})},
-      apm_mix::input_pair{"ARSPD_CRUISE",static_cast<apm_mix::float_t(*)()>([]()->apm_mix::float_t{return 12.0;})},
-      apm_mix::input_pair{"ARSPD_MAX", static_cast<apm_mix::float_t(*)()>([]()->apm_mix::float_t{return 20.0;})},
-      apm_mix::input_pair{"FAILSAFE_ON", failsafe_on},
-      apm_mix::input_pair{"DUMMY_INT", static_cast<apm_mix::int_t(*)()>([]()->apm_mix::int_t{return 1000;})}
+      {"ARSPD_MIN", static_cast<apm_mix::float_t(*)()>([]()->apm_mix::float_t{return 10.0;})},
+      {"ARSPD_CRUISE",static_cast<apm_mix::float_t(*)()>([]()->apm_mix::float_t{return 12.0;})},
+      {"ARSPD_MAX", static_cast<apm_mix::float_t(*)()>([]()->apm_mix::float_t{return 20.0;})},
+      {"FAILSAFE_ON", failsafe_on},
+      {"DUMMY_INT", static_cast<apm_mix::int_t(*)()>([]()->apm_mix::int_t{return 1000;})}
    };
 
    // The mixers also uses function pointers to send its outputs.
@@ -64,13 +62,6 @@ namespace {
       }
    }
 
-   // to show that int_t can be assigned as an output function also
-   template<unsigned N>
-   void output_action(apm_mix::int_t const & v)
-   {
-      printf("output[%u] = % 6d\n",N, static_cast<int>(v));
-   }
-
    // to show that bool can be assigned as an output function also
    template<unsigned N>
    void output_action(bool const & v)
@@ -84,18 +75,16 @@ namespace {
    // Outputs can output a type of Integer, Bool or Float
    // you can mix types in one mixer as shown here where 
    // output 9 is an int and output 10 is a bool
-   apm_mix::abc_expr* outputs[] = {
-       new apm_mix::output<apm_mix::float_t>{output_action<0>}
-     , new apm_mix::output<apm_mix::float_t>{output_action<1>}
-     , new apm_mix::output<apm_mix::float_t>{output_action<2>}
-     , new apm_mix::output<apm_mix::float_t>{output_action<3>}
-     , new apm_mix::output<apm_mix::float_t>{output_action<4>}
-     , new apm_mix::output<apm_mix::float_t>{output_action<5>}
-     , new apm_mix::output<apm_mix::float_t>{output_action<6>}
-     , new apm_mix::output<apm_mix::float_t>{output_action<7>}
-     , new apm_mix::output<apm_mix::float_t>{output_action<8>}
-     , new apm_mix::output<apm_mix::int_t>{output_action<9>}  
-     , new apm_mix::output<bool>{output_action<10>}
+   apm_mix::output<apm_mix::float_t> outputs[] = {
+       {output_action<0>}
+     , {output_action<1>}
+     , {output_action<2>}
+     , {output_action<3>}
+     , {output_action<4>}
+     , {output_action<5>}
+     , {output_action<6>}
+     , {output_action<7>}
+     , {output_action<8>}
    };
 }
 
@@ -115,12 +104,11 @@ const char mixer_string [] =
 
 int main()
 {
-
    // create the mixer from a cstrstream using the above string
-   auto* pstream = new apm_lexer::cstrstream_t{mixer_string,1000};
+   apm_lexer::cstrstream_t stream{mixer_string,1000};
 
    if ( apm_mix::mixer_create(
-          pstream
+          &stream
          ,inputs, sizeof(inputs)/sizeof(inputs[0])
          ,outputs, sizeof(outputs)/sizeof(outputs[0])
       )){
@@ -133,7 +121,6 @@ int main()
              "..................was created OK .................!\n\n",mixer_string);
    }else{
       printf("create mixer from %s failed ... quitting\n",mixer_string);
-      delete pstream;
       return EXIT_FAILURE;
    }
 
@@ -152,9 +139,5 @@ int main()
       result = EXIT_SUCCESS;
    }
    apm_mix::close_mixer();
-   delete pstream; 
-   for ( unsigned i = 0; i < sizeof(outputs)/sizeof(outputs[0]);++i){
-      delete outputs[i];
-   }
    return result;
 }

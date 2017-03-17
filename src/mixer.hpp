@@ -32,7 +32,7 @@ namespace apm_mix{
 
    // TODO destructor for mixer
    struct mixer_t{
-      mixer_t(input_pair* inputs, uint32_t num_inputs, abc_expr ** outputs , uint32_t num_outputs )
+      mixer_t(input_pair* inputs, uint32_t num_inputs, output<float_t> * outputs , uint32_t num_outputs )
          :m_inputs{inputs}
          ,m_num_inputs{num_inputs}
          ,m_outputs{outputs}
@@ -65,31 +65,15 @@ namespace apm_mix{
             return false;
          }
 
-         if ( output_expr->get_ID() != m_outputs[n]->get_ID()){
-            yyerror("no match for output expr type for assign");
+         if ( output_expr->get_ID() != abc_expr::exprID::FLOAT){
+            yyerror("output expression must be float");
             return false;
          }
 
-         switch ( m_outputs[n]->get_ID()){
-            case abc_expr::exprID::BOOL:{
-               auto * out = (output<bool>*)m_outputs[n];
-               out->set_output_expr( (expr<bool>*)output_expr);
-               return true;
-            }
-            case abc_expr::exprID::INT:{
-               auto * out = (output<apm_mix::int_t>*)m_outputs[n];
-               out->set_output_expr( (expr<apm_mix::int_t>*) output_expr);
-               return true;
-            }
-            case abc_expr::exprID::FLOAT:{
-               auto * out = (output<apm_mix::float_t>*)m_outputs[n];
-               out->set_output_expr((expr<apm_mix::float_t>*) output_expr);
-               return true;
-            }
-            default:
-               yyerror("unexpected");
-               return false;
-         }
+         auto & out = m_outputs[n];
+         out.set_output_expr((expr<apm_mix::float_t>*) output_expr);
+         return true;
+
       }
 
       /*
@@ -116,47 +100,21 @@ namespace apm_mix{
       void eval_outputs()
       {
          for ( uint32_t i = 0; i < m_num_outputs; ++i){
-            if ( m_outputs[i] != nullptr){
-               switch ( m_outputs[i]->get_ID()){
-                  case abc_expr::exprID::FLOAT:{
-                     auto * out = (output<apm_mix::float_t> *)m_outputs[i];
-                     if ( out->has_output_expr()){
-                        out->apply();
-                     }
-                     break;
-                  }
-                  case abc_expr::exprID::INT:{
-                     auto * out = (output<apm_mix::int_t> *)m_outputs[i];
-                     if ( out->has_output_expr()){
-                        out->apply();
-                     }
-                     break;
-                  }
-                  case abc_expr::exprID::BOOL:{
-                     auto * out = (output<bool> *)m_outputs[i];
-                     if ( out->has_output_expr()){
-                        out->apply();
-                     }
-                     break;
-                  }
-                  default:
-                    // shouldnt get here
-                    // report
-                     break;
-               }
+            if ( m_outputs[i].has_output_expr()){
+               m_outputs[i].apply();
             }
          }
       }
     private:
       input_pair * m_inputs;
       uint32_t const m_num_inputs;
-      abc_expr ** m_outputs;
+      output<float_t> * m_outputs;
       uint32_t const m_num_outputs;
       arg_list* m_expressions;
    };
 
    bool mixer_create(apm_lexer::stream_t * ,
-     input_pair* inputs, uint32_t num_inputs, abc_expr ** outputs , uint32_t num_outputs);
+     input_pair* inputs, uint32_t num_inputs, output<float_t> *outputs , uint32_t num_outputs);
    void close_mixer();
    void mixer_eval();
 }
