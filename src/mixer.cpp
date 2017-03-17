@@ -37,6 +37,7 @@ namespace {
    apm_mix::mixer_t* mixer = nullptr;
    apm_mix::lookup_t<apm_mix::abc_expr*> * symtab = nullptr;
    apm_mix::lookup_t<apm_mix::function_builder> * funtab = nullptr;
+   bool mixer_valid = false;
 //##################################
   
    bool parse_mixer_function();
@@ -287,12 +288,14 @@ void apm_mix::close_mixer()
    delete mixer; mixer = nullptr;
    delete symtab; symtab = nullptr;
    delete funtab; funtab = nullptr;
+   mixer_valid = false;
 }
 
 bool apm_mix::mixer_create(
    apm_lexer::stream_t* pstream,
    input_pair* inputs, uint32_t num_inputs,abc_expr** outputs, uint32_t num_outputs)
 {
+   close_mixer();
    if ( pstream == nullptr){
       yyerror("null stream ptr in mixer create");
       return false;
@@ -314,18 +317,21 @@ bool apm_mix::mixer_create(
       switch(apm_lexer::yylex()){
          case apm_lexer::NAME :
             if ( !parse_assign_expr(apm_lexer::get_lexer_string())){
-               apm_lexer::close_stream();
+               close_mixer();
                return false;
             }
             break;
          case apm_lexer::MIXER:{
-           bool result =  parse_mixer_function();
+            mixer_valid =  parse_mixer_function();
             apm_lexer::close_stream();
-            return result;
+            if( !mixer_valid){
+               close_mixer();
+            }
+            return mixer_valid;
          }
          default:
-            apm_lexer::close_stream();
-            return apm_mix::yyerror();
+            close_mixer();
+            return apm_mix::yyerror("unknown error");
       }     
    }
 }
