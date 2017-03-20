@@ -14,18 +14,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>
 
-QUANTRACKER_ROOT_DIR := /home/andy/cpp/projects/quantracker/
+
+ifeq ($(QUANTRACKER_ROOT_DIR), )
+$(error "QUANTRACKER_ROOT_DIR must be defined to the path to quantracker - see README.")
+endif
+
 OPTIMISATION_LEVEL  := Os
 
-include $(QUANTRACKER_ROOT_DIR)include/quantracker/build/osd.mk
+include $(QUANTRACKER_ROOT_DIR)/include/quantracker/build/osd.mk
 
 TARGET = ../build/stm32f405/mixer_lang.a
 
 .PHONY: clean all sources
-
-#CXX ?= g++
-
-#CFLAGS = -std=gnu++11 -Wall -Os 
 
 local_objects = arg_list.o lexer.o mixer.o symtab.o function.o 
 
