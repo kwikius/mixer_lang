@@ -70,9 +70,15 @@ uint32_t apm_lexer::get_max_string_chars()
     return buffer_length - 1;
 }
 
+// reset everything
 void apm_lexer::set_stream(apm_lexer::stream_t * p)
 {
    p_stream = p;
+   line_num = 1;
+   buffer_full = false;
+   buffered_tok = 0;
+   error_num = 0;
+   buffer_idx = 0;
 }
 
 apm_lexer::stream_t* apm_lexer::get_stream()
