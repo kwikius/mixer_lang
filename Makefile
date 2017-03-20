@@ -1,7 +1,7 @@
 
 
 .PHONY: all mixer_lang_lib clean_mixer_lang_lib taranis_joystick \
-clean_taranis_joystick clean test clean_test
+clean_taranis_joystick clean test clean_test stm32f405
 
 all: mixer_lang_lib taranis_joystick
 
@@ -22,6 +22,12 @@ test:
 
 clean_test :
 	make -C ./test clean
+
+stm32f405:
+	make AERFLITE=True -C ./src -f make_stm32f405.mk
+
+clean_stm32f405:
+	make AERFLITE=True -C ./src -f make_stm32f405.mk clean
 
 run_easystar : taranis_joystick
 	./examples/TaranisUSBJoystick/bin/taranis_mixer.exe ./mixers/generic/EasyStar.mix
