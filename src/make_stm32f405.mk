@@ -27,12 +27,12 @@ TARGET = ../build/stm32f405/mixer_lang.a
 
 #CFLAGS = -std=gnu++11 -Wall -Os 
 
-local_objects = arg_list.o lexer.o mixer.o symtab.o function.o stringfun.o
+local_objects = arg_list.o lexer.o mixer.o symtab.o function.o 
 
 sources  = $(patsubst %.o,%.cpp,$(local_objects))
 
 headers = abc_expr.hpp arg_list.hpp basic_char_ptr_converter.hpp exprtree.hpp \
-function.hpp lexer.hpp lookup.hpp mixer.hpp parse_number.hpp predicates.hpp stringfun.hpp
+function.hpp lexer.hpp lookup.hpp mixer.hpp parse_number.hpp predicates.hpp
 
 objects = $(patsubst %.o,obj/stm32f405/%.o,$(local_objects))
  
